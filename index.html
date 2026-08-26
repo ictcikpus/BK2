@@ -67,6 +67,17 @@
             filter: grayscale(0.6);
         }
 
+        /* Hide scrollbar for horizontal scroll tabs on mobile */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Toast animation */
+        @keyframes toastSlide {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-toast { animation: toastSlide 0.25s ease-out forwards; }
+
         /* Media Print Rules for Official Certificate */
         @media print {
             body {
@@ -139,6 +150,15 @@
                     Lvl <span id="player-level">1</span>
                 </div>
                 <div class="h-4 w-px bg-slate-700"></div>
+                <!-- Global Overall Progress Tracker -->
+                <div class="hidden md:flex items-center gap-2 text-xs text-slate-300">
+                    <span>Kemajuan:</span>
+                    <div class="w-20 h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                        <div id="global-progress-bar" class="h-full bg-gradient-to-r from-cyan-400 to-emerald-400 transition-all duration-500" style="width: 12.5%;"></div>
+                    </div>
+                    <span id="global-progress-text" class="text-cyan-400 font-bold text-[11px]">12%</span>
+                </div>
+                <div class="h-4 w-px bg-slate-700 hidden md:block"></div>
                 <!-- BGM Button -->
                 <button id="bgm-toggle-btn" onclick="toggleBGM()" class="text-xs px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all border border-slate-600 flex items-center gap-1">
                     🎵 BGM: OFF
@@ -150,30 +170,30 @@
     <!-- Main Container -->
     <main class="max-w-7xl mx-auto w-full px-4 sm:px-8 py-6 flex-grow">
         
-        <!-- Navigation Tabs with Lock Status Badges -->
-        <nav class="flex flex-wrap gap-2 mb-6 border-b border-slate-800 pb-3" id="tab-nav">
-            <button onclick="switchTab('tab-materi')" id="btn-tab-materi" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/20">
+        <!-- Navigation Tabs with Horizontal Scroll for Mobile -->
+        <nav class="flex gap-2 mb-6 border-b border-slate-800 pb-3 overflow-x-auto no-scrollbar sm:flex-wrap" id="tab-nav">
+            <button onclick="switchTab('tab-materi')" id="btn-tab-materi" class="tab-btn shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/20">
                 <i class="fa-solid fa-book-open"></i> 1. Materi Belajar <span id="badge-tab-materi" class="text-xs">✅</span>
             </button>
-            <button onclick="switchTab('tab-login')" id="btn-tab-login" class="tab-btn tab-locked px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+            <button onclick="switchTab('tab-login')" id="btn-tab-login" class="tab-btn tab-locked shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
                 <i class="fa-solid fa-id-card"></i> 2. Identitas Siswa <span id="badge-tab-login" class="text-xs">🔒</span>
             </button>
-            <button onclick="switchTab('tab-ct')" id="btn-tab-ct" class="tab-btn tab-locked px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+            <button onclick="switchTab('tab-ct')" id="btn-tab-ct" class="tab-btn tab-locked shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
                 <i class="fa-solid fa-brain"></i> 3. 4 Pondasi CT <span id="badge-tab-ct" class="text-xs">🔒</span>
             </button>
-            <button onclick="switchTab('tab-data')" id="btn-tab-data" class="tab-btn tab-locked px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+            <button onclick="switchTab('tab-data')" id="btn-tab-data" class="tab-btn tab-locked shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
                 <i class="fa-solid fa-cubes"></i> 4. Data Linear <span id="badge-tab-data" class="text-xs">🔒</span>
             </button>
-            <button onclick="switchTab('tab-search')" id="btn-tab-search" class="tab-btn tab-locked px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+            <button onclick="switchTab('tab-search')" id="btn-tab-search" class="tab-btn tab-locked shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
                 <i class="fa-solid fa-magnifying-glass"></i> 5. Pencarian <span id="badge-tab-search" class="text-xs">🔒</span>
             </button>
-            <button onclick="switchTab('tab-sort')" id="btn-tab-sort" class="tab-btn tab-locked px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+            <button onclick="switchTab('tab-sort')" id="btn-tab-sort" class="tab-btn tab-locked shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
                 <i class="fa-solid fa-arrow-down-short-wide"></i> 6. Pengurutan <span id="badge-tab-sort" class="text-xs">🔒</span>
             </button>
-            <button onclick="switchTab('tab-quiz')" id="btn-tab-quiz" class="tab-btn tab-locked px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+            <button onclick="switchTab('tab-quiz')" id="btn-tab-quiz" class="tab-btn tab-locked shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
                 <i class="fa-solid fa-gamepad"></i> 7. CT Boss Quest <span id="badge-tab-quiz" class="text-xs">🔒</span>
             </button>
-            <button onclick="switchTab('tab-cert')" id="btn-tab-cert" class="tab-btn tab-locked px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+            <button onclick="switchTab('tab-cert')" id="btn-tab-cert" class="tab-btn tab-locked shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
                 <i class="fa-solid fa-award"></i> 8. Sertifikat <span id="badge-tab-cert" class="text-xs">🔒</span>
             </button>
         </nav>
@@ -1118,34 +1138,47 @@
             'tab-cert': false
         };
 
-        // Trackers for individual sub-tasks
-        let ctPillarsDone = { decomp: false, pattern: false, abs: false, algo: false };
-        let dataLinearDone = { array: false, stack: false, queue: false };
-        let searchAlgoDone = { linear: false, binary: false };
-        let sortAlgoDone = false;
+        let ctPillarsDone = {
+            decomp: false,
+            pattern: false,
+            abs: false,
+            algo: false
+        };
 
-        /* Web Audio API Context & BGM State */
+        let dataLinearDone = {
+            array: false,
+            stack: false,
+            queue: false
+        };
+
+        let searchAlgoDone = {
+            linear: false,
+            binary: false
+        };
+
+        // Audio System State
         let audioCtx = null;
-        let isBgmPlaying = false;
         let bgmInterval = null;
+        let isBgmPlaying = false;
 
         function initAudio() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
         }
 
-        /* Update lock badges on navigation buttons */
+        /* Update lock badges on navigation buttons & global progress */
         function updateTabLockUI() {
+            let unlockedCount = 0;
+            const totalStages = Object.keys(stageUnlocked).length;
+
             for (let tabId in stageUnlocked) {
                 const btn = document.getElementById('btn-' + tabId);
                 const badge = document.getElementById('badge-' + tabId);
                 if (!btn) continue;
 
                 if (stageUnlocked[tabId]) {
+                    unlockedCount++;
                     btn.classList.remove('tab-locked');
                     if (badge) badge.innerText = '✅';
                 } else {
@@ -1153,6 +1186,13 @@
                     if (badge) badge.innerText = '🔒';
                 }
             }
+
+            // Update Header Global Progress Bar
+            const percent = Math.round((unlockedCount / totalStages) * 100);
+            const progressBar = document.getElementById('global-progress-bar');
+            const progressText = document.getElementById('global-progress-text');
+            if (progressBar) progressBar.style.width = percent + '%';
+            if (progressText) progressText.innerText = percent + '%';
         }
 
         /* Stage 1 Complete Handler */
@@ -1410,12 +1450,13 @@
             document.getElementById(tabId).classList.remove('hidden');
 
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.className = "tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800";
+                btn.className = "tab-btn shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800";
             });
 
             const activeBtn = document.getElementById('btn-' + tabId);
             if (activeBtn) {
-                activeBtn.className = "tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/20";
+                activeBtn.className = "tab-btn shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/20";
+                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             }
             updateTabLockUI();
         }
@@ -1437,11 +1478,11 @@
             if (!toast) {
                 toast = document.createElement('div');
                 toast.id = 'lock-toast';
-                toast.className = 'fixed bottom-6 right-6 z-50 bg-rose-900/90 border border-rose-500 text-rose-100 px-5 py-3 rounded-2xl shadow-2xl text-xs font-bold transition-all';
+                toast.className = 'fixed bottom-6 right-6 z-50 bg-rose-900/95 border border-rose-500 text-rose-100 px-5 py-3 rounded-2xl shadow-2xl text-xs font-bold transition-all animate-toast backdrop-blur-md flex items-center gap-2';
                 document.body.appendChild(toast);
             }
-            toast.innerText = msg;
-            toast.style.display = 'block';
+            toast.innerHTML = `<i class="fa-solid fa-lock text-rose-400 text-sm"></i> <span>${msg}</span>`;
+            toast.style.display = 'flex';
 
             setTimeout(() => {
                 toast.style.display = 'none';
