@@ -40,12 +40,10 @@
         .glow-cyan { box-shadow: 0 0 20px rgba(6, 182, 212, 0.35); }
         .glow-indigo { box-shadow: 0 0 20px rgba(99, 102, 241, 0.35); }
         
-        /* Bar chart transition for sorting visualizer */
         .array-bar {
-            transition: height 0.2s ease-in-out, background-color 0.2s ease-in-out, transform 0.2s;
+            transition: height 0.3s ease-in-out, background-color 0.3s ease-in-out, transform 0.2s;
         }
 
-        /* Canvas Overlay for Confetti */
         #confetti-canvas {
             position: fixed;
             top: 0;
@@ -56,7 +54,6 @@
             z-index: 100;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
@@ -66,7 +63,6 @@
 <body class="min-h-screen flex flex-col justify-between overflow-x-hidden text-slate-100 selection:bg-cyan-500 selection:text-white">
     <canvas id="confetti-canvas"></canvas>
 
-    <!-- Header / Navbar -->
     <header class="sticky top-0 z-50 glass-nav border-b border-slate-800 px-4 py-3 sm:px-8">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
             <div class="flex items-center gap-3">
@@ -75,7 +71,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-bold bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">CT Quest</h1>
-                    <p class="text-xs text-slate-400">Game Edukasi Berpikir Komputasional</p>
+                    <p class="text-xs text-slate-400">Game Edukasi & Modul Berpikir Komputasional</p>
                 </div>
             </div>
 
@@ -91,20 +87,22 @@
                     Lvl <span id="player-level">1</span>
                 </div>
                 <div class="h-4 w-px bg-slate-700"></div>
-                <!-- BGM Button -->
-                <button id="bgm-toggle-btn" onclick="toggleBGM()" class="text-xs px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all border border-slate-600 flex items-center gap-1">
+                <!-- Audio Button -->
+                <button id="bgm-toggle-btn" onclick="toggleAudio()" class="text-xs px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all border border-slate-600 flex items-center gap-1">
                     🎵 BGM: OFF
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Container -->
     <main class="max-w-7xl mx-auto w-full px-4 sm:px-8 py-6 flex-grow">
         
         <!-- Navigation Tabs -->
         <nav class="flex flex-wrap gap-2 mb-6 border-b border-slate-800 pb-3" id="tab-nav">
-            <button onclick="switchTab('tab-ct')" id="btn-tab-ct" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20">
+            <button onclick="switchTab('tab-materi')" id="btn-tab-materi" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20">
+                <i class="fa-solid fa-book-open"></i> 📚 Modul Materi Pembelajaran
+            </button>
+            <button onclick="switchTab('tab-ct')" id="btn-tab-ct" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
                 <i class="fa-solid fa-brain"></i> 4 Pondasi CT
             </button>
             <button onclick="switchTab('tab-data')" id="btn-tab-data" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
@@ -121,8 +119,446 @@
             </button>
         </nav>
 
-        <!-- ================= TAB 1: 4 PONDASI COMPUTATIONAL THINKING ================= -->
-        <section id="tab-ct" class="tab-content space-y-6">
+        <section id="tab-materi" class="tab-content space-y-6">
+            <div class="glass-card p-6 rounded-2xl border border-slate-800">
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-bold tracking-widest uppercase text-cyan-400 bg-cyan-950/80 px-3 py-1 rounded-full border border-cyan-800">Panduan Akademik CT</span>
+                        <h2 class="text-2xl font-extrabold text-white mt-2">Materi Lengkap Berpikir Komputasional & Struktur Data</h2>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1">Pelajari landasan teori, 4 kasus simulasi nyata, serta algoritma pencarian & pengurutan sebelum memulai game tantangan.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <button onclick="jumpToChapter('materi-bab1')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-cyan-600 text-slate-200 transition-all border border-slate-700">Bab 1: 4 Pondasi</button>
+                        <button onclick="jumpToChapter('materi-bab2')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-cyan-600 text-slate-200 transition-all border border-slate-700">Bab 2: Struktur Data</button>
+                        <button onclick="jumpToChapter('materi-bab3')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-cyan-600 text-slate-200 transition-all border border-slate-700">Bab 3: Linear</button>
+                        <button onclick="jumpToChapter('materi-bab4')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-cyan-600 text-slate-200 transition-all border border-slate-700">Bab 4: Searching</button>
+                        <button onclick="jumpToChapter('materi-bab5')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-cyan-600 text-slate-200 transition-all border border-slate-700">Bab 5: Sorting</button>
+                        <button onclick="jumpToChapter('materi-bab6')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-cyan-600 text-slate-200 transition-all border border-slate-700">Bab 6: Perbandingan</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BAB 1 -->
+            <div id="materi-bab1" class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+                <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-cyan-400 flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group"></i> Bab 1: 4 Pondasi Berpikir Komputasional (CT)
+                    </h3>
+                    <span class="text-xs bg-cyan-950 text-cyan-300 border border-cyan-800 px-2.5 py-1 rounded-md">Logika Solusi Terstruktur</span>
+                </div>
+                
+                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    <strong>Berpikir Komputasional (Computational Thinking / CT)</strong> adalah metode pemecahan masalah yang merumuskan masalah dan solusinya secara terstruktur, sistematis, dan logis sehingga dapat dijalankan oleh manusia maupun komputer. CT bukanlah sekadar belajar coding, melainkan melatih landasan berpikir kritis.
+                </p>
+
+                <!-- Grid 4 Pillars -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 hover:border-cyan-500/50 transition-all">
+                        <div class="text-cyan-400 text-2xl mb-2"><i class="fa-solid fa-puzzle-piece"></i></div>
+                        <h4 class="font-bold text-white text-sm mb-1">1. Dekomposisi</h4>
+                        <p class="text-xs text-slate-400 mb-2">Memecah masalah kompleks yang besar menjadi bagian-bagian kecil yang lebih sederhana dan mudah dikelola.</p>
+                        <div class="bg-slate-950 p-2 rounded text-[11px] text-cyan-300 italic border border-slate-800">
+                            💡 <strong>Analogi:</strong> Memecah perakitan sepeda menjadi komponen roda, rantai, stang, dan rem.
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 hover:border-indigo-500/50 transition-all">
+                        <div class="text-indigo-400 text-2xl mb-2"><i class="fa-solid fa-shapes"></i></div>
+                        <h4 class="font-bold text-white text-sm mb-1">2. Pengenalan Pola</h4>
+                        <p class="text-xs text-slate-400 mb-2">Mencari kesamaan, tren, atau pola berulang di dalam masalah untuk mempermudah penyelesaian.</p>
+                        <div class="bg-slate-950 p-2 rounded text-[11px] text-indigo-300 italic border border-slate-800">
+                            💡 <strong>Analogi:</strong> Mengenali pola cuaca mendung dan angin kencang sebagai tanda akan turun hujan.
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition-all">
+                        <div class="text-emerald-400 text-2xl mb-2"><i class="fa-solid fa-filter"></i></div>
+                        <h4 class="font-bold text-white text-sm mb-1">3. Abstraksi</h4>
+                        <p class="text-xs text-slate-400 mb-2">Fokus hanya pada informasi penting dan relevan, serta mengabaikan detail rumit yang tidak dibutuhkan.</p>
+                        <div class="bg-slate-950 p-2 rounded text-[11px] text-emerald-300 italic border border-slate-800">
+                            💡 <strong>Analogi:</strong> Peta rute MRT hanya fokus pada nama stasiun, tanpa lekukan jalan raya asli.
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 hover:border-amber-500/50 transition-all">
+                        <div class="text-amber-400 text-2xl mb-2"><i class="fa-solid fa-list-ol"></i></div>
+                        <h4 class="font-bold text-white text-sm mb-1">4. Desain Algoritma</h4>
+                        <p class="text-xs text-slate-400 mb-2">Menyusun instruksi atau langkah-langkah sistematis berurutan dari awal hingga akhir untuk menyelesaikan masalah.</p>
+                        <div class="bg-slate-950 p-2 rounded text-[11px] text-amber-300 italic border border-slate-800">
+                            💡 <strong>Analogi:</strong> Resep langkah-langkah memasak mi instan dari merebus air hingga disajikan.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bahan Latihan 4 Kasus Nyata -->
+                <div class="mt-6">
+                    <h4 class="text-base font-bold text-slate-200 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-vial-circle-check text-cyan-400"></i> Bahan Latihan Kasus Dunia Nyata (Simulasi 4 Pondasi CT)
+                    </h4>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Kasus 1: Gembok Kombinasi -->
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                            <span class="text-[10px] uppercase font-bold text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800">Kasus 1</span>
+                            <h5 class="font-bold text-white text-sm">🔒 Pemecahan Kunci Gembok Kombinasi</h5>
+                            <p class="text-xs text-slate-400">Petunjuk Logika Kode 3-Digit:</p>
+                            <ul class="text-[11px] text-slate-300 space-y-1 list-disc list-inside bg-slate-950 p-2.5 rounded border border-slate-800">
+                                <li><strong>(682):</strong> Satu angka benar & posisinya tepat</li>
+                                <li><strong>(614):</strong> Satu angka benar tapi posisinya salah</li>
+                                <li><strong>(206):</strong> Dua angka benar tapi posisinya salah semua</li>
+                                <li><strong>(738):</strong> Tidak ada angka yang benar</li>
+                            </ul>
+                            <div class="pt-2 flex items-center justify-between">
+                                <button onclick="toggleCaseDetails('case1-details')" class="text-xs text-cyan-400 hover:underline font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-magnifying-glass-plus"></i> Lihat Analisis Solusi CT
+                                </button>
+                                <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/60 px-2 py-1 rounded border border-emerald-800">Kunci: 042</span>
+                            </div>
+                            <div id="case1-details" class="hidden text-xs text-slate-300 bg-slate-950 p-3 rounded-lg border border-slate-800 mt-2 space-y-1.5">
+                                <p>🧩 <strong>Dekomposisi:</strong> Membagi menjadi 3 posisi digit: [D1] [D2] [D3].</p>
+                                <p>🔍 <strong>Pola & Abstraksi:</strong> Petunjuk D mengeliminasi (7,3,8). Petunjuk A & B membuktikan 6 salah. Petunjuk A menyisakan 2 di Digit 3 [ _ ] [ _ ] [ 2 ].</p>
+                                <p>📐 <strong>Algoritma:</strong> Dari (206), angka 0 benar di Digit 1 [ 0 ] [ _ ] [ 2 ]. Dari (614), 4 benar di Digit 2. Solusi akhir = <strong>042</strong>.</p>
+                            </div>
+                        </div>
+
+                        <!-- Kasus 2: Robot Navigasi Grid -->
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                            <span class="text-[10px] uppercase font-bold text-indigo-400 bg-indigo-950 px-2 py-0.5 rounded border border-indigo-800">Kasus 2</span>
+                            <h5 class="font-bold text-white text-sm">🤖 Perencanaan Navigasi Robot Petak Grid (4x4)</h5>
+                            <p class="text-xs text-slate-400">Robot bergerak dari Start (0,0) ke Finish (3,3) menghindari Tembok di (1,1) & (2,2).</p>
+                            <div class="bg-slate-950 p-2.5 rounded border border-slate-800 font-mono text-[11px] text-indigo-300">
+                                📍 Path: (0,0) ➔ Maju 2x ➔ (2,0) ➔ Belok Kiri ➔ Maju (2,1) ➔ Belok Kanan ➔ Maju (3,1) ➔ Belok Kiri ➔ Maju 2x ➔ Finish (3,3).
+                            </div>
+                            <div class="pt-2 flex items-center justify-between">
+                                <button onclick="toggleCaseDetails('case2-details')" class="text-xs text-indigo-400 hover:underline font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-route"></i> Detail Algoritma Grid
+                                </button>
+                            </div>
+                            <div id="case2-details" class="hidden text-xs text-slate-300 bg-slate-950 p-3 rounded-lg border border-slate-800 mt-2 space-y-1">
+                                <p>🎯 <strong>Abstraksi:</strong> Abaikan warna lantai/mesin, hanya fokus koordinat X,Y.</p>
+                                <p>📐 <strong>Langkah Algoritma:</strong> 1. Start(0,0) -> 2. Maju (2,0) -> 3. Kiri ke (2,1) -> 4. Kanan ke (3,1) -> 5. Kiri ke (3,3).</p>
+                            </div>
+                        </div>
+
+                        <!-- Kasus 3: Outfit Matching -->
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                            <span class="text-[10px] uppercase font-bold text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">Kasus 3</span>
+                            <h5 class="font-bold text-white text-sm">👔 Memilih Pakaian Berpasangan (Outfit Matching)</h5>
+                            <p class="text-xs text-slate-400">3 Kemeja (Putih, Biru, Merah) & 2 Celana (Hitam, Cokelat).</p>
+                            <div class="bg-slate-950 p-2.5 rounded border border-slate-800 text-[11px] text-emerald-300">
+                                📊 Pola Kombinasi = Jumlah Kemeja × Jumlah Celana = 3 × 2 = <strong>6 Pasangan Berbeda</strong>.
+                            </div>
+                            <div class="pt-2 flex items-center justify-between">
+                                <button onclick="toggleCaseDetails('case3-details')" class="text-xs text-emerald-400 hover:underline font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-[#shirt]"></i> Lihat 6 Pasangan
+                                </button>
+                            </div>
+                            <div id="case3-details" class="hidden text-xs text-slate-300 bg-slate-950 p-3 rounded-lg border border-slate-800 mt-2 space-y-1">
+                                <p>1. Putih - Hitam | 2. Putih - Cokelat</p>
+                                <p>3. Biru - Hitam | 4. Biru - Cokelat</p>
+                                <p>5. Merah - Hitam | 6. Merah - Cokelat</p>
+                            </div>
+                        </div>
+
+                        <!-- Kasus 4: Deret Angka -->
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                            <span class="text-[10px] uppercase font-bold text-amber-400 bg-amber-950 px-2 py-0.5 rounded border border-amber-800">Kasus 4</span>
+                            <h5 class="font-bold text-white text-sm">🔢 Analisis Pola Deret Angka</h5>
+                            <p class="text-xs text-slate-400">Barisan: 2, 5, 10, 17, 26, <strong>? (Suku 6)</strong>, <strong>? (Suku 7)</strong></p>
+                            <div class="bg-slate-950 p-2.5 rounded border border-slate-800 font-mono text-[11px] text-amber-300">
+                                Selisih: +3, +5, +7, +9 ➔ Selisih berikutnya (+11, +13). Rumus $n^2+1$.
+                            </div>
+                            <div class="pt-2 flex items-center justify-between">
+                                <button onclick="toggleCaseDetails('case4-details')" class="text-xs text-amber-400 hover:underline font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-calculator"></i> Jawaban Suku 6 & 7
+                                </button>
+                                <span class="text-xs font-mono font-bold text-amber-400 bg-amber-950/60 px-2 py-1 rounded border border-amber-800">Hasil: 37 & 50</span>
+                            </div>
+                            <div id="case4-details" class="hidden text-xs text-slate-300 bg-slate-950 p-3 rounded-lg border border-slate-800 mt-2 space-y-1">
+                                <p>Suku ke-6 = 26 + 11 = <strong>37</strong> (atau $6^2 + 1 = 37$).</p>
+                                <p>Suku ke-7 = 37 + 13 = <strong>50</strong> (atau $7^2 + 1 = 50$).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BAB 2 -->
+            <div id="materi-bab2" class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+                <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-indigo-400 flex items-center gap-2">
+                        <i class="fa-solid fa-cubes"></i> Bab 2: Memahami Pengertian Struktur Data
+                    </h3>
+                    <span class="text-xs bg-indigo-950 text-indigo-300 border border-indigo-800 px-2.5 py-1 rounded-md">Manajemen Memori RAM</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="md:col-span-2 space-y-3">
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                            <strong>Struktur Data</strong> adalah metode atau cara khusus untuk mengatur, mengorganisasi, menyimpan, dan mengelompokkan data di dalam memori komputer (RAM) sehingga data dapat diakses, dimanipulasi, dan diproses secara efisien oleh algoritma.
+                        </p>
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+                            <h4 class="font-bold text-white text-sm mb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-book-bookmark text-indigo-400"></i> Analogi Perpustakaan Sekolah
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Jika ribuan buku dicampurkan begitu saja dalam satu tumpukan raksasa di lantai (tanpa struktur data), Anda membutuhkan waktu berjam-jam untuk mencari satu buku sejarah. Namun, jika buku disusun pada rak bertingkat bernomor (Kategori Sejarah, Rak A, Indeks 2), buku dapat ditemukan dalam hitungan detik. Rak berstruktur itulah gambaran dari <strong>Struktur Data</strong>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
+                        <h4 class="font-bold text-white text-sm mb-2">Klasifikasi Utama</h4>
+                        <div class="space-y-3 text-xs">
+                            <div class="p-2.5 rounded-lg bg-indigo-950/60 border border-indigo-800 text-indigo-200">
+                                <strong>1. Struktur Data Linear:</strong>
+                                <p class="text-[11px] text-slate-400 mt-1">Data tersusun secara berurutan satu demi satu dalam satu baris memori. (Array, Stack, Queue, Linked List).</p>
+                            </div>
+                            <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-300">
+                                <strong>2. Struktur Data Non-Linear:</strong>
+                                <p class="text-[11px] text-slate-400 mt-1">Data terhubung secara hierarki atau jaringan/grafik. (Tree/Pohon, Graph).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BAB 3 -->
+            <div id="materi-bab3" class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+                <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-emerald-400 flex items-center gap-2">
+                        <i class="fa-solid fa-bars-staggered"></i> Bab 3: Jenis-Jenis Struktur Data Linear
+                    </h3>
+                    <span class="text-xs bg-emerald-950 text-emerald-300 border border-emerald-800 px-2.5 py-1 rounded-md">Array, Stack & Queue</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Array Card -->
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded">Indexed Access</span>
+                            <h4 class="font-bold text-white text-base mt-2 mb-1">3.1 Array (Larik)</h4>
+                            <p class="text-xs text-slate-400 mb-3">Kumpulan elemen data bertipe sama yang disimpan berurutan pada lokasi memori berdampingan. Akses langsung menggunakan <strong>Indeks (mulai 0)</strong>.</p>
+                            <div class="bg-slate-950 p-2.5 rounded border border-slate-800 text-[11px] text-cyan-300 italic mb-3">
+                                👞 <strong>Analogi:</strong> Deretan loker sepatu bernomor urut di sekolah (Loker 0, Loker 1, Loker 2, dst).
+                            </div>
+                        </div>
+                        <div class="bg-slate-950 p-2 rounded border border-slate-800 text-center font-mono text-xs text-slate-300">
+                            Index: [0] [1] [2] [3] [4]<br>
+                            Nilai: [75, 88, 92, 60, 85]
+                        </div>
+                    </div>
+
+                    <!-- Stack Card -->
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase text-indigo-400 bg-indigo-950 px-2 py-0.5 rounded">LIFO (Last-In First-Out)</span>
+                            <h4 class="font-bold text-white text-base mt-2 mb-1">3.2 Stack (Tumpukan)</h4>
+                            <p class="text-xs text-slate-400 mb-3">Elemen yang <strong>terakhir masuk</strong> (Push) akan menjadi elemen <strong>pertama yang keluar</strong> (Pop).</p>
+                            <div class="bg-slate-950 p-2.5 rounded border border-slate-800 text-[11px] text-indigo-300 italic mb-3">
+                                📚 <strong>Analogi:</strong> Tumpukan piring di kantin atau fitur "Undo" pada editor teks.
+                            </div>
+                        </div>
+                        <div class="bg-slate-950 p-2 rounded border border-slate-800 text-xs text-slate-300 space-y-1 font-mono">
+                            <p class="text-indigo-400">Push(10) ➔ Push(25) ➔ Push(40)</p>
+                            <p class="text-rose-400">Pop() ➔ Angka 40 keluar pertama!</p>
+                        </div>
+                    </div>
+
+                    <!-- Queue Card -->
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded">FIFO (First-In First-Out)</span>
+                            <h4 class="font-bold text-white text-base mt-2 mb-1">3.3 Queue (Antrean)</h4>
+                            <p class="text-xs text-slate-400 mb-3">Elemen yang <strong>pertama masuk</strong> (Enqueue) akan menjadi elemen <strong>pertama yang keluar</strong> (Dequeue).</p>
+                            <div class="bg-slate-950 p-2.5 rounded border border-slate-800 text-[11px] text-emerald-300 italic mb-3">
+                                🎟️ <strong>Analogi:</strong> Antrean pembelian tiket bioskop atau antrean pencetakan dokumen di printer.
+                            </div>
+                        </div>
+                        <div class="bg-slate-950 p-2 rounded border border-slate-800 text-xs text-slate-300 space-y-1 font-mono">
+                            <p class="text-emerald-400">Enqueue("Andi") ➔ Enqueue("Budi")</p>
+                            <p class="text-amber-400">Dequeue() ➔ "Andi" keluar pertama!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BAB 4 -->
+            <div id="materi-bab4" class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+                <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-sky-400 flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass"></i> Bab 4: Algoritma Pencarian (Search Algorithm)
+                    </h3>
+                    <span class="text-xs bg-sky-950 text-sky-300 border border-sky-800 px-2.5 py-1 rounded-md">Linear vs Binary Search</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-white text-base">4.1 Linear Search (Pencarian Berurutan)</h4>
+                            <span class="text-xs font-mono bg-cyan-950 text-cyan-400 px-2 py-0.5 rounded border border-cyan-800">Kompleksitas: O(n)</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Memeriksa setiap elemen data satu per satu secara berurutan dari indeks 0 hingga akhir. Sangat fleksibel untuk data acak (belum terurut).</p>
+                        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-slate-300">
+                            Target: 15 pada Array [8, 3, 25, 15, 42]<br>
+                            ➔ Cek [0]: 8 (Salah)<br>
+                            ➔ Cek [1]: 3 (Salah)<br>
+                            ➔ Cek [2]: 25 (Salah)<br>
+                            ➔ Cek [3]: 15 (BENAR! Ditemukan di langkah 4).
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-white text-base">4.2 Binary Search (Pencarian Biner)</h4>
+                            <span class="text-xs font-mono bg-indigo-950 text-indigo-400 px-2 py-0.5 rounded border border-indigo-800">Kompleksitas: O(log n)</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Mengambil titik tengah (MID) dan membelah dua wilayah pencarian. <strong>Syarat Mutlak:</strong> Data HARUS sudah terurut secara ascending!</p>
+                        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-slate-300">
+                            Target: 42 pada Array Terurut [5, 12, 18, 24, 31, 42, 55, 68, 70]<br>
+                            ➔ Mid: 31 (42 > 31 ➔ Buang setengah kiri)<br>
+                            ➔ Mid: 55 (42 < 55 ➔ Buang setengah kanan)<br>
+                            ➔ Mid: 42 (BENAR! Ditemukan dalam 3 langkah super cepat).
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BAB 5 -->
+            <div id="materi-bab5" class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+                <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-amber-400 flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-down-short-wide"></i> Bab 5: Algoritma Pengurutan (5 Sort Algorithms)
+                    </h3>
+                    <span class="text-xs bg-amber-950 text-amber-300 border border-amber-800 px-2.5 py-1 rounded-md">Ascending & Descending</span>
+                </div>
+
+                <p class="text-xs sm:text-sm text-slate-300">
+                    Berikut adalah prinsip 5 algoritma pengurutan utama untuk menyusun data acak <code class="bg-slate-950 px-2 py-0.5 rounded text-amber-300 font-mono">[5, 2, 8, 1, 3]</code> menjadi terurut naik (Ascending):
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <h4 class="font-bold text-amber-400 text-sm">5.1 Insertion Sort (Sisipan)</h4>
+                        <p class="text-xs text-slate-400">Menyisipkan elemen satu per satu ke posisi yang sesuai pada bagian array yang sudah terurut.</p>
+                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-300">
+                            [5 | 2, 8, 1, 3] ➔ Sisip 2 ➔ [2, 5 | 8, 1, 3] ➔ Sisip 1 ➔ [1, 2, 5, 8 | 3] ➔ [1, 2, 3, 5, 8]
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <h4 class="font-bold text-amber-400 text-sm">5.2 Selection Sort (Pilihan)</h4>
+                        <p class="text-xs text-slate-400">Mencari nilai terkecil pada bagian belum terurut, lalu menukarnya (Swap) ke posisi paling depan.</p>
+                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-300">
+                            Min=1 (Tukar 1 & 5) ➔ [1, 2, 8, 5, 3] ➔ Min=3 (Tukar 3 & 8) ➔ [1, 2, 3, 5, 8]
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <h4 class="font-bold text-amber-400 text-sm">5.3 Bubble Sort (Gelembung)</h4>
+                        <p class="text-xs text-slate-400">Membandingkan 2 angka berdampingan dan menukarnya jika urutannya salah, hingga angka terbesar mengapung ke kanan.</p>
+                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-300">
+                            Pass 1: Tukar (5,2) & (8,1) & (8,3) ➔ [2, 5, 1, 3, 8]<br>
+                            Pass 2 & 3 ➔ Hasil: [1, 2, 3, 5, 8]
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <h4 class="font-bold text-purple-400 text-sm">5.4 Quick Sort (Cepat)</h4>
+                        <p class="text-xs text-slate-400">Memilih elemen <strong>Pivot</strong>, membagi array menjadi dua kelompok (&lt; Pivot dan &gt; Pivot), lalu mengurutkan secara rekursif.</p>
+                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-300">
+                            Pivot=3 ➔ Kiri[2,1] + Pivot[3] + Kanan[5,8] ➔ Gabung ➔ [1, 2, 3, 5, 8]
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2 md:col-span-2 lg:col-span-2">
+                        <h4 class="font-bold text-pink-400 text-sm">5.5 Merge Sort (Pengurutan Gabung)</h4>
+                        <p class="text-xs text-slate-400">Prinsip <em>Divide and Conquer</em>: Membelah array menjadi sub-array tunggal, lalu menggabungkan kembali (Merge) secara terurut.</p>
+                        <div class="bg-slate-950 p-2 rounded text-[11px] font-mono text-slate-300">
+                            Divide: [5,2,8,1,3] ➔ [5,2] [8] [1,3] ➔ [5] [2] [8] [1] [3]<br>
+                            Merge: [2,5] + [8] ➔ [2,5,8] & [1,3] ➔ Final Merge ➔ [1, 2, 3, 5, 8]
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BAB 6 -->
+            <div id="materi-bab6" class="glass-card p-6 rounded-2xl border border-slate-800 space-y-4">
+                <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+                    <h3 class="text-xl font-bold text-emerald-400 flex items-center gap-2">
+                        <i class="fa-solid fa-table-list"></i> Bab 6: Ringkasan Perbandingan Algoritma
+                    </h3>
+                    <span class="text-xs bg-emerald-950 text-emerald-300 border border-emerald-800 px-2.5 py-1 rounded-md">Matriks Performa</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300 border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900 text-cyan-400 border-b border-slate-800">
+                                <th class="p-3 font-bold">Algoritma</th>
+                                <th class="p-3 font-bold">Prinsip Utama</th>
+                                <th class="p-3 font-bold">Kelebihan</th>
+                                <th class="p-3 font-bold">Kekurangan</th>
+                                <th class="p-3 font-bold">Kasus Terbaik</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/60 bg-slate-950/40">
+                            <tr class="hover:bg-slate-900/60 transition-colors">
+                                <td class="p-3 font-bold text-cyan-300">Linear Search</td>
+                                <td class="p-3">Cek elemen satu per satu dari awal.</td>
+                                <td class="p-3 text-emerald-400">Sederhana, cocok data acak.</td>
+                                <td class="p-3 text-rose-400">Lambat pada data besar O(n).</td>
+                                <td class="p-3">Pencarian data sedikit / tak terurut.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-900/60 transition-colors">
+                                <td class="p-3 font-bold text-indigo-300">Binary Search</td>
+                                <td class="p-3">Bagi dua area pencarian (MID).</td>
+                                <td class="p-3 text-emerald-400">Sangat cepat O(log n).</td>
+                                <td class="p-3 text-rose-400">Wajib data terurut.</td>
+                                <td class="p-3">Pencarian database / kamus besar.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-900/60 transition-colors">
+                                <td class="p-3 font-bold text-amber-300">Insertion Sort</td>
+                                <td class="p-3">Sisip elemen ke posisi tepat.</td>
+                                <td class="p-3 text-emerald-400">Efisien untuk data hampir rapi.</td>
+                                <td class="p-3 text-rose-400">Lambat jika acak total O(n²).</td>
+                                <td class="p-3">Data ukuran kecil & kontinu.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-900/60 transition-colors">
+                                <td class="p-3 font-bold text-amber-300">Selection Sort</td>
+                                <td class="p-3">Cari minimum, tukar ke depan.</td>
+                                <td class="p-3 text-emerald-400">Jumlah swap sedikit.</td>
+                                <td class="p-3 text-rose-400">Selalu cek seluruh sisa.</td>
+                                <td class="p-3">Memori yang membatasi operasi swap.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-900/60 transition-colors">
+                                <td class="p-3 font-bold text-amber-300">Bubble Sort</td>
+                                <td class="p-3">Tukar pasangan berdampingan.</td>
+                                <td class="p-3 text-emerald-400">Paling mudah dipahami.</td>
+                                <td class="p-3 text-rose-400">Performa paling lambat.</td>
+                                <td class="p-3">Edukasi dasar konsep sorting pemula.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-900/60 transition-colors">
+                                <td class="p-3 font-bold text-purple-300">Quick Sort</td>
+                                <td class="p-3">Partisi berdasarkan elemen Pivot.</td>
+                                <td class="p-3 text-emerald-400">Sangat cepat di praktik nyata.</td>
+                                <td class="p-3 text-rose-400">Sensitif pemilihan pivot.</td>
+                                <td class="p-3">Pemrosesan umum data skala besar.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-900/60 transition-colors">
+                                <td class="p-3 font-bold text-pink-300">Merge Sort</td>
+                                <td class="p-3">Belah hingga tunggal, gabung terurut.</td>
+                                <td class="p-3 text-emerald-400">Performa konsisten stabil O(n log n).</td>
+                                <td class="p-3 text-rose-400">Butuh memori ekstra.</td>
+                                <td class="p-3">Pengurutan data raksasa / linked list.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-ct" class="tab-content space-y-6 hidden">
             <div class="glass-card p-6 rounded-2xl border border-slate-800">
                 <div class="flex items-center gap-3 mb-2">
                     <span class="p-2 rounded-lg bg-cyan-500/20 text-cyan-400 font-bold text-lg"><i class="fa-solid fa-lightbulb"></i></span>
@@ -259,16 +695,13 @@
             </div>
         </section>
 
-        <!-- ================= TAB 2: STRUKTUR DATA LINEAR ================= -->
         <section id="tab-data" class="tab-content space-y-6 hidden">
             <div class="glass-card p-6 rounded-2xl border border-slate-800">
                 <h2 class="text-xl font-bold text-white mb-2"><i class="fa-solid fa-cubes text-cyan-400 mr-2"></i>Struktur Data Linear</h2>
                 <p class="text-sm text-slate-300">Struktur data linear menyimpan elemen secara berurutan. Pelajari perbandingan sifat <strong>Array</strong>, <strong>Stack (LIFO)</strong>, dan <strong>Queue (FIFO)</strong> secara visual.</p>
             </div>
 
-            <!-- Data Structure Selector Tabs -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                
                 <!-- ARRAY MODULE -->
                 <div class="glass-card p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
                     <div>
@@ -278,9 +711,8 @@
                         </div>
                         <p class="text-xs text-slate-400 mb-4">Setiap elemen disimpan pada nomor indeks tetap mulai dari `0` hingga `n-1`.</p>
 
-                        <!-- Array Container -->
                         <div id="array-visual-container" class="grid grid-cols-5 gap-1 bg-slate-900 p-3 rounded-xl border border-slate-800 mb-4">
-                            <!-- Array elements will be generated dynamically -->
+                            <!-- Dynamically Generated -->
                         </div>
                     </div>
 
@@ -302,7 +734,6 @@
                         </div>
                         <p class="text-xs text-slate-400 mb-4">Elemen terakhir yang dimasukkan (Push) akan menjadi elemen pertama yang dikeluarkan (Pop).</p>
 
-                        <!-- Stack Cylinder Visual -->
                         <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 min-h-[140px] flex flex-col-reverse justify-start gap-1 mb-4" id="stack-visual-container">
                             <span id="stack-empty-msg" class="text-xs text-slate-500 italic text-center my-auto">Stack Kosong</span>
                         </div>
@@ -328,7 +759,6 @@
                         </div>
                         <p class="text-xs text-slate-400 mb-4">Elemen pertama yang masuk (Enqueue) akan menjadi elemen pertama yang keluar (Dequeue).</p>
 
-                        <!-- Queue Container Visual -->
                         <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 min-h-[140px] flex items-center gap-1.5 overflow-x-auto mb-4" id="queue-visual-container">
                             <span id="queue-empty-msg" class="text-xs text-slate-500 italic text-center w-full">Antrean Kosong</span>
                         </div>
@@ -344,11 +774,9 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
 
-        <!-- ================= TAB 3: ALGORITMA PENCARIAN (SEARCHING) ================= -->
         <section id="tab-search" class="tab-content space-y-6 hidden">
             <div class="glass-card p-6 rounded-2xl border border-slate-800">
                 <h2 class="text-xl font-bold text-white mb-2"><i class="fa-solid fa-magnifying-glass text-cyan-400 mr-2"></i>Algoritma Pencarian (Searching)</h2>
@@ -356,15 +784,13 @@
             </div>
 
             <div class="glass-card p-6 rounded-2xl border border-slate-800">
-                <!-- Search Array Display -->
                 <div class="mb-6">
                     <label class="block text-xs font-semibold text-slate-400 mb-2">Array Terurut (10 Elemen):</label>
                     <div id="search-array-container" class="flex flex-wrap gap-2 justify-center bg-slate-900/90 p-4 rounded-xl border border-slate-800">
-                        <!-- Search array items -->
+                        <!-- Generated by JS -->
                     </div>
                 </div>
 
-                <!-- Controls -->
                 <div class="flex flex-col sm:flex-row gap-4 mb-6">
                     <div class="flex-1">
                         <label class="block text-xs font-semibold text-slate-400 mb-1">Angka Target yang Dicari:</label>
@@ -380,7 +806,6 @@
                     </div>
                 </div>
 
-                <!-- Result & Stats Comparison -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
                         <h4 class="text-sm font-bold text-cyan-400 mb-2">Status Linear Search O(n)</h4>
@@ -400,7 +825,6 @@
             </div>
         </section>
 
-        <!-- ================= TAB 4: ALGORITMA PENGURUTAN (5 SORTING ALGORITHMS) ================= -->
         <section id="tab-sort" class="tab-content space-y-6 hidden">
             <div class="glass-card p-6 rounded-2xl border border-slate-800">
                 <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -409,7 +833,6 @@
                         <p class="text-xs text-slate-300">Amati dan pelajari secara visual perbedaan cara kerja <strong>Bubble, Selection, Insertion, Quick, dan Merge Sort</strong>.</p>
                     </div>
 
-                    <!-- Legend Colors -->
                     <div class="flex flex-wrap gap-3 text-[11px] bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
                         <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-cyan-500"></span> Default</span>
                         <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-amber-400"></span> Bandingkan</span>
@@ -421,7 +844,6 @@
             </div>
 
             <div class="glass-card p-6 rounded-2xl border border-slate-800">
-                <!-- Sorting Control Panel -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 mb-1">Pilih Algoritma Sorting:</label>
@@ -436,103 +858,73 @@
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 mb-1">Kecepatan Animasi (ms):</label>
-                        <input type="range" id="sort-speed-slider" min="50" max="1200" value="400" step="50" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-400 my-2">
+                        <input type="range" id="sort-speed-slider" min="50" max="1000" value="300" step="50" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-400 my-2">
                     </div>
 
                     <div class="flex items-end gap-2">
                         <button onclick="resetSortArray()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 rounded-lg font-bold text-xs transition-all">
-                            🎲 Acak Data
+                            🔄 Acak Array
                         </button>
-                        <button onclick="startSortAnimation()" id="start-sort-btn" class="flex-1 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg font-bold text-xs transition-all shadow-lg shadow-cyan-500/20">
-                            ▶ Mulai Sorting
+                        <button id="start-sort-btn" onclick="startSorting()" class="flex-1 py-2 bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white rounded-lg font-bold text-xs shadow-lg shadow-cyan-500/20 transition-all">
+                            ▶️ Jalankan Visualisator
                         </button>
                     </div>
                 </div>
 
-                <!-- Description Box -->
-                <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800 mb-6 text-xs text-cyan-200 leading-relaxed" id="sort-algo-desc">
-                    Membandingkan dua elemen berdampingan. Jika elemen kiri lebih besar dari elemen kanan, tukar posisinya.
-                </div>
+                <p id="sort-desc-text" class="text-xs text-cyan-300 bg-slate-900/90 p-3 rounded-lg border border-slate-800 mb-4 font-mono"></p>
 
-                <!-- Sorting Visualizer Bars Display -->
-                <div class="bg-slate-950 p-6 rounded-2xl border border-slate-800 flex items-end justify-center gap-2 sm:gap-3 h-64 overflow-x-auto" id="bars-visual-container">
-                    <!-- Dynamic Bars Here -->
-                </div>
-
-                <!-- Log step readout -->
-                <div class="mt-4 p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs text-slate-300 font-mono flex justify-between items-center">
-                    <span>Langkah Aktif: <span id="sort-step-text" class="text-cyan-400 font-semibold">Ready</span></span>
-                    <span id="sort-comp-count" class="text-slate-400">Komparasi: 0</span>
+                <!-- Sorting Visualizer Bars Container -->
+                <div id="sorting-bars-container" class="h-64 bg-slate-950 p-4 rounded-xl border border-slate-800 flex items-end justify-between gap-1 sm:gap-2">
+                    <!-- Dynamic Bars -->
                 </div>
             </div>
         </section>
 
-        <!-- ================= TAB 5: CT BOSS QUEST (QUIZ GAME) ================= -->
         <section id="tab-quiz" class="tab-content space-y-6 hidden">
-            <div class="glass-card p-6 rounded-2xl border border-slate-800 text-center">
-                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-rose-600 flex items-center justify-center shadow-lg shadow-amber-500/30 text-white font-black text-2xl mx-auto mb-3">
-                    👾
+            <div class="glass-card p-6 rounded-2xl border border-slate-800">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold text-white mb-1"><i class="fa-solid fa-gamepad text-amber-400 mr-2"></i>CT Boss Quest - Uji Logika & Materi</h2>
+                        <p class="text-xs text-slate-300">Jawab kuis dari materi Bab 1 - 6 dan dapatkan XP untuk menaikkan Level Berpikir Komputasional Anda!</p>
+                    </div>
+                    <span id="quiz-progress" class="text-xs font-bold text-cyan-400 bg-cyan-950 px-3 py-1 rounded-full border border-cyan-800">Soal 1/5</span>
                 </div>
-                <h2 class="text-2xl font-bold text-white mb-1">CT Boss Challenge</h2>
-                <p class="text-xs text-slate-300 max-w-xl mx-auto">Uji pemahaman komprehensifmu tentang 4 Pondasi CT, Array, Stack, Queue, Searching, dan 5 Algoritma Sorting untuk mengalahkan Boss!</p>
             </div>
 
-            <!-- Quiz Card -->
-            <div class="glass-card p-6 rounded-2xl border border-slate-800 max-w-2xl mx-auto" id="quiz-card-container">
-                <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
-                    <span class="text-xs font-bold text-cyan-400 uppercase tracking-wider">Soal <span id="quiz-num">1</span> dari 5</span>
-                    <span class="text-xs font-bold text-amber-400"><i class="fa-solid fa-star mr-1"></i> Reward +100 XP</span>
+            <div class="glass-card p-6 rounded-2xl border border-slate-800 max-w-3xl mx-auto">
+                <div id="quiz-box" class="space-y-4">
+                    <!-- Dynamic Quiz Content -->
                 </div>
-
-                <h3 id="quiz-question" class="text-base font-bold text-white mb-6">... Loading Question ...</h3>
-
-                <!-- Options -->
-                <div id="quiz-options-container" class="space-y-3 mb-6">
-                    <!-- Dynamic Quiz Options -->
-                </div>
-
-                <button onclick="nextQuizQuestion()" id="quiz-next-btn" class="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl text-xs transition-all shadow-lg shadow-cyan-500/20 hidden">
-                    Pertanyaan Selanjutnya ➔
-                </button>
             </div>
         </section>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="glass-nav border-t border-slate-800 py-4 text-center text-xs text-slate-500">
-        <p>CT Quest &copy; 2026 - Media Pembelajaran Berpikir Komputasional & Struktur Data Linear</p>
+    <footer class="border-t border-slate-800 bg-slate-950 py-4 px-4 text-center text-xs text-slate-500">
+        <p>© 2026 ⚡ CT Quest - Game Edukasi Berpikir Komputasional &amp; Struktur Data Interaktif.</p>
     </footer>
 
-    <!-- JavaScript Logic -->
     <script>
-        // Player state
-        let score = 0;
-        let level = 1;
-
-        // Audio Synth state
+        let playerScore = 0;
+        let playerLevel = 1;
+        let isAudioOn = false;
         let audioCtx = null;
-        let bgmOscillator = null;
-        let isBgmPlaying = false;
-        let bgmInterval = null;
 
         function initAudio() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
         }
 
         function playSound(freq, duration, type = 'sine') {
+            if (!isAudioOn) return;
             try {
                 initAudio();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
                 osc.type = type;
                 osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
@@ -541,688 +933,611 @@
             } catch(e) {}
         }
 
-        function playSwapSound() { playSound(380, 0.08, 'triangle'); }
-        function playCompareSound() { playSound(620, 0.05, 'sine'); }
-        function playSuccessSound() {
-            playSound(523.25, 0.1, 'sine');
-            setTimeout(() => playSound(659.25, 0.1, 'sine'), 80);
-            setTimeout(() => playSound(783.99, 0.2, 'sine'), 160);
-        }
-
-        function toggleBGM() {
-            initAudio();
+        function toggleAudio() {
+            isAudioOn = !isAudioOn;
             const btn = document.getElementById('bgm-toggle-btn');
-            if (isBgmPlaying) {
-                clearInterval(bgmInterval);
-                isBgmPlaying = false;
-                if (btn) btn.innerHTML = '🎵 BGM: OFF';
+            if (isAudioOn) {
+                initAudio();
+                btn.innerText = '🎵 BGM: ON';
+                btn.classList.add('bg-cyan-600', 'text-white');
+                playSound(523.25, 0.2);
             } else {
-                isBgmPlaying = true;
-                if (btn) btn.innerHTML = '🎶 BGM: ON';
-                const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88];
-                let noteIdx = 0;
-                bgmInterval = setInterval(() => {
-                    if (!isBgmPlaying) return;
-                    const freq = notes[noteIdx % notes.length];
-                    playSound(freq * 0.5, 0.2, 'sine');
-                    noteIdx = (noteIdx + Math.floor(Math.random() * 3) + 1) % notes.length;
-                }, 450);
+                btn.innerText = '🎵 BGM: OFF';
+                btn.classList.remove('bg-cyan-600', 'text-white');
             }
         }
 
-        function addScore(pts) {
-            score += pts;
-            document.getElementById('player-score').textContent = score;
-            level = Math.floor(score / 200) + 1;
-            document.getElementById('player-level').textContent = level;
+        function addXP(points) {
+            playerScore += points;
+            document.getElementById('player-score').innerText = playerScore;
+            let newLevel = Math.floor(playerScore / 100) + 1;
+            if (newLevel > playerLevel) {
+                playerLevel = newLevel;
+                document.getElementById('player-level').innerText = playerLevel;
+                triggerConfetti();
+                playSound(880, 0.4);
+            } else {
+                playSound(587.33, 0.15);
+            }
         }
 
-        // Tab Switching Logic
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(tabId).classList.remove('hidden');
-
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.className = 'tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800';
+                btn.classList.remove('bg-gradient-to-r', 'from-cyan-500', 'to-blue-600', 'text-white', 'shadow-lg', 'shadow-cyan-500/20');
+                btn.classList.add('text-slate-400');
             });
+
+            const activeTab = document.getElementById(tabId);
+            if (activeTab) activeTab.classList.remove('hidden');
 
             const activeBtn = document.getElementById('btn-' + tabId);
             if (activeBtn) {
-                activeBtn.className = 'tab-btn px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20';
+                activeBtn.classList.remove('text-slate-400');
+                activeBtn.classList.add('bg-gradient-to-r', 'from-cyan-500', 'to-blue-600', 'text-white', 'shadow-lg', 'shadow-cyan-500/20');
+            }
+            playSound(440, 0.08);
+        }
+
+        function jumpToChapter(chapterId) {
+            const element = document.getElementById(chapterId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
             }
         }
 
-        // CT 1: Decomposition
+        function toggleCaseDetails(detailsId) {
+            const el = document.getElementById(detailsId);
+            if (el) {
+                el.classList.toggle('hidden');
+                playSound(350, 0.1);
+            }
+        }
+
         function checkDecomposition() {
             const checkboxes = document.querySelectorAll('.decomp-chk');
-            let isCorrect = true;
+            let correct = true;
             checkboxes.forEach(chk => {
-                const correct = chk.getAttribute('data-correct') === 'true';
-                if (chk.checked !== correct) isCorrect = false;
+                const isCorrect = chk.getAttribute('data-correct') === 'true';
+                if (chk.checked !== isCorrect) correct = false;
             });
 
             const fb = document.getElementById('decomp-feedback');
-            fb.classList.remove('hidden');
-            if (isCorrect) {
-                fb.className = 'text-xs font-semibold mt-2 text-emerald-400';
-                fb.textContent = '🎉 Hebat! Kamu memecah tugas kopi secara benar tanpa memasukkan tugas irrelevant.';
-                playSuccessSound();
-                addScore(50);
+            fb.classList.remove('hidden', 'text-emerald-400', 'text-rose-400');
+            if (correct) {
+                fb.innerText = '✅ Tepat Sekali! Anda memisahkan sub-tugas pembuat kopi secara efisien!';
+                fb.classList.add('text-emerald-400');
+                addXP(25);
             } else {
-                fb.className = 'text-xs font-semibold mt-2 text-rose-400';
-                fb.textContent = '❌ Coba periksa kembali! Tugas cuci baju bukan bagian dari pembuatan kopi.';
+                fb.innerText = '❌ Masih kurang tepat. Ingat, memicu mesin cuci baju tidak relevan!';
+                fb.classList.add('text-rose-400');
+                playSound(200, 0.2, 'sawtooth');
             }
         }
 
-        // CT 2: Pattern Recognition
         function checkPattern() {
-            const val = document.getElementById('pattern-input').value;
+            const val = document.getElementById('pattern-input').value.trim();
             const fb = document.getElementById('pattern-feedback');
-            fb.classList.remove('hidden');
-            if (parseInt(val) === 32) {
-                fb.className = 'text-xs font-semibold mt-2 text-emerald-400';
-                fb.textContent = '🎉 Tepat sekali! Polanya adalah perkalian 2 (2, 4, 8, 16, 32).';
-                playSuccessSound();
-                addScore(50);
+            fb.classList.remove('hidden', 'text-emerald-400', 'text-rose-400');
+
+            if (val === '32') {
+                fb.innerText = '✅ Benar! Polanya adalah perkalian 2 (2^n): 2, 4, 8, 16, 32!';
+                fb.classList.add('text-emerald-400');
+                addXP(25);
             } else {
-                fb.className = 'text-xs font-semibold mt-2 text-rose-400';
-                fb.textContent = '❌ Kurang tepat. Perhatikan perkalian dua dari angka sebelumnya!';
+                fb.innerText = '❌ Salah. Perhatikan penggandaan dari 16!';
+                fb.classList.add('text-rose-400');
+                playSound(200, 0.2, 'sawtooth');
             }
         }
 
-        // CT 3: Abstraction
         function checkAbstraction() {
             const checkboxes = document.querySelectorAll('.abs-chk');
-            let isCorrect = true;
+            let correct = true;
             checkboxes.forEach(chk => {
-                const essential = chk.getAttribute('data-essential') === 'true';
-                if (chk.checked !== essential) isCorrect = false;
+                const isEssential = chk.getAttribute('data-essential') === 'true';
+                if (chk.checked !== isEssential) correct = false;
             });
 
             const fb = document.getElementById('abstraction-feedback');
-            fb.classList.remove('hidden');
-            if (isCorrect) {
-                fb.className = 'text-xs font-semibold mt-2 text-emerald-400';
-                fb.textContent = '🎉 Bagus! Kamu berhasil memfilter data yang tidak esensial bagi navigasi GPS.';
-                playSuccessSound();
-                addScore(50);
+            fb.classList.remove('hidden', 'text-emerald-400', 'text-rose-400');
+            if (correct) {
+                fb.innerText = '✅ Hebat! Warna sepatu dan judul lagu diabaikan karena tidak penting!';
+                fb.classList.add('text-emerald-400');
+                addXP(25);
             } else {
-                fb.className = 'text-xs font-semibold mt-2 text-rose-400';
-                fb.textContent = '❌ Belum pas. Abstraksi hanya memilih data GPS & lalu lintas!';
+                fb.innerText = '❌ Coba lagi. Abaikan detail pelengkap yang tidak berpengaruh pada rute!';
+                fb.classList.add('text-rose-400');
+                playSound(200, 0.2, 'sawtooth');
             }
         }
 
-        // CT 4: Algorithm Design
-        let currentAlgoSteps = [];
-        function addAlgoStep(stepName) {
-            currentAlgoSteps.push(stepName);
+        let algoSteps = [];
+        function addAlgoStep(step) {
+            algoSteps.push(step);
             renderAlgoSteps();
+            playSound(600, 0.05);
         }
         function clearAlgoStep() {
-            currentAlgoSteps = [];
+            algoSteps = [];
             renderAlgoSteps();
         }
         function renderAlgoSteps() {
             const container = document.getElementById('algo-sequence');
-            if (currentAlgoSteps.length === 0) {
-                container.innerHTML = `<span class="text-slate-500 italic text-[11px] self-center">Klik tombol instruksi di bawah...</span>`;
+            if (algoSteps.length === 0) {
+                container.innerHTML = `<span class="text-slate-500 italic text-[11px] self-center">Klik tombol instruksi di bawah untuk menyusun...</span>`;
                 return;
             }
-            container.innerHTML = currentAlgoSteps.map((s, idx) => `
-                <span class="px-2 py-1 bg-amber-950 text-amber-300 border border-amber-800 rounded text-[11px] font-mono">
-                    ${idx + 1}. ${s}
-                </span>
-            `).join('');
+            container.innerHTML = algoSteps.map((s, idx) => 
+                `<span class="px-2 py-1 bg-amber-500/20 text-amber-300 rounded border border-amber-500/40">${idx+1}. ${s}</span>`
+            ).join('');
         }
         function checkAlgorithm() {
             const fb = document.getElementById('algo-feedback');
-            fb.classList.remove('hidden');
-            const target = ['Maju 1 Langkah', 'Belok Kanan', 'Ambil Kunci'];
-            const isMatch = currentAlgoSteps.length === 3 && currentAlgoSteps.every((val, i) => val === target[i]);
-
-            if (isMatch) {
-                fb.className = 'text-xs font-semibold mt-2 text-emerald-400';
-                fb.textContent = '🎉 Luar biasa! Robot berhasil mengikuti langkah algoritma logismu!';
-                playSuccessSound();
-                addScore(50);
+            fb.classList.remove('hidden', 'text-emerald-400', 'text-rose-400');
+            const target = ["Maju 1 Langkah", "Belok Kanan", "Ambil Kunci"];
+            
+            if (JSON.stringify(algoSteps) === JSON.stringify(target)) {
+                fb.innerText = '✅ Sukses! Robot berhasil mengambil kunci dan menuju pintu keluar!';
+                fb.classList.add('text-emerald-400');
+                addXP(30);
             } else {
-                fb.className = 'text-xs font-semibold mt-2 text-rose-400';
-                fb.textContent = '❌ Urutan belum pas. Cobalah: Maju 1 Langkah -> Belok Kanan -> Ambil Kunci.';
+                fb.innerText = '❌ Robot tersesat! Urutan yang benar: Maju 1 Langkah ➔ Belok Kanan ➔ Ambil Kunci.';
+                fb.classList.add('text-rose-400');
+                playSound(200, 0.2, 'sawtooth');
             }
         }
 
-        // 1. Array State
-        let arrayData = [12, 45, 67, 89, 34];
+        let arrayData = [12, 45, 78, 23, 89];
+        let stackData = [10, 25];
+        let queueData = ["Andi", "Budi"];
+
         function renderArray() {
-            const container = document.getElementById('array-visual-container');
-            container.innerHTML = arrayData.map((val, idx) => `
-                <div class="bg-slate-800 border border-slate-700 rounded-lg p-2 text-center">
-                    <span class="text-[10px] text-cyan-400 font-mono block">Idx [${idx}]</span>
-                    <span class="text-sm font-bold text-white">${val}</span>
+            const c = document.getElementById('array-visual-container');
+            c.innerHTML = arrayData.map((val, idx) => `
+                <div class="bg-slate-800 p-2 rounded-lg text-center border border-slate-700">
+                    <div class="text-[10px] text-cyan-400 font-mono mb-1">Indeks [${idx}]</div>
+                    <div class="text-sm font-bold text-white font-mono">${val}</div>
                 </div>
             `).join('');
         }
+
         function updateArrayValue() {
             const idx = parseInt(document.getElementById('arr-idx-input').value);
             const val = parseInt(document.getElementById('arr-val-input').value);
-            if (isNaN(idx) || isNaN(val) || idx < 0 || idx >= arrayData.length) {
-                alert('Masukkan indeks valid (0-4) dan nilai angka!');
-                return;
+            if (!isNaN(idx) && idx >= 0 && idx < 5 && !isNaN(val)) {
+                arrayData[idx] = val;
+                renderArray();
+                addXP(10);
             }
-            arrayData[idx] = val;
-            renderArray();
-            playSound(500, 0.1);
         }
 
-        // 2. Stack State
-        let stackData = ['Buku A', 'Buku B'];
         function renderStack() {
-            const container = document.getElementById('stack-visual-container');
+            const c = document.getElementById('stack-visual-container');
+            const msg = document.getElementById('stack-empty-msg');
             if (stackData.length === 0) {
-                container.innerHTML = `<span class="text-xs text-slate-500 italic text-center my-auto">Stack Kosong</span>`;
+                c.innerHTML = '<span id="stack-empty-msg" class="text-xs text-slate-500 italic text-center my-auto">Stack Kosong</span>';
                 return;
             }
-            container.innerHTML = stackData.map((item, idx) => `
-                <div class="bg-indigo-950 border border-indigo-700 rounded-lg p-2 text-center text-xs font-bold text-indigo-200">
-                    ${item} ${idx === stackData.length - 1 ? '(TOP)' : ''}
+            c.innerHTML = stackData.map((item, idx) => `
+                <div class="p-2 bg-indigo-600/30 border border-indigo-500/50 rounded-lg text-center text-xs font-bold text-indigo-300 flex justify-between px-3">
+                    <span>${item}</span>
+                    <span class="text-[10px] text-indigo-400">${idx === stackData.length - 1 ? '← TOP' : ''}</span>
                 </div>
             `).join('');
         }
+
         function pushStack() {
-            const input = document.getElementById('stack-input');
-            if (!input.value.trim()) return;
-            if (stackData.length >= 4) {
-                alert('Stack Penuh (Stack Overflow)! Hapus elemen teratas dulu.');
-                return;
+            const val = document.getElementById('stack-input').value.trim();
+            if (val && stackData.length < 4) {
+                stackData.push(val);
+                document.getElementById('stack-input').value = '';
+                renderStack();
+                addXP(10);
             }
-            stackData.push(input.value.trim());
-            input.value = '';
-            renderStack();
-            playSound(600, 0.1);
-        }
-        function popStack() {
-            if (stackData.length === 0) return;
-            stackData.pop();
-            renderStack();
-            playSound(300, 0.1);
         }
 
-        // 3. Queue State
-        let queueData = ['Orang #1', 'Orang #2'];
+        function popStack() {
+            if (stackData.length > 0) {
+                stackData.pop();
+                renderStack();
+                playSound(300, 0.1, 'square');
+            }
+        }
+
         function renderQueue() {
-            const container = document.getElementById('queue-visual-container');
+            const c = document.getElementById('queue-visual-container');
             if (queueData.length === 0) {
-                container.innerHTML = `<span class="text-xs text-slate-500 italic text-center w-full">Antrean Kosong</span>`;
+                c.innerHTML = '<span id="queue-empty-msg" class="text-xs text-slate-500 italic text-center w-full">Antrean Kosong</span>';
                 return;
             }
-            container.innerHTML = queueData.map((item, idx) => `
-                <div class="bg-emerald-950 border border-emerald-700 rounded-lg p-2 text-center text-xs font-bold text-emerald-200 whitespace-nowrap flex-1">
-                    ${idx === 0 ? ' (FRONT) ' : ''}${item}
+            c.innerHTML = queueData.map((item, idx) => `
+                <div class="px-3 py-2 bg-emerald-600/30 border border-emerald-500/50 rounded-lg text-center text-xs font-bold text-emerald-300 whitespace-nowrap">
+                    <div class="text-[9px] text-emerald-400">${idx === 0 ? 'FRONT' : (idx === queueData.length-1 ? 'REAR' : '')}</div>
+                    ${item}
                 </div>
             `).join('');
         }
+
         function enqueueQueue() {
-            const input = document.getElementById('queue-input');
-            if (!input.value.trim()) return;
-            if (queueData.length >= 4) {
-                alert('Antrean Penuh!');
-                return;
+            const val = document.getElementById('queue-input').value.trim();
+            if (val && queueData.length < 5) {
+                queueData.push(val);
+                document.getElementById('queue-input').value = '';
+                renderQueue();
+                addXP(10);
             }
-            queueData.push(input.value.trim());
-            input.value = '';
-            renderQueue();
-            playSound(550, 0.1);
-        }
-        function dequeueQueue() {
-            if (queueData.length === 0) return;
-            queueData.shift();
-            renderQueue();
-            playSound(350, 0.1);
         }
 
-        const searchArrayData = [10, 24, 35, 42, 58, 68, 77, 85, 93, 100];
+        function dequeueQueue() {
+            if (queueData.length > 0) {
+                queueData.shift();
+                renderQueue();
+                playSound(300, 0.1, 'triangle');
+            }
+        }
+
+        const searchArray = [12, 19, 25, 33, 41, 52, 68, 74, 85, 96];
+
         function renderSearchArray(activeIdx = -1, foundIdx = -1) {
             const container = document.getElementById('search-array-container');
-            container.innerHTML = searchArrayData.map((val, idx) => {
-                let bgClass = 'bg-slate-800 border-slate-700 text-slate-200';
-                if (idx === activeIdx) bgClass = 'bg-amber-500/30 border-amber-500 text-amber-300 animate-pulse';
-                if (idx === foundIdx) bgClass = 'bg-emerald-500/40 border-emerald-500 text-emerald-300 font-extrabold scale-110';
-                
-                return `
-                    <div class="border ${bgClass} rounded-xl px-3 py-2 text-center transition-all min-w-[50px]">
-                        <span class="text-[10px] text-slate-400 block font-mono">[${idx}]</span>
-                        <span class="text-sm font-bold">${val}</span>
-                    </div>
-                `;
+            container.innerHTML = searchArray.map((val, idx) => {
+                let colorClass = "bg-slate-800 border-slate-700 text-slate-200";
+                if (idx === foundIdx) colorClass = "bg-emerald-600 border-emerald-400 text-white glow-cyan scale-110";
+                else if (idx === activeIdx) colorClass = "bg-amber-500 border-amber-300 text-slate-900 scale-105";
+
+                return `<div class="w-12 h-12 rounded-xl flex flex-col items-center justify-center font-bold font-mono border transition-all ${colorClass}">
+                    <span class="text-[9px] opacity-75">[${idx}]</span>
+                    <span class="text-xs">${val}</span>
+                </div>`;
             }).join('');
         }
 
         async function runLinearSearch() {
             const target = parseInt(document.getElementById('search-target-input').value);
             let steps = 0;
-            let found = -1;
+            let found = false;
 
-            document.getElementById('linear-status').textContent = 'Memproses...';
-            for (let i = 0; i < searchArrayData.length; i++) {
+            for (let i = 0; i < searchArray.length; i++) {
                 steps++;
-                document.getElementById('linear-steps').textContent = steps;
+                document.getElementById('linear-steps').innerText = steps;
+                document.getElementById('linear-status').innerText = `Memeriksa Indeks [${i}] = ${searchArray[i]}`;
                 renderSearchArray(i);
-                playCompareSound();
+                playSound(400 + i * 40, 0.1);
                 await new Promise(r => setTimeout(r, 400));
 
-                if (searchArrayData[i] === target) {
-                    found = i;
+                if (searchArray[i] === target) {
                     renderSearchArray(-1, i);
-                    playSuccessSound();
-                    document.getElementById('linear-status').textContent = `Ditemukan pada indeks [${i}]!`;
-                    addScore(30);
-                    return;
+                    document.getElementById('linear-status').innerText = `✅ Ditemukan pada Indeks [${i}]!`;
+                    found = true;
+                    addXP(20);
+                    break;
                 }
             }
-            document.getElementById('linear-status').textContent = 'Tidak ditemukan!';
+            if (!found) {
+                document.getElementById('linear-status').innerText = `❌ Tidak ditemukan dalam array!`;
+            }
         }
 
         async function runBinarySearch() {
             const target = parseInt(document.getElementById('search-target-input').value);
             let steps = 0;
-            let low = 0, high = searchArrayData.length - 1;
+            let low = 0;
+            let high = searchArray.length - 1;
+            let found = false;
 
-            document.getElementById('binary-status').textContent = 'Memproses...';
             while (low <= high) {
                 steps++;
-                document.getElementById('binary-steps').textContent = steps;
                 let mid = Math.floor((low + high) / 2);
+                document.getElementById('binary-steps').innerText = steps;
+                document.getElementById('binary-status').innerText = `Low:${low}, High:${high} ➔ Mid [${mid}] = ${searchArray[mid]}`;
                 renderSearchArray(mid);
-                playCompareSound();
-                await new Promise(r => setTimeout(r, 500));
+                playSound(600 + steps * 100, 0.1);
+                await new Promise(r => setTimeout(r, 600));
 
-                if (searchArrayData[mid] === target) {
+                if (searchArray[mid] === target) {
                     renderSearchArray(-1, mid);
-                    playSuccessSound();
-                    document.getElementById('binary-status').textContent = `Ditemukan pada indeks [${mid}]!`;
-                    addScore(50);
-                    return;
-                } else if (searchArrayData[mid] < target) {
+                    document.getElementById('binary-status').innerText = `✅ Ditemukan pada Indeks [${mid}]!`;
+                    found = true;
+                    addXP(25);
+                    break;
+                } else if (searchArray[mid] < target) {
                     low = mid + 1;
                 } else {
                     high = mid - 1;
                 }
             }
-            document.getElementById('binary-status').textContent = 'Tidak ditemukan!';
-        }
-
-        let currentSortArray = [45, 12, 89, 34, 67, 23, 95, 55];
-        let isSorting = false;
-
-        function updateSortDesc() {
-            const algo = document.getElementById('sorting-algo-select').value;
-            const desc = document.getElementById('sort-algo-desc');
-            if (algo === 'bubble') {
-                desc.textContent = "1. Bubble Sort: Membandingkan dua elemen berdampingan. Jika elemen kiri lebih besar dari kanan, tukar posisinya. Ulangi hingga nilai terbesar mengapung ke kanan.";
-            } else if (algo === 'selection') {
-                desc.textContent = "2. Selection Sort: Mencari elemen dengan nilai terkecil di seluruh array yang belum terurut, lalu menukarnya dengan elemen terdepan.";
-            } else if (algo === 'insertion') {
-                desc.textContent = "3. Insertion Sort: Mengambil satu per satu elemen dan menyisipkannya pada posisi terurut yang pas di sebelah kiri, layaknya menyusun kartu tangan.";
-            } else if (algo === 'quick') {
-                desc.textContent = "4. Quick Sort (Divide & Conquer): Memilih satu elemen 'Pivot', membagi array menjadi dua bagian (< pivot dan > pivot), lalu mengurutkan masing-masing bagian secara rekursif.";
-            } else if (algo === 'merge') {
-                desc.textContent = "5. Merge Sort (Divide & Conquer): Membelah array menjadi dua bagian secara berulang hingga berukuran 1, kemudian menggabungkan (merge) dua sub-array terurut kembali.";
+            if (!found) {
+                document.getElementById('binary-status').innerText = `❌ Tidak ditemukan dalam array!`;
             }
         }
+
+        let sortArray = [];
+        let isSorting = false;
 
         function resetSortArray() {
             if (isSorting) return;
-            currentSortArray = Array.from({length: 8}, () => Math.floor(Math.random() * 80) + 15);
-            renderSortBars();
-            document.getElementById('sort-step-text').textContent = 'Array diacak!';
-            document.getElementById('sort-comp-count').textContent = 'Komparasi: 0';
+            sortArray = Array.from({length: 12}, () => Math.floor(Math.random() * 85) + 15);
+            renderSortingBars();
         }
 
-        function renderSortBars(highlights = {}) {
-            // highlights: { active: [], swapping: [], pivot: [], sorted: [] }
-            const container = document.getElementById('bars-visual-container');
-            const maxVal = Math.max(...currentSortArray, 100);
+        function renderSortingBars(comparing = [], swapping = [], pivot = -1, sorted = []) {
+            const container = document.getElementById('sorting-bars-container');
+            container.innerHTML = sortArray.map((val, idx) => {
+                let barColor = "bg-cyan-500";
+                if (sorted.includes(idx)) barColor = "bg-emerald-500";
+                else if (idx === pivot) barColor = "bg-pink-500";
+                else if (swapping.includes(idx)) barColor = "bg-purple-500";
+                else if (comparing.includes(idx)) barColor = "bg-amber-400";
 
-            container.innerHTML = currentSortArray.map((val, idx) => {
-                let colorClass = 'bg-cyan-500';
-                if (highlights.active && highlights.active.includes(idx)) colorClass = 'bg-amber-400 scale-105';
-                if (highlights.swapping && highlights.swapping.includes(idx)) colorClass = 'bg-purple-500 scale-105';
-                if (highlights.pivot && highlights.pivot.includes(idx)) colorClass = 'bg-pink-500 scale-105';
-                if (highlights.sorted && highlights.sorted.includes(idx)) colorClass = 'bg-emerald-500';
-
-                const heightPercent = Math.max(15, Math.round((val / maxVal) * 100));
-
-                return `
-                    <div class="flex flex-col items-center flex-1 h-full justify-end">
-                        <span class="text-[10px] font-bold text-slate-300 mb-1">${val}</span>
-                        <div class="array-bar w-full max-w-[40px] rounded-t-lg ${colorClass}" style="height: ${heightPercent}%;"></div>
-                        <span class="text-[9px] text-slate-500 font-mono mt-1">[${idx}]</span>
-                    </div>
-                `;
+                return `<div class="flex-1 flex flex-col items-center justify-end h-full">
+                    <span class="text-[10px] font-mono font-bold text-slate-300 mb-1">${val}</span>
+                    <div class="w-full rounded-t-lg array-bar ${barColor}" style="height: ${val}%;"></div>
+                </div>`;
             }).join('');
         }
 
-        async function animateSortSteps(steps) {
+        function updateSortDesc() {
+            const algo = document.getElementById('sorting-algo-select').value;
+            const descMap = {
+                'bubble': 'Bubble Sort: Membandingkan pasangan berdampingan dan menukarnya hingga angka terbesar mengapung ke ujung.',
+                'selection': 'Selection Sort: Mencari elemen terkecil pada area tak terurut, lalu menukarnya ke posisi depan.',
+                'insertion': 'Insertion Sort: Menyisipkan satu per satu elemen ke posisi terurut yang tepat.',
+                'quick': 'Quick Sort: Menggunakan Pivot untuk membagi array menjadi dua sisi (< Pivot & > Pivot).',
+                'merge': 'Merge Sort: Membelah array hingga tunggal (Divide), lalu menggabungkannya kembali (Merge) secara terurut.'
+            };
+            document.getElementById('sort-desc-text').innerText = descMap[algo] || '';
+        }
+
+        function getSortSpeed() {
+            return parseInt(document.getElementById('sort-speed-slider').value);
+        }
+
+        async function startSorting() {
+            if (isSorting) return;
             isSorting = true;
             document.getElementById('start-sort-btn').disabled = true;
-            const speed = parseInt(document.getElementById('sort-speed-slider').value);
+            
+            const algo = document.getElementById('sorting-algo-select').value;
+            if (algo === 'bubble') await bubbleSort();
+            else if (algo === 'selection') await selectionSort();
+            else if (algo === 'insertion') await insertionSort();
+            else if (algo === 'quick') await quickSort(0, sortArray.length - 1);
+            else if (algo === 'merge') await mergeSort(0, sortArray.length - 1);
 
-            let totalComp = 0;
-            for (let i = 0; i < steps.length; i++) {
-                const step = steps[i];
-                currentSortArray = [...step.array];
-                renderSortBars(step);
-
-                if (step.desc) document.getElementById('sort-step-text').textContent = step.desc;
-                if (step.active) {
-                    totalComp++;
-                    document.getElementById('sort-comp-count').textContent = `Komparasi: ${totalComp}`;
-                    playCompareSound();
-                }
-                if (step.swapping) {
-                    playSwapSound();
-                }
-
-                await new Promise(r => setTimeout(r, speed));
-            }
-
+            renderSortingBars([], [], -1, Array.from({length: sortArray.length}, (_, i) => i));
+            addXP(40);
             isSorting = false;
             document.getElementById('start-sort-btn').disabled = false;
-            addScore(60);
         }
 
-        /* 1. Bubble Sort Generator */
-        function generateBubbleSortSteps(arr) {
-            let steps = [];
-            let a = [...arr];
-            let n = a.length;
-            let sortedIdxs = [];
-
+        async function bubbleSort() {
+            let n = sortArray.length;
             for (let i = 0; i < n - 1; i++) {
                 for (let j = 0; j < n - i - 1; j++) {
-                    steps.push({ array: [...a], active: [j, j + 1], sorted: [...sortedIdxs], desc: `Bandingkan elemen [${j}] (${a[j]}) dan [${j+1}] (${a[j+1]})` });
-                    if (a[j] > a[j + 1]) {
-                        let temp = a[j];
-                        a[j] = a[j + 1];
-                        a[j + 1] = temp;
-                        steps.push({ array: [...a], swapping: [j, j + 1], sorted: [...sortedIdxs], desc: `Tukar ${a[j+1]} dan ${a[j]}` });
+                    renderSortingBars([j, j+1]);
+                    playSound(300 + sortArray[j] * 5, 0.05);
+                    await new Promise(r => setTimeout(r, getSortSpeed()));
+                    if (sortArray[j] > sortArray[j+1]) {
+                        [sortArray[j], sortArray[j+1]] = [sortArray[j+1], sortArray[j]];
+                        renderSortingBars([], [j, j+1]);
+                        await new Promise(r => setTimeout(r, getSortSpeed()));
                     }
                 }
-                sortedIdxs.push(n - 1 - i);
             }
-            sortedIdxs.push(0);
-            steps.push({ array: [...a], sorted: sortedIdxs, desc: 'Bubble Sort Selesai!' });
-            return steps;
         }
 
-        /* 2. Selection Sort Generator */
-        function generateSelectionSortSteps(arr) {
-            let steps = [];
-            let a = [...arr];
-            let n = a.length;
-            let sortedIdxs = [];
-
+        async function selectionSort() {
+            let n = sortArray.length;
             for (let i = 0; i < n - 1; i++) {
                 let minIdx = i;
-                steps.push({ array: [...a], active: [i], pivot: [minIdx], sorted: [...sortedIdxs], desc: `Cari nilai terkecil mulai dari indeks [${i}]` });
-
                 for (let j = i + 1; j < n; j++) {
-                    steps.push({ array: [...a], active: [j], pivot: [minIdx], sorted: [...sortedIdxs], desc: `Bandingkan [${j}] (${a[j]}) dengan minimum sementara (${a[minIdx]})` });
-                    if (a[j] < a[minIdx]) {
-                        minIdx = j;
-                    }
+                    renderSortingBars([j, minIdx]);
+                    playSound(350 + sortArray[j] * 5, 0.05);
+                    await new Promise(r => setTimeout(r, getSortSpeed()));
+                    if (sortArray[j] < sortArray[minIdx]) minIdx = j;
                 }
                 if (minIdx !== i) {
-                    let temp = a[i];
-                    a[i] = a[minIdx];
-                    a[minIdx] = temp;
-                    steps.push({ array: [...a], swapping: [i, minIdx], sorted: [...sortedIdxs], desc: `Tukar nilai terkecil (${a[i]}) ke posisi [${i}]` });
+                    [sortArray[i], sortArray[minIdx]] = [sortArray[minIdx], sortArray[i]];
+                    renderSortingBars([], [i, minIdx]);
+                    await new Promise(r => setTimeout(r, getSortSpeed()));
                 }
-                sortedIdxs.push(i);
             }
-            sortedIdxs.push(n - 1);
-            steps.push({ array: [...a], sorted: sortedIdxs, desc: 'Selection Sort Selesai!' });
-            return steps;
         }
 
-        /* 3. Insertion Sort Generator */
-        function generateInsertionSortSteps(arr) {
-            let steps = [];
-            let a = [...arr];
-            let n = a.length;
-
+        async function insertionSort() {
+            let n = sortArray.length;
             for (let i = 1; i < n; i++) {
-                let key = a[i];
+                let key = sortArray[i];
                 let j = i - 1;
-                steps.push({ array: [...a], active: [i], desc: `Ambil elemen [${i}] (${key}) untuk disisipkan.` });
-
-                while (j >= 0 && a[j] > key) {
-                    steps.push({ array: [...a], active: [j, j + 1], desc: `${a[j]} > ${key}, geser ${a[j]} ke kanan.` });
-                    a[j + 1] = a[j];
-                    j--;
+                while (j >= 0 && sortArray[j] > key) {
+                    renderSortingBars([j, j+1]);
+                    playSound(400 + sortArray[j] * 5, 0.05);
+                    await new Promise(r => setTimeout(r, getSortSpeed()));
+                    sortArray[j + 1] = sortArray[j];
+                    j = j - 1;
                 }
-                a[j + 1] = key;
-                steps.push({ array: [...a], swapping: [j + 1], desc: `Sisipkan ${key} pada posisi [${j + 1}].` });
+                sortArray[j + 1] = key;
+                renderSortingBars([], [j + 1]);
+                await new Promise(r => setTimeout(r, getSortSpeed()));
             }
-            steps.push({ array: [...a], sorted: a.map((_, idx) => idx), desc: 'Insertion Sort Selesai!' });
-            return steps;
         }
 
-        /* 4. Quick Sort Generator */
-        function generateQuickSortSteps(arr) {
-            let steps = [];
-            let a = [...arr];
-
-            function quickSortHelper(low, high) {
-                if (low < high) {
-                    let pivotIdx = partition(low, high);
-                    quickSortHelper(low, pivotIdx - 1);
-                    quickSortHelper(pivotIdx + 1, high);
-                }
+        async function quickSort(low, high) {
+            if (low < high) {
+                let pi = await partition(low, high);
+                await quickSort(low, pi - 1);
+                await quickSort(pi + 1, high);
             }
-
-            function partition(low, high) {
-                let pivot = a[high];
-                steps.push({ array: [...a], pivot: [high], desc: `Pilih Pivot: ${pivot} pada indeks [${high}].` });
-
-                let i = low - 1;
-                for (let j = low; j < high; j++) {
-                    steps.push({ array: [...a], active: [j], pivot: [high], desc: `Bandingkan [${j}] (${a[j]}) dengan Pivot (${pivot})` });
-                    if (a[j] < pivot) {
-                        i++;
-                        let temp = a[i];
-                        a[i] = a[j];
-                        a[j] = temp;
-                        steps.push({ array: [...a], swapping: [i, j], pivot: [high], desc: `Tukar [${i}] dan [${j}]` });
-                    }
-                }
-                let temp = a[i + 1];
-                a[i + 1] = a[high];
-                a[high] = temp;
-                steps.push({ array: [...a], swapping: [i + 1, high], desc: `Pindahkan Pivot (${pivot}) ke posisi akhir [${i + 1}]` });
-                return i + 1;
-            }
-
-            quickSortHelper(0, a.length - 1);
-            steps.push({ array: [...a], sorted: a.map((_, idx) => idx), desc: 'Quick Sort Selesai!' });
-            return steps;
         }
 
-        /* 5. Merge Sort Generator */
-        function generateMergeSortSteps(arr) {
-            let steps = [];
-            let a = [...arr];
-
-            function mergeSortHelper(left, right) {
-                if (left >= right) return;
-                let mid = Math.floor((left + right) / 2);
-                steps.push({ array: [...a], active: [left, mid, right], desc: `Bagi sub-array [${left}..${right}] menjadi dua bagian.` });
-                mergeSortHelper(left, mid);
-                mergeSortHelper(mid + 1, right);
-                merge(left, mid, right);
-            }
-
-            function merge(left, mid, right) {
-                let leftArr = a.slice(left, mid + 1);
-                let rightArr = a.slice(mid + 1, right + 1);
-
-                let i = 0, j = 0, k = left;
-                while (i < leftArr.length && j < rightArr.length) {
-                    steps.push({ array: [...a], active: [left + i, mid + 1 + j], desc: `Bandingkan bagian kiri (${leftArr[i]}) dan kanan (${rightArr[j]})` });
-                    if (leftArr[i] <= rightArr[j]) {
-                        a[k] = leftArr[i];
-                        i++;
-                    } else {
-                        a[k] = rightArr[j];
-                        j++;
-                    }
-                    steps.push({ array: [...a], swapping: [k], desc: `Tempatkan ${a[k]} di posisi [${k}]` });
-                    k++;
-                }
-
-                while (i < leftArr.length) {
-                    a[k] = leftArr[i];
-                    steps.push({ array: [...a], swapping: [k], desc: `Salin sisa elemen kiri (${leftArr[i]})` });
-                    i++; k++;
-                }
-                while (j < rightArr.length) {
-                    a[k] = rightArr[j];
-                    steps.push({ array: [...a], swapping: [k], desc: `Salin sisa elemen kanan (${rightArr[j]})` });
-                    j++; k++;
+        async function partition(low, high) {
+            let pivot = sortArray[high];
+            let i = (low - 1);
+            for (let j = low; j <= high - 1; j++) {
+                renderSortingBars([j], [], high);
+                playSound(300 + sortArray[j] * 5, 0.05);
+                await new Promise(r => setTimeout(r, getSortSpeed()));
+                if (sortArray[j] < pivot) {
+                    i++;
+                    [sortArray[i], sortArray[j]] = [sortArray[j], sortArray[i]];
+                    renderSortingBars([], [i, j], high);
+                    await new Promise(r => setTimeout(r, getSortSpeed()));
                 }
             }
-
-            mergeSortHelper(0, a.length - 1);
-            steps.push({ array: [...a], sorted: a.map((_, idx) => idx), desc: 'Merge Sort Selesai!' });
-            return steps;
+            [sortArray[i + 1], sortArray[high]] = [sortArray[high], sortArray[i + 1]];
+            return (i + 1);
         }
 
-        async function startSortAnimation() {
-            const algo = document.getElementById('sorting-algo-select').value;
-            let steps = [];
-            if (algo === 'bubble') steps = generateBubbleSortSteps(currentSortArray);
-            else if (algo === 'selection') steps = generateSelectionSortSteps(currentSortArray);
-            else if (algo === 'insertion') steps = generateInsertionSortSteps(currentSortArray);
-            else if (algo === 'quick') steps = generateQuickSortSteps(currentSortArray);
-            else if (algo === 'merge') steps = generateMergeSortSteps(currentSortArray);
+        async function mergeSort(l, r) {
+            if (l >= r) return;
+            let m = l + parseInt((r - l) / 2);
+            await mergeSort(l, m);
+            await mergeSort(m + 1, r);
+            await merge(l, m, r);
+        }
 
-            if (steps.length > 0) {
-                await animateSortSteps(steps);
-                playSuccessSound();
+        async function merge(l, m, r) {
+            let n1 = m - l + 1;
+            let n2 = r - m;
+            let L = new Array(n1);
+            let R = new Array(n2);
+
+            for (let i = 0; i < n1; i++) L[i] = sortArray[l + i];
+            for (let j = 0; j < n2; j++) R[j] = sortArray[m + 1 + j];
+
+            let i = 0, j = 0, k = l;
+            while (i < n1 && j < n2) {
+                renderSortingBars([k]);
+                playSound(450 + sortArray[k] * 4, 0.05);
+                await new Promise(res => setTimeout(res, getSortSpeed()));
+                if (L[i] <= R[j]) {
+                    sortArray[k] = L[i];
+                    i++;
+                } else {
+                    sortArray[k] = R[j];
+                    j++;
+                }
+                k++;
+            }
+            while (i < n1) {
+                sortArray[k] = L[i];
+                i++; k++;
+            }
+            while (j < n2) {
+                sortArray[k] = R[j];
+                j++; k++;
             }
         }
 
         const quizQuestions = [
             {
-                q: "Memecah program kompleks pembuatan game menjadi tugas karakter, audio, dan grafis merupakan penerapan pondasi CT...",
-                options: ["A. Abstraksi", "B. Dekomposisi", "C. Pengenalan Pola", "D. Algoritma"],
+                q: "Pada Kasus 1 (Kunci Gembok Kombinasi 3-Digit), hasil kombinasi kode gembok yang tepat berdasarkan petunjuk eliminasi logika CT adalah:",
+                options: ["A. 614", "B. 042", "C. 682", "D. 206"],
                 correct: 1
             },
             {
-                q: "Struktur data mana yang menggunakan prinsip LIFO (Last-In First-Out)?",
-                options: ["A. Array", "B. Queue", "C. Stack", "D. Linked List"],
-                correct: 2
-            },
-            {
-                q: "Algoritma pencarian manakah yang mensyaratkan data array dalam keadaan terurut terlebih dahulu?",
-                options: ["A. Linear Search", "B. Binary Search", "C. Random Search", "D. Sequential Search"],
+                q: "Budi memiliki 3 Kemeja dan 2 Celana. Berdasarkan Pilar CT (Pengenalan Pola Kasus 3), berapa banyak variasi kombinasi pasangan pakaian yang bisa dipakai Budi?",
+                options: ["A. 5 Pasangan", "B. 6 Pasangan", "C. 8 Pasangan", "D. 9 Pasangan"],
                 correct: 1
             },
             {
-                q: "Manakah di antara algoritma pengurutan berikut yang menggunakan strategi Divide & Conquer dengan elemen Pivot?",
-                options: ["A. Bubble Sort", "B. Selection Sort", "C. Insertion Sort", "D. Quick Sort"],
-                correct: 3
+                q: "Pada deret angka 2, 5, 10, 17, 26, ... Berapakah dua angka berikutnya (Suku ke-6 dan ke-7)?",
+                options: ["A. 30 dan 35", "B. 35 dan 48", "C. 37 dan 50", "D. 36 dan 49"],
+                correct: 2
             },
             {
-                q: "Berapa kompleksitas waktu rata-rata (Average Time Complexity) untuk Merge Sort dan Quick Sort?",
-                options: ["A. O(n)", "B. O(n²)", "C. O(n log n)", "D. O(1)"],
+                q: "Struktur data linear yang bekerja dengan prinsip LIFO (Last-In First-Out) seperti tumpukan piring adalah:",
+                options: ["A. Array", "B. Queue", "C. Stack", "D. Tree"],
                 correct: 2
+            },
+            {
+                q: "Algoritma sorting mana yang menggunakan elemen 'Pivot' untuk membagi array menjadi dua sisi?",
+                options: ["A. Quick Sort", "B. Bubble Sort", "C. Insertion Sort", "D. Linear Search"],
+                correct: 0
             }
         ];
 
         let currentQuizIdx = 0;
+
         function renderQuiz() {
             const q = quizQuestions[currentQuizIdx];
-            document.getElementById('quiz-num').textContent = currentQuizIdx + 1;
-            document.getElementById('quiz-question').textContent = q.q;
+            document.getElementById('quiz-progress').innerText = `Soal ${currentQuizIdx+1}/${quizQuestions.length}`;
+            const container = document.getElementById('quiz-box');
 
-            const optContainer = document.getElementById('quiz-options-container');
-            optContainer.innerHTML = q.options.map((opt, idx) => `
-                <button onclick="checkQuizAnswer(${idx})" class="quiz-opt-btn w-full p-3.5 text-left rounded-xl bg-slate-900 border border-slate-700/80 hover:border-cyan-500 text-xs text-slate-200 transition-all flex items-center justify-between">
-                    <span>${opt}</span>
-                    <i class="fa-regular fa-circle text-slate-600"></i>
-                </button>
-            `).join('');
-
-            document.getElementById('quiz-next-btn').classList.add('hidden');
+            container.innerHTML = `
+                <div class="bg-slate-900/90 p-5 rounded-xl border border-slate-800">
+                    <span class="text-xs text-amber-400 font-bold uppercase tracking-wider">Pertanyaan ${currentQuizIdx+1}</span>
+                    <h3 class="text-base font-bold text-white mt-1 mb-4 leading-relaxed">${q.q}</h3>
+                    <div class="space-y-2">
+                        ${q.options.map((opt, idx) => `
+                            <button onclick="submitAnswer(${idx})" class="w-full text-left p-3 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-200 transition-all flex items-center justify-between">
+                                <span>${opt}</span>
+                                <i class="fa-solid fa-chevron-right text-slate-500"></i>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
         }
 
-        function checkQuizAnswer(selectedIdx) {
+        function submitAnswer(idx) {
             const q = quizQuestions[currentQuizIdx];
-            const btns = document.querySelectorAll('.quiz-opt-btn');
-
-            btns.forEach((btn, idx) => {
-                btn.disabled = true;
-                if (idx === q.correct) {
-                    btn.className = 'w-full p-3.5 text-left rounded-xl bg-emerald-950 border border-emerald-500 text-xs font-bold text-emerald-300 flex items-center justify-between';
-                    btn.querySelector('i').className = 'fa-solid fa-circle-check text-emerald-400';
-                } else if (idx === selectedIdx) {
-                    btn.className = 'w-full p-3.5 text-left rounded-xl bg-rose-950 border border-rose-500 text-xs font-bold text-rose-300 flex items-center justify-between';
-                    btn.querySelector('i').className = 'fa-solid fa-circle-xmark text-rose-400';
-                }
-            });
-
-            if (selectedIdx === q.correct) {
-                playSuccessSound();
-                addScore(100);
-            } else {
-                playSound(200, 0.2);
-            }
-
-            document.getElementById('quiz-next-btn').classList.remove('hidden');
-        }
-
-        function nextQuizQuestion() {
-            currentQuizIdx++;
-            if (currentQuizIdx >= quizQuestions.length) {
+            if (idx === q.correct) {
+                addXP(30);
                 triggerConfetti();
-                alert('🎉 Selamat! Kamu telah menamatkan CT Boss Quest!');
-                currentQuizIdx = 0;
+            } else {
+                playSound(200, 0.2, 'sawtooth');
             }
-            renderQuiz();
+
+            currentQuizIdx++;
+            if (currentQuizIdx < quizQuestions.length) {
+                renderQuiz();
+            } else {
+                document.getElementById('quiz-box').innerHTML = `
+                    <div class="text-center p-8 bg-slate-900 rounded-xl border border-slate-800 space-y-4">
+                        <div class="text-5xl">🏆</div>
+                        <h3 class="text-xl font-bold text-white">Selamat! Anda Menyelesaikan CT Boss Quest!</h3>
+                        <p class="text-xs text-slate-300">Total XP yang dikumpulkan: <span class="text-amber-400 font-bold">${playerScore} XP</span></p>
+                        <button onclick="currentQuizIdx=0; renderQuiz();" class="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-indigo-600 rounded-lg text-xs font-bold text-white">Ulangi Kuis</button>
+                    </div>
+                `;
+            }
         }
 
-        // Confetti Celebration FX
         function triggerConfetti() {
             const canvas = document.getElementById('confetti-canvas');
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
 
-            const pieces = Array.from({length: 80}, () => ({
+            let particles = Array.from({length: 60}, () => ({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height - canvas.height,
-                size: Math.random() * 8 + 4,
-                color: ['#38bdf8', '#818cf8', '#34d399', '#fbbf24', '#f43f5e'][Math.floor(Math.random() * 5)],
-                speed: Math.random() * 4 + 2
+                color: ['#38bdf8', '#818cf8', '#34d399', '#fbbf24', '#f472b6'][Math.floor(Math.random()*5)],
+                size: Math.random() * 6 + 4,
+                speedY: Math.random() * 3 + 2,
+                speedX: Math.random() * 2 - 1
             }));
 
             let frame = 0;
             function animateConfetti() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                pieces.forEach(p => {
-                    p.y += p.speed;
+                particles.forEach(p => {
+                    p.y += p.speedY;
+                    p.x += p.speedX;
                     ctx.fillStyle = p.color;
-                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
                 });
                 frame++;
-                if (frame < 120) requestAnimationFrame(animateConfetti);
+                if (frame < 90) requestAnimationFrame(animateConfetti);
                 else ctx.clearRect(0, 0, canvas.width, canvas.height);
             }
             animateConfetti();
         }
 
-        // Initialization on Load
         window.onload = function() {
             renderArray();
             renderStack();
