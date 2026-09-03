@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Meta Tag Anti-Cache (Memaksa Browser Mengunduh Versi Terbaru) -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <title>CT Quest - Game Edukasi Berpikir Komputasional</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -39,10 +45,6 @@
         .glass-card { background: rgba(30, 41, 59, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .glass-nav { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(16px); }
         
-        .array-bar {
-            transition: height 0.25s ease-in-out, background-color 0.25s ease-in-out, transform 0.2s;
-        }
-
         #confetti-canvas {
             position: fixed;
             top: 0;
@@ -58,7 +60,7 @@
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
 
-        .tab-locked {
+        .tab-locked, .chap-locked {
             opacity: 0.5;
             cursor: not-allowed !important;
             filter: grayscale(0.6);
@@ -141,17 +143,13 @@
                 -webkit-text-fill-color: initial !important;
                 color: #0369a1 !important;
             }
-            .cert-text-dark {
-                color: #0f172a !important;
-            }
+            .cert-text-dark { color: #0f172a !important; }
             .cert-badge {
                 background-color: #f0f9ff !important;
                 border: 1px solid #bae6fd !important;
                 color: #0369a1 !important;
             }
-            .cert-badge-text {
-                color: #0284c7 !important;
-            }
+            .cert-badge-text { color: #0284c7 !important; }
         }
     </style>
 </head>
@@ -236,115 +234,362 @@
 
         <!-- ================= TAB 1: MATERI BELAJAR ================= -->
         <section id="tab-materi" class="tab-content space-y-6">
-            <div class="glass-card p-6 rounded-2xl border border-slate-800">
-                <div class="flex items-center gap-3 mb-2">
-                    <span class="p-2.5 rounded-xl bg-amber-500/20 text-amber-400 font-bold text-xl"><i class="fa-solid fa-graduation-cap"></i></span>
+            <!-- Header Status Modul -->
+            <div class="glass-card p-6 rounded-2xl border border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <span class="p-3 rounded-2xl bg-amber-500/20 text-amber-400 font-bold text-2xl border border-amber-500/30"><i class="fa-solid fa-graduation-cap"></i></span>
                     <div>
-                        <h2 class="text-xl font-bold text-white">Tahap 1: Materi Pembelajaran Berpikir Komputasional</h2>
-                        <p class="text-xs text-slate-300">Modul komprehensif Bab 1 sampai Bab 6. Silakan baca materi di bawah ini. Setelah selesai membaca seluruh materi, klik tombol di bawah untuk mengunci kelulusan membaca dan membuka **Tahap 2 (Identitas Siswa)**.</p>
+                        <h2 class="text-xl font-bold text-white">Tahap 1: Modul Pembelajaran Berpikir Komputasional</h2>
+                        <p class="text-xs text-slate-300">Baca dan pelajari materi Bab 1 hingga Bab 6 secara berurutan untuk menyelesaikan Tahap 1.</p>
                     </div>
+                </div>
+                <div class="bg-slate-900/90 px-4 py-2 rounded-xl border border-slate-700/80 text-xs font-bold text-cyan-300">
+                    Progres Materi: <span id="materi-progress-text" class="text-amber-400 font-extrabold">1/6 Bab Terbuka</span>
                 </div>
             </div>
 
-            <!-- Chapter Navigation Tabs -->
-            <div class="flex flex-wrap gap-2">
-                <button onclick="showChapter('chap-1')" id="btn-chap-1" class="chap-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-amber-500 text-slate-950">Bab 1: 4 Pondasi CT</button>
-                <button onclick="showChapter('chap-2')" id="btn-chap-2" class="chap-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">Bab 2: Pengertian Struktur Data</button>
-                <button onclick="showChapter('chap-3')" id="btn-chap-3" class="chap-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">Bab 3: Data Linear</button>
-                <button onclick="showChapter('chap-4')" id="btn-chap-4" class="chap-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">Bab 4: Algoritma Pencarian</button>
-                <button onclick="showChapter('chap-5')" id="btn-chap-5" class="chap-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">Bab 5: Algoritma Pengurutan</button>
-                <button onclick="showChapter('chap-6')" id="btn-chap-6" class="chap-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">Bab 6: Ringkasan & Perbandingan</button>
+            <!-- Chapter Navigation Tabs (Step-by-step unlock) -->
+            <div class="flex flex-wrap gap-2 border-b border-slate-800 pb-3" id="chap-nav-container">
+                <button onclick="selectChapter(1)" id="btn-chap-1" class="chap-btn px-4 py-2.5 rounded-xl text-xs font-bold transition-all bg-amber-500 text-slate-950 flex items-center gap-2">
+                    Bab 1: 4 Pondasi CT <span id="badge-chap-1">✅</span>
+                </button>
+                <button onclick="selectChapter(2)" id="btn-chap-2" class="chap-btn chap-locked px-4 py-2.5 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-400 flex items-center gap-2">
+                    Bab 2: Struktur Data <span id="badge-chap-2">🔒</span>
+                </button>
+                <button onclick="selectChapter(3)" id="btn-chap-3" class="chap-btn chap-locked px-4 py-2.5 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-400 flex items-center gap-2">
+                    Bab 3: Data Linear <span id="badge-chap-3">🔒</span>
+                </button>
+                <button onclick="selectChapter(4)" id="btn-chap-4" class="chap-btn chap-locked px-4 py-2.5 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-400 flex items-center gap-2">
+                    Bab 4: Pencarian <span id="badge-chap-4">🔒</span>
+                </button>
+                <button onclick="selectChapter(5)" id="btn-chap-5" class="chap-btn chap-locked px-4 py-2.5 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-400 flex items-center gap-2">
+                    Bab 5: Pengurutan <span id="badge-chap-5">🔒</span>
+                </button>
+                <button onclick="selectChapter(6)" id="btn-chap-6" class="chap-btn chap-locked px-4 py-2.5 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-400 flex items-center gap-2">
+                    Bab 6: Ringkasan <span id="badge-chap-6">🔒</span>
+                </button>
             </div>
 
-            <!-- CHAP 1 CONTENT -->
-            <div id="chap-1" class="chap-content glass-card p-6 rounded-2xl space-y-6">
-                <div class="border-b border-slate-700 pb-3">
-                    <h3 class="text-lg font-bold text-amber-400">Bab 1: 4 Pondasi Berpikir Komputasional (Computational Thinking)</h3>
-                    <p class="text-xs text-slate-300 mt-1">Berpikir Komputasional (CT) adalah metode pemecahan masalah yang merumuskan masalah dan solusinya secara terstruktur, sistematis, dan logis sehingga dapat dijalankan oleh manusia maupun komputer.</p>
+            <!-- ================= BAB 1 CONTENT ================= -->
+            <div id="chap-1" class="chap-content glass-card p-6 sm:p-8 rounded-2xl space-y-6">
+                <div class="border-b border-slate-700 pb-4">
+                    <span class="px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-md text-xs font-bold uppercase tracking-wider">Modul 1</span>
+                    <h3 class="text-xl font-bold text-amber-400 mt-2">Bab 1: 4 Pondasi Berpikir Komputasional (Computational Thinking)</h3>
+                    <p class="text-xs text-slate-300 mt-1 leading-relaxed">Berpikir Komputasional (CT) adalah metode pemecahan masalah dengan merumuskan masalah dan solusinya secara terstruktur, sistematis, dan logis sehingga dapat dieksekusi oleh manusia maupun komputer.</p>
                 </div>
 
                 <div class="space-y-4">
-                    <h4 class="text-sm font-bold text-cyan-300">1.1 Pengertian 4 Pondasi Utama CT</h4>
+                    <h4 class="text-sm font-bold text-cyan-300 flex items-center gap-2">
+                        <i class="fa-solid fa-cubes text-cyan-400"></i> 1.1 Penjelasan Detail 4 Pillar CT
+                    </h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
-                            <div class="flex items-center gap-2 text-cyan-400 font-bold mb-1">
-                                <span class="text-lg">🧩</span> Dekomposisi (Decomposition)
+                        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
+                            <div class="flex items-center gap-2 text-cyan-400 font-bold">
+                                <span class="text-xl">🧩</span> Dekomposisi (Decomposition)
                             </div>
-                            <p class="text-xs text-slate-300 mb-2">Memecah masalah kompleks yang besar menjadi bagian-bagian kecil yang lebih sederhana dan mudah dikelola.</p>
-                            <p class="text-xs text-amber-300 bg-amber-950/40 p-2 rounded border border-amber-800/50"><strong>Analogi:</strong> Memecah perakitan sepeda menjadi komponen roda, rantai, stang, dan rem.</p>
+                            <p class="text-xs text-slate-300">Memecah masalah besar/kompleks menjadi sub-masalah kecil yang lebih sederhana dan berdiri sendiri agar mudah dianalisis satu per satu.</p>
+                            <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-xs text-amber-300">
+                                <strong>Analogi Nyata:</strong> Merakit sepeda dibagi menjadi pengerjaan sistem roda, pengereman, rantai transmisi, dan kemudi (stang).
+                            </div>
                         </div>
-                        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
-                            <div class="flex items-center gap-2 text-indigo-400 font-bold mb-1">
-                                <span class="text-lg">🔍</span> Pengenalan Pola (Pattern Recognition)
+
+                        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
+                            <div class="flex items-center gap-2 text-indigo-400 font-bold">
+                                <span class="text-xl">🔍</span> Pengenalan Pola (Pattern Recognition)
                             </div>
-                            <p class="text-xs text-slate-300 mb-2">Mencari kesamaan, tren, atau pola berulang di dalam masalah untuk mempermudah penyelesaian berdasarkan pengalaman terdahulu.</p>
-                            <p class="text-xs text-amber-300 bg-amber-950/40 p-2 rounded border border-amber-800/50"><strong>Analogi:</strong> Mengenali pola cuaca mendung dan angin kencang sebagai tanda akan turun hujan.</p>
+                            <p class="text-xs text-slate-300">Mencari kesamaan, tren, atau keteraturan berulang dalam masalah untuk mempercepat penyelesaian berbasis pengalaman masa lalu.</p>
+                            <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-xs text-amber-300">
+                                <strong>Analogi Nyata:</strong> Mengenali pola awan gelap dan angin kencang sebagai pertanda hujan akan segera turun.
+                            </div>
                         </div>
-                        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
-                            <div class="flex items-center gap-2 text-emerald-400 font-bold mb-1">
-                                <span class="text-lg">🎯</span> Abstraksi (Abstraction)
+
+                        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
+                            <div class="flex items-center gap-2 text-emerald-400 font-bold">
+                                <span class="text-xl">🎯</span> Abstraksi (Abstraction)
                             </div>
-                            <p class="text-xs text-slate-300 mb-2">Fokus hanya pada informasi penting dan relevan, serta mengabaikan detail rumit yang tidak dibutuhkan.</p>
-                            <p class="text-xs text-amber-300 bg-amber-950/40 p-2 rounded border border-amber-800/50"><strong>Analogi:</strong> Melihat peta rute busway hanya fokus pada nama halte, tanpa memperhatikan lekukan jalan raya asli.</p>
+                            <p class="text-xs text-slate-300">Menyaring dan berfokus HANYA pada informasi esensial yang penting, serta mengabaikan detail rumit yang tidak relevan.</p>
+                            <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-xs text-amber-300">
+                                <strong>Analogi Nyata:</strong> Peta rute busway/MRT hanya menampilkan urutan stasiun, mengabaikan kondisi kontur tanah asli.
+                            </div>
                         </div>
-                        <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
-                            <div class="flex items-center gap-2 text-rose-400 font-bold mb-1">
-                                <span class="text-lg">📐</span> Desain Algoritma (Algorithm Design)
+
+                        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
+                            <div class="flex items-center gap-2 text-rose-400 font-bold">
+                                <span class="text-xl">📐</span> Desain Algoritma (Algorithm Design)
                             </div>
-                            <p class="text-xs text-slate-300 mb-2">Menyusun instruksi atau langkah-langkah sistematis berurutan dari awal hingga akhir untuk menyelesaikan masalah.</p>
-                            <p class="text-xs text-amber-300 bg-amber-950/40 p-2 rounded border border-amber-800/50"><strong>Analogi:</strong> Resep langkah-langkah memasak mi instan dari merebus air hingga disajikan.</p>
+                            <p class="text-xs text-slate-300">Menyusun rangkaian instruksi atau langkah-langkah logis berurutan (step-by-step) dari kondisi awal hingga mencapai solusi akhir.</p>
+                            <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-xs text-amber-300">
+                                <strong>Analogi Nyata:</strong> Panduan resep memasak dari menyiapkan bahan, merebus air, memasukkan bumbu, hingga penyajikan.
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Case Studies -->
+                <div class="space-y-4 pt-4 border-t border-slate-800">
+                    <h4 class="text-sm font-bold text-amber-300"><i class="fa-solid fa-flask text-amber-400 mr-1"></i> 1.2 Studi Kasus Penerapan CT</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                            <h5 class="font-bold text-cyan-300 text-sm">Kasus 1: Pemecahan Kunci Gembok Kombinasi</h5>
+                            <p class="text-slate-300">Petunjuk Logika: (682: 1 angka benar & posisi tepat), (614: 1 angka benar tapi posisi salah), (206: 2 angka benar tapi posisi salah), (738: Tidak ada angka benar).</p>
+                            <div class="bg-slate-950 p-2.5 rounded font-mono text-[11px] space-y-1 text-slate-300">
+                                <p>• Dekomposisi: Pisahkan menjadi 3 digit [_][_][_].</p>
+                                <p>• Pengenalan Pola: Eliminasi angka 7, 3, 8, dan 6.</p>
+                                <p>• Abstraksi: Abaikan bahan & merk gembok.</p>
+                                <p>• Solusi Algoritma: Kombinasi kunci tepat adalah <strong class="text-emerald-400">042</strong>.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-2">
+                            <h5 class="font-bold text-indigo-300 text-sm">Kasus 2: Deret Angka & Selisih Pertambahan</h5>
+                            <p class="text-slate-300">Barisan Angka Memori: 2, 5, 10, 17, 26, ...</p>
+                            <div class="bg-slate-950 p-2.5 rounded font-mono text-[11px] space-y-1 text-slate-300">
+                                <p>• Pola Selisih: +3, +5, +7, +9 (Pertambahan Bilangan Ganjil / n² + 1).</p>
+                                <p>• Suku ke-6: 26 + 11 = <strong class="text-emerald-400">37</strong>.</p>
+                                <p>• Suku ke-7: 37 + 13 = <strong class="text-emerald-400">50</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-800 text-right">
+                    <button onclick="finishChapter(1)" class="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold rounded-xl transition-all shadow-lg text-xs inline-flex items-center gap-2">
+                        <span>Selesai Bab 1 ➔ Lanjut ke Bab 2: Struktur Data</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
             </div>
 
-            <!-- CHAP 2 CONTENT -->
-            <div id="chap-2" class="chap-content glass-card p-6 rounded-2xl space-y-4 hidden">
-                <div class="border-b border-slate-700 pb-3">
-                    <h3 class="text-lg font-bold text-amber-400">Bab 2: Memahami Pengertian Struktur Data</h3>
-                    <p class="text-xs text-slate-300 mt-1">Struktur Data adalah metode khusus untuk mengatur, mengorganisasi, menyimpan, dan mengelompokkan data di dalam memori komputer (RAM) agar dapat diakses & diproses secara efisien.</p>
+            <!-- ================= BAB 2 CONTENT ================= -->
+            <div id="chap-2" class="chap-content glass-card p-6 sm:p-8 rounded-2xl space-y-6 hidden">
+                <div class="border-b border-slate-700 pb-4">
+                    <span class="px-3 py-1 bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 rounded-md text-xs font-bold uppercase tracking-wider">Modul 2</span>
+                    <h3 class="text-xl font-bold text-indigo-400 mt-2">Bab 2: Memahami Pengertian & Pentingnya Struktur Data</h3>
+                    <p class="text-xs text-slate-300 mt-1 leading-relaxed">Struktur Data adalah cara khusus untuk mengorganisasi, menyimpan, dan mengelompokkan data di dalam memori komputer (RAM) agar dapat diakses, dimodifikasi, dan diproses secara efektif oleh algoritma.</p>
                 </div>
+
+                <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 text-xs space-y-3">
+                    <h4 class="font-bold text-cyan-300 text-sm">Analogi Utama: Rak Buku Perpustakaan Sekolah</h4>
+                    <p class="text-slate-300 leading-relaxed">
+                        Jika ribuan buku dicampurkan begitu saja dalam satu tumpukan raksasa di lantai (tanpa struktur data), pencarian satu buku sejarah bisa memakan waktu berjam-jam.<br>
+                        Namun, jika buku disusun pada rak bernomor sesuai kategori (Kategori Sejarah ➔ Rak A ➔ Tingkat 2), Anda dapat menemukan buku dalam hitungan detik. Struktur data bertindak seperti susunan rak bernomor tersebut di RAM komputer.
+                    </p>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
-                        <h4 class="font-bold text-indigo-400 mb-2">1. Struktur Data Linear</h4>
-                        <p class="text-slate-300">Elemen-elemen data tersusun secara berurutan satu demi satu dalam satu baris memori. Contoh: Array, Stack, Queue, Linked List.</p>
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <h4 class="font-bold text-cyan-400 text-sm">1. Struktur Data Linear</h4>
+                        <p class="text-slate-300">Elemen-elemen data tersusun berurutan satu demi satu dalam satu baris memori lurus. Elemen memiliki tetangga sebelum dan sesudahnya.</p>
+                        <p class="text-amber-300 bg-slate-950 p-2 rounded">Contoh: Array, Stack, Queue, Linked List.</p>
                     </div>
-                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
-                        <h4 class="font-bold text-rose-400 mb-2">2. Struktur Data Non-Linear</h4>
-                        <p class="text-slate-300">Elemen-elemen data terhubung secara hierarki atau berjejaring, tidak dalam satu baris lurus. Contoh: Tree (Pohon), Graph (Jaringan).</p>
+
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <h4 class="font-bold text-rose-400 text-sm">2. Struktur Data Non-Linear</h4>
+                        <p class="text-slate-300">Elemen data terhubung secara hierarki bertingkat atau berupa hubungan jejaring kompleks, tidak dalam urutan lurus tunggal.</p>
+                        <p class="text-amber-300 bg-slate-950 p-2 rounded">Contoh: Tree (Pohon Decision), Graph (Jaringan Peta/Sosial).</p>
                     </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-800 text-right">
+                    <button onclick="finishChapter(2)" class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-400 hover:to-blue-500 text-white font-extrabold rounded-xl transition-all shadow-lg text-xs inline-flex items-center gap-2">
+                        <span>Selesai Bab 2 ➔ Lanjut ke Bab 3: Jenis Data Linear</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
 
-            <!-- CHAP 3-6 CONTENT -->
-            <div id="chap-3" class="chap-content glass-card p-6 rounded-2xl space-y-4 hidden">
-                <h3 class="text-lg font-bold text-amber-400">Bab 3: Jenis-Jenis Struktur Data Linear</h3>
-                <p class="text-xs text-slate-300">Array (Larik), Stack (Tumpukan - LIFO), dan Queue (Antrean - FIFO).</p>
-            </div>
-            <div id="chap-4" class="chap-content glass-card p-6 rounded-2xl space-y-4 hidden">
-                <h3 class="text-lg font-bold text-amber-400">Bab 4: Algoritma Pencarian (Search Algorithm)</h3>
-                <p class="text-xs text-slate-300">Linear Search O(n) vs Binary Search O(log n).</p>
-            </div>
-            <div id="chap-5" class="chap-content glass-card p-6 rounded-2xl space-y-4 hidden">
-                <h3 class="text-lg font-bold text-amber-400">Bab 5: Algoritma Pengurutan (Sort Algorithm)</h3>
-                <p class="text-xs text-slate-300">Insertion, Selection, Bubble, Quick, dan Merge Sort.</p>
-            </div>
-            <div id="chap-6" class="chap-content glass-card p-6 rounded-2xl space-y-4 hidden">
-                <h3 class="text-lg font-bold text-amber-400">Bab 6: Ringkasan & Perbandingan Algoritma</h3>
-                <p class="text-xs text-slate-300">Perbandingan efisiensi waktu dan penggunaan memori antar algoritma.</p>
+            <!-- ================= BAB 3 CONTENT ================= -->
+            <div id="chap-3" class="chap-content glass-card p-6 sm:p-8 rounded-2xl space-y-6 hidden">
+                <div class="border-b border-slate-700 pb-4">
+                    <span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded-md text-xs font-bold uppercase tracking-wider">Modul 3</span>
+                    <h3 class="text-xl font-bold text-emerald-400 mt-2">Bab 3: Jenis-Jenis Struktur Data Linear</h3>
+                    <p class="text-xs text-slate-300 mt-1">Struktur data linear merupakan fondasi pemrosesan sekensial di hampir semua bahasa pemrograman modern.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <h4 class="font-bold text-cyan-300 text-sm">3.1 Array (Larik)</h4>
+                        <p class="text-slate-300">Kumpulan elemen bertipe data sama pada lokasi memori berdampingan. Diakses langsung menggunakan **Indeks (dimulai dari 0)**.</p>
+                        <p class="text-cyan-300 bg-slate-950 p-2 rounded font-mono">Akses Cepat: O(1) via Indeks</p>
+                    </div>
+
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <h4 class="font-bold text-indigo-300 text-sm">3.2 Stack (Tumpukan)</h4>
+                        <p class="text-slate-300">Bekerja berdasarkan prinsip **LIFO (Last In, First Out)** — data terakhir masuk adalah yang pertama dikeluarkan.</p>
+                        <p class="text-indigo-300 bg-slate-950 p-2 rounded font-mono">Operasi: Push (Masuk) & Pop (Keluar dari TOP)</p>
+                    </div>
+
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <h4 class="font-bold text-emerald-300 text-sm">3.3 Queue (Antrean)</h4>
+                        <p class="text-slate-300">Bekerja berdasarkan prinsip **FIFO (First In, First Out)** — data pertama masuk adalah yang pertama dilayani/keluar.</p>
+                        <p class="text-emerald-300 bg-slate-950 p-2 rounded font-mono">Operasi: Enqueue (Masuk REAR) & Dequeue (Keluar FRONT)</p>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-800 text-right">
+                    <button onclick="finishChapter(3)" class="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-extrabold rounded-xl transition-all shadow-lg text-xs inline-flex items-center gap-2">
+                        <span>Selesai Bab 3 ➔ Lanjut ke Bab 4: Algoritma Pencarian</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
             </div>
 
-            <!-- Reading Completion Button -->
-            <div class="glass-card p-6 rounded-2xl border border-amber-500/50 text-center space-y-3 bg-gradient-to-r from-amber-950/40 via-slate-900 to-orange-950/40">
-                <h3 class="text-base font-bold text-amber-400">Selesai Membaca Seluruh Modul?</h3>
-                <p class="text-xs text-slate-300 max-w-xl mx-auto">Klik tombol konfirmasi di bawah ini untuk mengklaim bonus XP dan membuka **Tahap 2: Identitas Siswa (Login)**!</p>
-                <button onclick="completeMateriStage()" class="px-8 py-3 bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-extrabold rounded-xl transition-all shadow-xl shadow-amber-500/25 text-xs flex items-center justify-center gap-2 mx-auto">
-                    <i class="fa-solid fa-circle-check text-base"></i> Saya Sudah Membaca Seluruh Materi (Buka Tahap Identitas Siswa)
-                </button>
+            <!-- ================= BAB 4 CONTENT ================= -->
+            <div id="chap-4" class="chap-content glass-card p-6 sm:p-8 rounded-2xl space-y-6 hidden">
+                <div class="border-b border-slate-700 pb-4">
+                    <span class="px-3 py-1 bg-sky-500/20 text-sky-300 border border-sky-500/40 rounded-md text-xs font-bold uppercase tracking-wider">Modul 4</span>
+                    <h3 class="text-xl font-bold text-sky-400 mt-2">Bab 4: Algoritma Pencarian (Search Algorithm)</h3>
+                    <p class="text-xs text-slate-300 mt-1">Metode sistematis untuk menemukan posisi elemen data tertentu di dalam kumpulan data.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <h4 class="font-bold text-cyan-400 text-sm">4.1 Linear Search (Pencarian Berurutan)</h4>
+                        <p class="text-slate-300">Memeriksa elemen satu per satu dari indeks pertama (0) hingga akhir. Cocok untuk data acak / tidak terurut.</p>
+                        <div class="bg-slate-950 p-2.5 rounded text-slate-400 font-mono">
+                            <p>• Kompleksitas Waktu: <strong>O(n)</strong></p>
+                            <p>• Kelebihan: Tidak butuh pengurutan awal.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
+                        <h4 class="font-bold text-indigo-400 text-sm">4.2 Binary Search (Pencarian Biner)</h4>
+                        <p class="text-slate-300">Mengambil titik tengah (MID) lalu membelah area pencarian menjadi dua bagian. <span class="text-amber-400 font-bold">Syarat Wajib: Data HARUS Terurut!</span></p>
+                        <div class="bg-slate-950 p-2.5 rounded text-slate-400 font-mono">
+                            <p>• Kompleksitas Waktu: <strong>O(log n)</strong></p>
+                            <p>• Kelebihan: Sangat cepat untuk data raksasa.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-800 text-right">
+                    <button onclick="finishChapter(4)" class="px-6 py-3 bg-gradient-to-r from-sky-500 to-cyan-600 hover:from-sky-400 hover:to-cyan-500 text-white font-extrabold rounded-xl transition-all shadow-lg text-xs inline-flex items-center gap-2">
+                        <span>Selesai Bab 4 ➔ Lanjut ke Bab 5: Algoritma Pengurutan</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ================= BAB 5 CONTENT ================= -->
+            <div id="chap-5" class="chap-content glass-card p-6 sm:p-8 rounded-2xl space-y-6 hidden">
+                <div class="border-b border-slate-700 pb-4">
+                    <span class="px-3 py-1 bg-rose-500/20 text-rose-300 border border-rose-500/40 rounded-md text-xs font-bold uppercase tracking-wider">Modul 5</span>
+                    <h3 class="text-xl font-bold text-rose-400 mt-2">Bab 5: 5 Algoritma Pengurutan Utama (Sorting)</h3>
+                    <p class="text-xs text-slate-300 mt-1">Mengatur ulang susunan elemen data dari nilai terkecil ke terbesar (Ascending) atau sebaliknya.</p>
+                </div>
+
+                <div class="space-y-3 text-xs">
+                    <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800">
+                        <h4 class="font-bold text-cyan-300">5.1 Bubble Sort</h4>
+                        <p class="text-slate-300">Membandingkan pasangan berdampingan dan menukarnya jika urutannya salah berulang kali hingga data terbesar mengapung ke kanan.</p>
+                    </div>
+                    <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800">
+                        <h4 class="font-bold text-indigo-300">5.2 Selection Sort</h4>
+                        <p class="text-slate-300">Mencari elemen terkecil di bagian belum terurut, lalu menukarnya (swap) ke posisi depan.</p>
+                    </div>
+                    <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800">
+                        <h4 class="font-bold text-emerald-300">5.3 Insertion Sort</h4>
+                        <p class="text-slate-300">Menyisipkan data satu per satu ke posisi yang tepat pada bagian yang sudah terurut di sebelah kiri.</p>
+                    </div>
+                    <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800">
+                        <h4 class="font-bold text-amber-300">5.4 Quick Sort</h4>
+                        <p class="text-slate-300">Memilih elemen **Pivot**, membagi data menjadi dua kelompok (&lt; pivot & &gt; pivot), lalu mengurutkan secara rekursif.</p>
+                    </div>
+                    <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800">
+                        <h4 class="font-bold text-rose-300">5.5 Merge Sort</h4>
+                        <p class="text-slate-300">Prinsip **Divide and Conquer**: membelah array hingga tunggal, lalu menggabungkannya kembali secara terurut.</p>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-800 text-right">
+                    <button onclick="finishChapter(5)" class="px-6 py-3 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white font-extrabold rounded-xl transition-all shadow-lg text-xs inline-flex items-center gap-2">
+                        <span>Selesai Bab 5 ➔ Lanjut ke Bab 6: Ringkasan Perbandingan</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ================= BAB 6 CONTENT (LAST CHAPTER) ================= -->
+            <div id="chap-6" class="chap-content glass-card p-6 sm:p-8 rounded-2xl space-y-6 hidden">
+                <div class="border-b border-slate-700 pb-4">
+                    <span class="px-3 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-md text-xs font-bold uppercase tracking-wider">Modul Final</span>
+                    <h3 class="text-xl font-bold text-amber-400 mt-2">Bab 6: Ringkasan & Tabel Perbandingan Efisiensi</h3>
+                    <p class="text-xs text-slate-300 mt-1">Evaluasi performa kompleksitas waktu (Time Complexity) dan penggunaan memori (Space Complexity).</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900 text-amber-300 border-b border-slate-700">
+                                <th class="p-3">Algoritma</th>
+                                <th class="p-3">Prinsip Utama</th>
+                                <th class="p-3">Best Case</th>
+                                <th class="p-3">Worst Case</th>
+                                <th class="p-3">Kelebihan Utama</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800 text-slate-300">
+                            <tr>
+                                <td class="p-3 font-bold text-cyan-400">Linear Search</td>
+                                <td class="p-3">Cek satu per satu</td>
+                                <td class="p-3 font-mono">O(1)</td>
+                                <td class="p-3 font-mono">O(n)</td>
+                                <td class="p-3">Sederhana, data acak</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-bold text-indigo-400">Binary Search</td>
+                                <td class="p-3">Bagi dua wilayah</td>
+                                <td class="p-3 font-mono">O(1)</td>
+                                <td class="p-3 font-mono">O(log n)</td>
+                                <td class="p-3">Sangat cepat di data besar</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-bold text-emerald-400">Insertion Sort</td>
+                                <td class="p-3">Sisip ke kiri terurut</td>
+                                <td class="p-3 font-mono">O(n)</td>
+                                <td class="p-3 font-mono">O(n²)</td>
+                                <td class="p-3">Efisien jika data hampir rapi</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-bold text-amber-400">Selection Sort</td>
+                                <td class="p-3">Cari min, tukar depan</td>
+                                <td class="p-3 font-mono">O(n²)</td>
+                                <td class="p-3 font-mono">O(n²)</td>
+                                <td class="p-3">Jumlah penukaran (swap) sedikit</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-bold text-rose-400">Bubble Sort</td>
+                                <td class="p-3">Tukar berdampingan</td>
+                                <td class="p-3 font-mono">O(n)</td>
+                                <td class="p-3 font-mono">O(n²)</td>
+                                <td class="p-3">Mudah dipahami pemula</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-bold text-sky-400">Quick Sort</td>
+                                <td class="p-3">Partisi elemen Pivot</td>
+                                <td class="p-3 font-mono">O(n log n)</td>
+                                <td class="p-3 font-mono">O(n²)</td>
+                                <td class="p-3">Sangat cepat dalam praktik</td>
+                            </tr>
+                            <tr>
+                                <td class="p-3 font-bold text-purple-400">Merge Sort</td>
+                                <td class="p-3">Belah lalu gabung</td>
+                                <td class="p-3 font-mono">O(n log n)</td>
+                                <td class="p-3 font-mono">O(n log n)</td>
+                                <td class="p-3">Performa stabil konsisten</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- SOLE FINAL COMPLETION BUTTON (ONLY APPEARS HERE) -->
+                <div class="pt-6 border-t border-slate-700/80 text-center space-y-3 bg-gradient-to-r from-amber-950/40 via-slate-900 to-orange-950/40 p-6 rounded-2xl border border-amber-500/50">
+                    <h4 class="text-base font-bold text-amber-400">🎉 Selamat! Seluruh Modul Materi Selesai Dibaca!</h4>
+                    <p class="text-xs text-slate-300 max-w-xl mx-auto">Klik tombol di bawah ini untuk klaim bonus XP dan membuka **Tahap 2: Identitas Siswa (Login)**.</p>
+                    <button onclick="completeAllMateri()" class="px-8 py-3.5 bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-extrabold rounded-xl transition-all shadow-xl shadow-amber-500/25 text-xs inline-flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-base"></i>
+                        <span>Selesai Membaca Seluruh Materi (Buka Tahap Identitas Siswa)</span>
+                    </button>
+                </div>
             </div>
         </section>
 
-        <!-- ================= TAB 2: LOGIN / IDENTITAS SISWA ================= -->
+        <!-- ================= TAB 2: IDENTITAS SISWA ================= -->
         <section id="tab-login" class="tab-content space-y-6 hidden">
             <div class="glass-card p-6 rounded-2xl border border-slate-800 max-w-2xl mx-auto">
                 <div class="flex items-center gap-3 mb-4 border-b border-slate-800 pb-4">
@@ -396,7 +641,7 @@
             <div class="glass-card p-6 rounded-2xl border border-slate-800 flex items-center justify-between">
                 <div>
                     <h2 class="text-xl font-bold text-white">Tahap 3: 4 Pillar Computational Thinking</h2>
-                    <p class="text-xs text-slate-300">Selesaikan seluruh 4 simulasi pilar di bawah untuk membuka Tahap 4!</p>
+                    <p class="text-xs text-slate-300">Selesaikan seluruh simulasi pilar untuk melanjutkan.</p>
                 </div>
                 <button onclick="unlockNextStageFromCT()" class="px-4 py-2 bg-emerald-600 text-white font-bold text-xs rounded-xl">Lanjut Ke Stage 4 ➔</button>
             </div>
@@ -459,12 +704,10 @@
                     </h3>
                 </div>
 
-                <!-- Options -->
                 <div id="quiz-options-container" class="grid grid-cols-1 gap-3 text-xs">
                     <!-- Dynamic option buttons -->
                 </div>
 
-                <!-- Explanation Box -->
                 <div id="quiz-explanation" class="hidden bg-slate-900 p-4 rounded-xl border border-slate-800 text-xs space-y-2">
                     <p class="font-bold" id="quiz-feedback-title"></p>
                     <p class="text-slate-300" id="quiz-explanation-text"></p>
@@ -537,7 +780,6 @@
             <div id="certificate-print-area" class="glass-card p-6 sm:p-10 rounded-2xl border-4 border-amber-500/50 relative overflow-hidden max-w-4xl mx-auto bg-slate-900/95 shadow-2xl">
                 <div class="cert-border-inner border-2 border-cyan-400/50 rounded-xl p-6 sm:p-8 relative flex flex-col justify-between">
                     
-                    <!-- Header -->
                     <div class="text-center space-y-1">
                         <div class="flex items-center justify-center gap-3 mb-1">
                             <span class="text-2xl text-amber-400">🎓</span>
@@ -548,7 +790,6 @@
                         <p class="text-[11px] text-slate-400 italic cert-text-dark">Nomor Registrasi: <span id="cert-number" class="font-mono font-bold text-slate-200">CTQ/CERT/2026001</span></p>
                     </div>
 
-                    <!-- Body -->
                     <div class="text-center space-y-3 my-4">
                         <p class="text-xs sm:text-sm text-slate-300 cert-text-dark">Diberikan secara resmi kepada siswa/siswi:</p>
                         
@@ -585,7 +826,6 @@
                         </div>
                     </div>
 
-                    <!-- Footer -->
                     <div class="pt-4 border-t border-slate-700/60 flex flex-row justify-between items-end text-xs text-slate-300">
                         <div class="text-left space-y-1">
                             <p class="text-[10px] text-slate-400 cert-text-dark">Tanggal Diterbitkan:</p>
@@ -632,16 +872,29 @@
             isLoggedIn: false
         };
 
+        // Main Tab Unlocking Progress
         let stageUnlocked = {
             'tab-materi': true,
-            'tab-login': true,
-            'tab-ct': true,
-            'tab-data': true,
-            'tab-search': true,
-            'tab-sort': true,
-            'tab-quiz': true,
-            'tab-cert': true
+            'tab-login': false,
+            'tab-ct': false,
+            'tab-data': false,
+            'tab-search': false,
+            'tab-sort': false,
+            'tab-quiz': false,
+            'tab-cert': false
         };
+
+        // Step-by-Step Chapter Unlocking Progress inside Materi
+        let chapUnlocked = {
+            1: true,
+            2: false,
+            3: false,
+            4: false,
+            5: false,
+            6: false
+        };
+
+        let currentActiveChap = 1;
 
         let audioCtx = null;
         let isBgmPlaying = false;
@@ -653,7 +906,7 @@
         }
 
         function addXP(amount) {
-            playerScore = Math.max(0, playerScore + amount); // Pastikan poin tidak negatif
+            playerScore = Math.max(0, playerScore + amount);
             document.getElementById('player-score').innerText = playerScore;
 
             const newLevel = Math.floor(playerScore / 100) + 1;
@@ -692,12 +945,89 @@
             if (progressText) progressText.innerText = percent + '%';
         }
 
-        function completeMateriStage() {
-            stageUnlocked['tab-login'] = true;
-            updateTabLockUI();
+        /* ================= STEP-BY-STEP MATERI CHAPTER LOGIC ================= */
+        function updateChapNavUI() {
+            let unlockedCount = 0;
+            for (let i = 1; i <= 6; i++) {
+                const btn = document.getElementById('btn-chap-' + i);
+                const badge = document.getElementById('badge-chap-' + i);
+                if (!btn) continue;
+
+                if (chapUnlocked[i]) {
+                    unlockedCount++;
+                    btn.classList.remove('chap-locked');
+                    if (badge) badge.innerText = '✅';
+                } else {
+                    btn.classList.add('chap-locked');
+                    if (badge) badge.innerText = '🔒';
+                }
+            }
+
+            document.getElementById('materi-progress-text').innerText = `${unlockedCount}/6 Bab Terbuka`;
+        }
+
+        function selectChapter(chapNum) {
+            playSound('click');
+            if (!chapUnlocked[chapNum]) {
+                playSound('wrong');
+                showToast(`🔒 Bab ${chapNum} masih terkunci! Selesaikan Bab ${chapNum - 1} terlebih dahulu.`);
+                return;
+            }
+
+            currentActiveChap = chapNum;
+            document.querySelectorAll('.chap-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('chap-' + chapNum).classList.remove('hidden');
+
+            for (let i = 1; i <= 6; i++) {
+                const btn = document.getElementById('btn-chap-' + i);
+                if (!btn) continue;
+                if (i === chapNum) {
+                    btn.className = "chap-btn px-4 py-2.5 rounded-xl text-xs font-bold transition-all bg-amber-500 text-slate-950 flex items-center gap-2 shadow-lg";
+                } else {
+                    const isUnlocked = chapUnlocked[i];
+                    btn.className = `chap-btn ${isUnlocked ? '' : 'chap-locked'} px-4 py-2.5 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:text-white flex items-center gap-2`;
+                }
+            }
+        }
+
+        function finishChapter(currentChap) {
+            playSound('correct');
+            addXP(15);
+            const nextChap = currentChap + 1;
+            if (nextChap <= 6) {
+                chapUnlocked[nextChap] = true;
+                updateChapNavUI();
+                selectChapter(nextChap);
+                showToast(`✨ Bab ${currentChap} Selesai! (+15 XP) Bab ${nextChap} Terbuka.`);
+            }
+        }
+
+        function completeAllMateri() {
+            if (!stageUnlocked['tab-login']) {
+                stageUnlocked['tab-login'] = true;
+                updateTabLockUI();
+                addXP(30);
+                playSound('levelup');
+                fireConfetti();
+                showToast("🎉 Modul Materi Lengkap Selesai! Tahap Identitas Siswa Terbuka.");
+            }
             switchTab('tab-login');
         }
 
+        function showToast(message) {
+            let toast = document.getElementById('lock-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'lock-toast';
+                toast.className = 'fixed bottom-6 right-6 z-50 bg-slate-900/95 border border-amber-500 text-amber-200 px-5 py-3 rounded-2xl shadow-2xl text-xs font-bold transition-all animate-toast backdrop-blur-md flex items-center gap-2';
+                document.body.appendChild(toast);
+            }
+            toast.innerHTML = message;
+            toast.style.display = 'flex';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        /* ================= LOGIN & OTHER STAGES ================= */
         function handleLoginSubmit(event) {
             event.preventDefault();
             const nameInput = document.getElementById('input-student-name').value.trim();
@@ -762,58 +1092,22 @@
             window.print();
         }
 
-        /* ================= QUIZ ENGINE WITH STRICT SCORE RULES ================= */
+        /* ================= QUIZ ENGINE ================= */
         const quizBank = [
-            {
-                category: "Jenis 1 - 4 Pondasi CT",
-                question: "Pilar Berpikir Komputasional yang memecah masalah besar menjadi bagian kecil adalah...",
-                options: ["Abstraksi", "Dekomposisi", "Pengenalan Pola", "Algoritma"],
-                correct: 1,
-                explanation: "Dekomposisi memecah masalah kompleks menjadi komponen-komponents kecil yang mudah dikelola."
-            },
-            {
-                category: "Jenis 1 - Kasus Logika",
-                question: "Pada kasus kunci gembok kombinasi (682: 1 tepat, 614: 1 salah pos, 206: 2 salah pos, 738: salah semua), kombinasi tepat adalah...",
-                options: ["682", "042", "206", "738"],
-                correct: 1,
-                explanation: "Menggunakan metode eliminasi logika CT, hasil akhir kombinasi gembok yang tepat adalah 042."
-            },
-            {
-                category: "Jenis 2 - Struktur Data",
-                question: "Manakah di bawah ini yang tergolong ke dalam Struktur Data Non-Linear?",
-                options: ["Array & Stack", "Queue & Linked List", "Tree (Pohon) & Graph (Jaringan)", "Stack & Queue"],
-                correct: 2,
-                explanation: "Tree dan Graph merupakan struktur data non-linear karena terhubung secara berjejaring atau hierarki."
-            },
-            {
-                category: "Jenis 3 - Data Linear",
-                question: "Struktur data Stack (Tumpukan) bekerja dengan prinsip...",
-                options: ["FIFO (First-In First-Out)", "LIFO (Last-In First-Out)", "Random Access", "Linear Search"],
-                correct: 1,
-                explanation: "Stack menggunakan LIFO — elemen terakhir yang dimasukkan adalah yang pertama dikeluarkan."
-            },
-            {
-                category: "Jenis 4 - Algoritma Pencarian",
-                question: "Syarat mutlak untuk menjalankan algoritma Binary Search adalah...",
-                options: ["Data berjumlah di atas 100", "Data HARUS sudah terurut", "Data harus berupa teks", "Memori RAM harus kosong"],
-                correct: 1,
-                explanation: "Binary Search hanya bekerja dengan benar pada data yang sudah terurut (Sorted)."
-            },
-            {
-                category: "Jenis 5 - Algoritma Pengurutan",
-                question: "Algoritma pengurutan yang memilih elemen 'Pivot' untuk pemisahan partisi adalah...",
-                options: ["Insertion Sort", "Selection Sort", "Quick Sort", "Bubble Sort"],
-                correct: 2,
-                explanation: "Quick Sort membagi elemen array berdasarkan perbandingan terhadap elemen Pivot."
-            }
+            { category: "Jenis 1 - 4 Pondasi CT", question: "Pilar Berpikir Komputasional yang memecah masalah besar menjadi bagian kecil adalah...", options: ["Abstraksi", "Dekomposisi", "Pengenalan Pola", "Algoritma"], correct: 1, explanation: "Dekomposisi memecah masalah kompleks menjadi komponen kecil yang mudah dikelola." },
+            { category: "Jenis 1 - Kasus Logika", question: "Pada gembok kombinasi (682: 1 tepat, 614: 1 salah pos, 206: 2 salah pos, 738: salah semua), kombinasi tepat adalah...", options: ["682", "042", "206", "738"], correct: 1, explanation: "Kombinasi gembok yang tepat adalah 042." },
+            { category: "Jenis 2 - Struktur Data", question: "Manakah di bawah ini yang tergolong Struktur Data Non-Linear?", options: ["Array & Stack", "Queue & Linked List", "Tree (Pohon) & Graph (Jaringan)", "Stack & Queue"], correct: 2, explanation: "Tree dan Graph merupakan struktur data non-linear berjejaring/hierarki." },
+            { category: "Jenis 3 - Data Linear", question: "Struktur data Stack (Tumpukan) bekerja dengan prinsip...", options: ["FIFO", "LIFO", "Random Access", "Linear Search"], correct: 1, explanation: "Stack menggunakan LIFO (Last-In First-Out)." },
+            { category: "Jenis 4 - Algoritma Pencarian", question: "Syarat mutlak untuk menjalankan algoritma Binary Search adalah...", options: ["Data > 100", "Data HARUS sudah terurut", "Data harus teks", "RAM harus kosong"], correct: 1, explanation: "Binary Search membelah wilayah pencarian hanya jika data terurut." },
+            { category: "Jenis 5 - Algoritma Pengurutan", question: "Algoritma pengurutan yang memilih elemen 'Pivot' untuk pemisahan partisi adalah...", options: ["Insertion Sort", "Selection Sort", "Quick Sort", "Bubble Sort"], correct: 2, explanation: "Quick Sort membagi elemen berdasarkan perbandingan terhadap Pivot." }
         ];
 
         let currentQuizIdx = 0;
         let quizCorrectCount = 0;
-        let questionXPClaimed = false; // Memastikan penambahan poin benar hanya 1x per soal
+        let questionXPClaimed = false;
 
         function renderQuizQuestion() {
-            questionXPClaimed = false; // Reset klaim poin untuk soal baru
+            questionXPClaimed = false;
             const q = quizBank[currentQuizIdx];
             document.getElementById('quiz-progress-text').innerText = currentQuizIdx + 1;
             document.getElementById('quiz-total-text').innerText = quizBank.length;
@@ -837,15 +1131,13 @@
             const isCorrect = selectedIdx === q.correct;
 
             if (isCorrect) {
-                // Jawaban Benar
                 if (!questionXPClaimed) {
-                    addXP(20); // Tambah +20 XP hanya 1x per soal
+                    addXP(20);
                     questionXPClaimed = true;
                     quizCorrectCount++;
                 }
                 playSound('correct');
 
-                // Kunci seluruh tombol opsi setelah berhasil menjawab benar
                 document.querySelectorAll('.quiz-opt-btn').forEach((btn, idx) => {
                     btn.disabled = true;
                     if (idx === q.correct) {
@@ -859,13 +1151,10 @@
                 document.getElementById('quiz-feedback-title').className = "font-bold text-emerald-400";
                 document.getElementById('quiz-explanation-text').innerText = q.explanation;
                 document.getElementById('btn-next-question').classList.remove('hidden');
-
             } else {
-                // Jawaban Salah: Selalu mengurangi -10 XP tiap kali tombol salah diklik
                 addXP(-10);
                 playSound('wrong');
 
-                // Nonaktifkan hanya tombol salah yang diklik
                 if (btnElement) {
                     btnElement.disabled = true;
                     btnElement.className = "quiz-opt-btn p-3 bg-rose-950/80 border border-rose-500 text-rose-300 rounded-xl text-left flex items-center justify-between w-full opacity-60 cursor-not-allowed";
@@ -875,7 +1164,7 @@
                 expBox.classList.remove('hidden');
                 document.getElementById('quiz-feedback-title').innerText = "❌ Jawaban Salah (-10 XP)";
                 document.getElementById('quiz-feedback-title').className = "font-bold text-rose-400";
-                document.getElementById('quiz-explanation-text').innerText = "Pilihan ini belum tepat. Poin Anda berkurang 10 XP. Silakan coba pilih jawaban lain!";
+                document.getElementById('quiz-explanation-text').innerText = "Pilihan ini kurang tepat. Poin Anda berkurang 10 XP. Coba pilih jawaban lain!";
             }
         }
 
@@ -985,6 +1274,12 @@
 
         function switchTab(tabId) {
             playSound('click');
+            if (!stageUnlocked[tabId]) {
+                playSound('wrong');
+                showToast("🔒 Tahap ini masih terkunci! Selesaikan tahap sebelumnya.");
+                return;
+            }
+
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(tabId).classList.remove('hidden');
 
@@ -999,23 +1294,10 @@
             updateTabLockUI();
         }
 
-        function showChapter(chapId) {
-            playSound('click');
-            document.querySelectorAll('.chap-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(chapId).classList.remove('hidden');
-
-            document.querySelectorAll('.chap-btn').forEach(btn => {
-                btn.className = "chap-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white";
-            });
-
-            const activeBtn = document.getElementById('btn-' + chapId);
-            if (activeBtn) {
-                activeBtn.className = "chap-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-amber-500 text-slate-950";
-            }
-        }
-
         window.onload = function() {
             updateTabLockUI();
+            updateChapNavUI();
+            selectChapter(1);
             renderQuizQuestion();
             updateCertificateView();
         };
