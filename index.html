@@ -32,15 +32,12 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
         .glass-card { background: rgba(30, 41, 59, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
         .glass-nav { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(16px); }
-        .glow-cyan { box-shadow: 0 0 20px rgba(6, 182, 212, 0.35); }
-        .glow-indigo { box-shadow: 0 0 20px rgba(99, 102, 241, 0.35); }
-        .glow-amber { box-shadow: 0 0 20px rgba(245, 158, 11, 0.35); }
         
         .array-bar {
             transition: height 0.25s ease-in-out, background-color 0.25s ease-in-out, transform 0.2s;
@@ -67,51 +64,93 @@
             filter: grayscale(0.6);
         }
 
-        /* Hide scrollbar for horizontal scroll tabs on mobile */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Toast animation */
         @keyframes toastSlide {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
         .animate-toast { animation: toastSlide 0.25s ease-out forwards; }
 
-        /* Media Print Rules for Official Certificate */
+        /* ================= MEDIA PRINT RULES FOR A4 LANDSCAPE ================= */
         @media print {
-            body {
-                background: white !important;
-                color: black !important;
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+            html, body {
+                width: 297mm;
+                height: 210mm;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #ffffff !important;
+                color: #0f172a !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
             header, footer, nav, .no-print, .tab-content:not(#tab-cert) {
                 display: none !important;
             }
-            #tab-cert {
-                display: block !important;
+            main {
                 padding: 0 !important;
                 margin: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            #tab-cert {
+                display: flex !important;
+                justify-content: center;
+                align-items: center;
+                width: 297mm !important;
+                height: 210mm !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                box-sizing: border-box !important;
             }
             #certificate-print-area {
-                border: 10px double #0284c7 !important;
+                width: 283mm !important;
+                height: 196mm !important;
+                margin: 7mm auto !important;
+                padding: 6mm !important;
+                box-sizing: border-box !important;
                 background: #ffffff !important;
                 color: #0f172a !important;
+                border: 4px double #0284c7 !important;
+                border-radius: 8px !important;
                 box-shadow: none !important;
-                width: 100% !important;
-                max-width: 100% !important;
-                padding: 40px !important;
-                page-break-inside: avoid;
+                page-break-inside: avoid !important;
+                page-break-after: avoid !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
             }
             .cert-border-inner {
-                border: 2px solid #38bdf8 !important;
-                padding: 24px !important;
+                border: 2px solid #0284c7 !important;
+                height: 100% !important;
+                padding: 6mm 10mm !important;
+                box-sizing: border-box !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+                border-radius: 6px !important;
+                background: radial-gradient(circle at center, #ffffff 60%, #f8fafc 100%) !important;
+            }
+            .cert-gradient-text {
+                background: none !important;
+                -webkit-text-fill-color: initial !important;
+                color: #0369a1 !important;
             }
             .cert-text-dark {
                 color: #0f172a !important;
             }
-            @page {
-                size: landscape A4;
-                margin: 10mm;
+            .cert-badge {
+                background-color: #f0f9ff !important;
+                border: 1px solid #bae6fd !important;
+                color: #0369a1 !important;
+            }
+            .cert-badge-text {
+                color: #0284c7 !important;
             }
         }
     </style>
@@ -132,9 +171,8 @@
                 </div>
             </div>
 
-            <!-- Stats, Student Identity & Audio Controls -->
+            <!-- Stats & Controls -->
             <div class="flex flex-wrap items-center justify-center gap-3 bg-slate-900/80 px-4 py-2 rounded-full border border-slate-700/60">
-                <!-- Student Profile Badge -->
                 <div id="header-student-badge" onclick="switchTab('tab-login')" class="flex items-center gap-1.5 text-xs text-cyan-300 font-semibold cursor-pointer hover:text-white transition-all bg-slate-800 px-2.5 py-1 rounded-full border border-slate-700">
                     <i class="fa-solid fa-user-circle text-cyan-400"></i>
                     <span id="header-student-name">Belum Login</span>
@@ -150,7 +188,6 @@
                     Lvl <span id="player-level">1</span>
                 </div>
                 <div class="h-4 w-px bg-slate-700"></div>
-                <!-- Global Overall Progress Tracker -->
                 <div class="hidden md:flex items-center gap-2 text-xs text-slate-300">
                     <span>Kemajuan:</span>
                     <div class="w-20 h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
@@ -159,7 +196,6 @@
                     <span id="global-progress-text" class="text-cyan-400 font-bold text-[11px]">12%</span>
                 </div>
                 <div class="h-4 w-px bg-slate-700 hidden md:block"></div>
-                <!-- BGM Button -->
                 <button id="bgm-toggle-btn" onclick="toggleBGM()" class="text-xs px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all border border-slate-600 flex items-center gap-1">
                     🎵 BGM: OFF
                 </button>
@@ -170,7 +206,7 @@
     <!-- Main Container -->
     <main class="max-w-7xl mx-auto w-full px-4 sm:px-8 py-6 flex-grow">
         
-        <!-- Navigation Tabs with Horizontal Scroll for Mobile -->
+        <!-- Navigation Tabs -->
         <nav class="flex gap-2 mb-6 border-b border-slate-800 pb-3 overflow-x-auto no-scrollbar sm:flex-wrap" id="tab-nav">
             <button onclick="switchTab('tab-materi')" id="btn-tab-materi" class="tab-btn shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/20">
                 <i class="fa-solid fa-book-open"></i> 1. Materi Belajar <span id="badge-tab-materi" class="text-xs">✅</span>
@@ -210,7 +246,7 @@
                 </div>
             </div>
 
-            <!-- Chapter Navigation Tabs inside Materi -->
+            <!-- Chapter Navigation Tabs -->
             <div class="flex flex-wrap gap-2">
                 <button onclick="showChapter('chap-1')" id="btn-chap-1" class="chap-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-amber-500 text-slate-950">Bab 1: 4 Pondasi CT</button>
                 <button onclick="showChapter('chap-2')" id="btn-chap-2" class="chap-btn px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:text-white">Bab 2: Pengertian Struktur Data</button>
@@ -260,52 +296,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- 1.2 Case Studies -->
-                <div class="space-y-4 pt-4 border-t border-slate-800">
-                    <h4 class="text-sm font-bold text-amber-300">1.2 Bahan Latihan & Kasus Dunia Nyata</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 text-xs space-y-2">
-                            <h5 class="font-bold text-cyan-300 text-sm">Kasus 1: Pemecahan Kunci Gembok Kombinasi</h5>
-                            <p class="text-slate-300">Petunjuk Logika: (682: 1 angka benar & posisi tepat), (614: 1 angka benar tapi posisi salah), (206: 2 angka benar tapi posisi salah), (738: Tidak ada angka benar).</p>
-                            <div class="bg-slate-950 p-2.5 rounded text-slate-300 font-mono text-[11px] space-y-1">
-                                <p>• 🧩 Dekomposisi: Membagi menjadi 3 digit [_][_][_].</p>
-                                <p>• 🔍 Pengenalan Pola: Eliminasi 7, 3, 8, dan 6.</p>
-                                <p>• 🎯 Abstraksi: Abaikan merk & bahan gembok.</p>
-                                <p>• 📐 Hasil Akhir Kombinasi: <strong class="text-emerald-400">042</strong>.</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 text-xs space-y-2">
-                            <h5 class="font-bold text-indigo-300 text-sm">Kasus 2: Robot Navigasi Petak 4x4</h5>
-                            <p class="text-slate-300">Robot harus berjalan dari Start (0,0) menuju Finish (3,3) menghindari dinding di (1,1) dan (2,2).</p>
-                            <div class="bg-slate-950 p-2.5 rounded text-slate-300 font-mono text-[11px] space-y-1">
-                                <p>1. Start (0,0) -> Maju ke (2,0)</p>
-                                <p>2. Belok Kiri -> Maju ke (2,1)</p>
-                                <p>3. Belok Kanan -> Maju ke (3,1)</p>
-                                <p>4. Belok Kiri -> Maju 2 langkah ke Finish (3,3)</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 text-xs space-y-2">
-                            <h5 class="font-bold text-emerald-300 text-sm">Kasus 3: Outfit Matching (Kemeja & Celana)</h5>
-                            <p class="text-slate-300">3 Kemeja (Putih, Biru, Merah) dan 2 Celana (Hitam, Cokelat).</p>
-                            <div class="bg-slate-950 p-2.5 rounded text-slate-300 font-mono text-[11px]">
-                                <p>• Pola Kombinasi: 3 Kemeja × 2 Celana = <strong class="text-cyan-400">6 Varian Pasangan Outfit</strong>.</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 text-xs space-y-2">
-                            <h5 class="font-bold text-rose-300 text-sm">Kasus 4: Deret Angka & Selisih Pertambahan</h5>
-                            <p class="text-slate-300">Barisan: 2, 5, 10, 17, 26, ...</p>
-                            <div class="bg-slate-950 p-2.5 rounded text-slate-300 font-mono text-[11px] space-y-1">
-                                <p>• Selisih: +3, +5, +7, +9 (Bilangan Ganjil / $n^2+1$)</p>
-                                <p>• Suku ke-6: $26 + 11 = $ <strong class="text-emerald-400">37</strong></p>
-                                <p>• Suku ke-7: $37 + 13 = $ <strong class="text-emerald-400">50</strong></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- CHAP 2 CONTENT -->
@@ -314,15 +304,6 @@
                     <h3 class="text-lg font-bold text-amber-400">Bab 2: Memahami Pengertian Struktur Data</h3>
                     <p class="text-xs text-slate-300 mt-1">Struktur Data adalah metode khusus untuk mengatur, mengorganisasi, menyimpan, dan mengelompokkan data di dalam memori komputer (RAM) agar dapat diakses & diproses secara efisien.</p>
                 </div>
-
-                <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800 text-xs space-y-3">
-                    <h4 class="font-bold text-cyan-300 text-sm">Analogi Dunia Nyata: Rak Perpustakaan Sekolah</h4>
-                    <p class="text-slate-300 leading-relaxed">
-                        Jika ribuan buku dicampurkan begitu saja dalam satu tumpukan raksasa di lantai (tanpa struktur), Anda akan membutuhkan waktu berjam-jam untuk menemukan satu buku sejarah.<br>
-                        Namun jika buku dikelompokkan pada rak-rak bernomor berdasarkan kategori (Kategori Sejarah, Rak A, Tingkat 2), Anda dapat menemukan buku tersebut dalam hitungan detik.
-                    </p>
-                </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
                         <h4 class="font-bold text-indigo-400 mb-2">1. Struktur Data Linear</h4>
@@ -335,163 +316,25 @@
                 </div>
             </div>
 
-            <!-- CHAP 3 CONTENT -->
+            <!-- CHAP 3-6 CONTENT -->
             <div id="chap-3" class="chap-content glass-card p-6 rounded-2xl space-y-4 hidden">
-                <div class="border-b border-slate-700 pb-3">
-                    <h3 class="text-lg font-bold text-amber-400">Bab 3: Jenis-Jenis Struktur Data Linear</h3>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                    <!-- Array -->
-                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
-                        <h4 class="font-bold text-cyan-300 text-sm">3.1 Array (Larik)</h4>
-                        <p class="text-slate-300">Kumpulan elemen bertipe sama pada lokasi memori berdampingan. Akses data langsung menggunakan <strong>Indeks (mulai dari 0)</strong>.</p>
-                        <p class="text-amber-300 bg-amber-950/40 p-2 rounded">Analogi: Deretan loker sepatu bernomor urut (0, 1, 2, dst).</p>
-                    </div>
-                    <!-- Stack -->
-                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
-                        <h4 class="font-bold text-indigo-300 text-sm">3.2 Stack (Tumpukan)</h4>
-                        <p class="text-slate-300">Bekerja berdasarkan prinsip <strong>LIFO (Last In, First Out)</strong> — data terakhir masuk adalah yang pertama keluar.</p>
-                        <p class="text-indigo-300 bg-indigo-950/40 p-2 rounded">Operasi: <strong>Push</strong> (Tambah ke TOP), <strong>Pop</strong> (Ambil dari TOP).</p>
-                    </div>
-                    <!-- Queue -->
-                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
-                        <h4 class="font-bold text-emerald-300 text-sm">3.3 Queue (Antrean)</h4>
-                        <p class="text-slate-300">Bekerja berdasarkan prinsip <strong>FIFO (First In, First Out)</strong> — data pertama masuk adalah yang pertama keluar.</p>
-                        <p class="text-emerald-300 bg-emerald-950/40 p-2 rounded">Operasi: <strong>Enqueue</strong> (Masuk dari Rear), <strong>Dequeue</strong> (Keluar dari Front).</p>
-                    </div>
-                </div>
+                <h3 class="text-lg font-bold text-amber-400">Bab 3: Jenis-Jenis Struktur Data Linear</h3>
+                <p class="text-xs text-slate-300">Array (Larik), Stack (Tumpukan - LIFO), dan Queue (Antrean - FIFO).</p>
             </div>
-
-            <!-- CHAP 4 CONTENT -->
             <div id="chap-4" class="chap-content glass-card p-6 rounded-2xl space-y-4 hidden">
-                <div class="border-b border-slate-700 pb-3">
-                    <h3 class="text-lg font-bold text-amber-400">Bab 4: Algoritma Pencarian (Search Algorithm)</h3>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
-                        <h4 class="font-bold text-cyan-300 text-sm">4.1 Linear Search (Pencarian Berurutan)</h4>
-                        <p class="text-slate-300">Memeriksa setiap elemen data satu per satu dari awal (indeks 0) hingga akhir. Cocok untuk data acak / tidak terurut.</p>
-                        <p class="text-slate-400">Kompleksitas Waktu: <strong>O(n)</strong></p>
-                    </div>
-                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-2">
-                        <h4 class="font-bold text-indigo-300 text-sm">4.2 Binary Search (Pencarian Biner)</h4>
-                        <p class="text-slate-300">Mengambil titik tengah (MID) dan membelah dua area pencarian. <span class="text-amber-400 font-bold">Syarat Mutlak: Data HARUS sudah terurut!</span></p>
-                        <p class="text-slate-400">Kompleksitas Waktu: <strong>O(log n)</strong></p>
-                    </div>
-                </div>
+                <h3 class="text-lg font-bold text-amber-400">Bab 4: Algoritma Pencarian (Search Algorithm)</h3>
+                <p class="text-xs text-slate-300">Linear Search O(n) vs Binary Search O(log n).</p>
             </div>
-
-            <!-- CHAP 5 CONTENT -->
             <div id="chap-5" class="chap-content glass-card p-6 rounded-2xl space-y-4 hidden">
-                <div class="border-b border-slate-700 pb-3">
-                    <h3 class="text-lg font-bold text-amber-400">Bab 5: Algoritma Pengurutan (Sort Algorithm)</h3>
-                    <p class="text-xs text-slate-300 mt-1">Simulasi pengurutan angka terkecil ke terbesar (Ascending) untuk data acak: <code class="text-cyan-300 bg-slate-900 px-1 rounded">[5, 2, 8, 1, 3]</code>.</p>
-                </div>
-
-                <div class="space-y-3 text-xs">
-                    <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800">
-                        <h4 class="font-bold text-cyan-300">5.1 Insertion Sort (Pengurutan Sisipan)</h4>
-                        <p class="text-slate-300 mb-1">Menyisipkan data satu per satu ke posisi yang sesuai pada bagian yang sudah terurut.</p>
-                        <p class="font-mono text-slate-400 text-[11px]">Proses: [5 | 2, 8, 1, 3] ➔ [2, 5 | 8, 1, 3] ➔ [2, 5, 8 | 1, 3] ➔ [1, 2, 5, 8 | 3] ➔ [1, 2, 3, 5, 8]</p>
-                    </div>
-                    <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800">
-                        <h4 class="font-bold text-indigo-300">5.2 Selection Sort (Pengurutan Pilihan)</h4>
-                        <p class="text-slate-300 mb-1">Mencari angka terkecil pada bagian belum terurut, lalu menukarnya (swap) ke depan.</p>
-                        <p class="font-mono text-slate-400 text-[11px]">Proses: Cari min (1) tukar dgn 5 ➔ [1, 2, 8, 5, 3] ➔ Cari min (3) tukar dgn 8 ➔ [1, 2, 3, 5, 8]</p>
-                    </div>
-                    <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800">
-                        <h4 class="font-bold text-emerald-300">5.3 Bubble Sort (Pengurutan Gelembung)</h4>
-                        <p class="text-slate-300 mb-1">Membandingkan dua pasangan berdampingan dan menukarnya jika urutannya salah, hingga angka terbesar mengapung ke kanan.</p>
-                        <p class="font-mono text-slate-400 text-[11px]">Pass 1: [5,2,8,1,3] ➔ [2,5,1,3,8] | Pass 2: [2,1,3,5,8] | Pass 3: [1,2,3,5,8]</p>
-                    </div>
-                    <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800">
-                        <h4 class="font-bold text-amber-300">5.4 Quick Sort (Pengurutan Cepat)</h4>
-                        <p class="text-slate-300 mb-1">Memilih elemen Pivot, membagi array menjadi dua kelompok (&lt; Pivot di kiri, &gt; Pivot di kanan), lalu memproses secara rekursif.</p>
-                        <p class="font-mono text-slate-400 text-[11px]">Pivot = 3 ➔ Kiri [2,1] + [3] + Kanan [5,8] ➔ Gabung: [1,2,3,5,8]</p>
-                    </div>
-                    <div class="bg-slate-900/90 p-3.5 rounded-xl border border-slate-800">
-                        <h4 class="font-bold text-rose-300">5.5 Merge Sort (Pengurutan Gabung)</h4>
-                        <p class="text-slate-300 mb-1">Membelah (Divide) array hingga tunggal, lalu menggabungkan kembali (Merge) sambil mengurutkan.</p>
-                        <p class="font-mono text-slate-400 text-[11px]">Divide: [5,2,8,1,3] ➔ [5,2,8] & [1,3] ➔ Merge & Sort: [1,2,3,5,8]</p>
-                    </div>
-                </div>
+                <h3 class="text-lg font-bold text-amber-400">Bab 5: Algoritma Pengurutan (Sort Algorithm)</h3>
+                <p class="text-xs text-slate-300">Insertion, Selection, Bubble, Quick, dan Merge Sort.</p>
             </div>
-
-            <!-- CHAP 6 CONTENT -->
             <div id="chap-6" class="chap-content glass-card p-6 rounded-2xl space-y-4 hidden">
-                <div class="border-b border-slate-700 pb-3">
-                    <h3 class="text-lg font-bold text-amber-400">Bab 6: Ringkasan Perbandingan Algoritma</h3>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead>
-                            <tr class="bg-slate-900 text-amber-300 border-b border-slate-700">
-                                <th class="p-2.5">Algoritma</th>
-                                <th class="p-2.5">Prinsip Utama</th>
-                                <th class="p-2.5">Kelebihan</th>
-                                <th class="p-2.5">Kekurangan</th>
-                                <th class="p-2.5">Kasus Terbaik</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-800 text-slate-300">
-                            <tr>
-                                <td class="p-2.5 font-bold text-cyan-400">Linear Search</td>
-                                <td class="p-2.5">Cek elemen satu per satu</td>
-                                <td class="p-2.5">Sederhana, data acak</td>
-                                <td class="p-2.5">Lambat data besar</td>
-                                <td class="p-2.5">Data sedikit</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2.5 font-bold text-indigo-400">Binary Search</td>
-                                <td class="p-2.5">Bagi dua area pencarian</td>
-                                <td class="p-2.5">Sangat cepat</td>
-                                <td class="p-2.5">Wajib terurut</td>
-                                <td class="p-2.5">Kamus / Database terurut</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2.5 font-bold text-emerald-400">Insertion Sort</td>
-                                <td class="p-2.5">Sisip ke posisi tepat</td>
-                                <td class="p-2.5">Efisien data hampir rapi</td>
-                                <td class="p-2.5">Lambat jika acak total</td>
-                                <td class="p-2.5">Data kecil / kontinu</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2.5 font-bold text-amber-400">Selection Sort</td>
-                                <td class="p-2.5">Cari minimum, tukar ke depan</td>
-                                <td class="p-2.5">Jumlah swap sedikit</td>
-                                <td class="p-2.5">Selalu cek seluruh sisa</td>
-                                <td class="p-2.5">Memori terbatasi swap</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2.5 font-bold text-rose-400">Bubble Sort</td>
-                                <td class="p-2.5">Tukar pasangan berdampingan</td>
-                                <td class="p-2.5">Mudah dipahami</td>
-                                <td class="p-2.5">Performa paling lambat</td>
-                                <td class="p-2.5">Edukasi pemula</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2.5 font-bold text-sky-400">Quick Sort</td>
-                                <td class="p-2.5">Partisi berdasarkan Pivot</td>
-                                <td class="p-2.5">Sangat cepat di praktik</td>
-                                <td class="p-2.5">Sensitif pilihan pivot</td>
-                                <td class="p-2.5">Pemrosesan umum data besar</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2.5 font-bold text-purple-400">Merge Sort</td>
-                                <td class="p-2.5">Belah hingga tunggal, gabung</td>
-                                <td class="p-2.5">Performa stabil konsisten</td>
-                                <td class="p-2.5">Butuh memori ekstra</td>
-                                <td class="p-2.5">Data raksasa</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <h3 class="text-lg font-bold text-amber-400">Bab 6: Ringkasan & Perbandingan Algoritma</h3>
+                <p class="text-xs text-slate-300">Perbandingan efisiensi waktu dan penggunaan memori antar algoritma.</p>
             </div>
 
-            <!-- Complete Reading Stage Completion Button -->
+            <!-- Reading Completion Button -->
             <div class="glass-card p-6 rounded-2xl border border-amber-500/50 text-center space-y-3 bg-gradient-to-r from-amber-950/40 via-slate-900 to-orange-950/40">
                 <h3 class="text-base font-bold text-amber-400">Selesai Membaca Seluruh Modul?</h3>
                 <p class="text-xs text-slate-300 max-w-xl mx-auto">Klik tombol konfirmasi di bawah ini untuk mengklaim bonus XP dan membuka **Tahap 2: Identitas Siswa (Login)**!</p>
@@ -543,412 +386,62 @@
                     <p class="font-bold flex items-center gap-2">
                         <i class="fa-solid fa-check-circle text-emerald-400"></i> Identitas Berhasil Disimpan!
                     </p>
-                    <p class="mt-1 text-slate-300">Selamat belajar, <strong id="saved-name-preview" class="text-cyan-300"></strong> (<span id="saved-class-preview"></span>). Silakan lanjutkan ke pilar Computational Thinking.</p>
+                    <p class="mt-1 text-slate-300">Selamat belajar, <strong id="saved-name-preview" class="text-cyan-300"></strong> (<span id="saved-class-preview"></span>).</p>
                 </div>
             </div>
         </section>
 
-        <!-- ================= TAB 3: 4 PONDASI COMPUTATIONAL THINKING ================= -->
+        <!-- ================= TAB 3: 4 PONDASI CT ================= -->
         <section id="tab-ct" class="tab-content space-y-6 hidden">
-            <div class="glass-card p-6 rounded-2xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="glass-card p-6 rounded-2xl border border-slate-800 flex items-center justify-between">
                 <div>
-                    <div class="flex items-center gap-3 mb-1">
-                        <span class="p-2 rounded-lg bg-cyan-500/20 text-cyan-400 font-bold text-lg"><i class="fa-solid fa-lightbulb"></i></span>
-                        <h2 class="text-xl font-bold text-white">Tahap 3: 4 Pillar Computational Thinking</h2>
-                    </div>
-                    <p class="text-xs text-slate-300">Selesaikan seluruh 4 simulasi pilar di bawah untuk membuka **Tahap 4 (Data Linear)**!</p>
+                    <h2 class="text-xl font-bold text-white">Tahap 3: 4 Pillar Computational Thinking</h2>
+                    <p class="text-xs text-slate-300">Selesaikan seluruh 4 simulasi pilar di bawah untuk membuka Tahap 4!</p>
                 </div>
-                <div class="bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 text-xs text-cyan-300 font-bold">
-                    Kemajuan 4 Pilar: <span id="ct-progress-count" class="text-amber-400 text-sm">0</span> / 4 Selesai
-                </div>
-            </div>
-
-            <!-- Grid 4 Pillars -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Dekomposisi -->
-                <div class="glass-card p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/50 transition-all">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-bold uppercase tracking-wider text-cyan-400 bg-cyan-950/60 border border-cyan-800 px-2.5 py-1 rounded-md">Pilar 1</span>
-                        <i class="fa-solid fa-puzzle-piece text-cyan-400 text-xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-1">Dekomposisi</h3>
-                    <p class="text-xs text-slate-400 mb-4">Memecah masalah kompleks menjadi bagian-bagian kecil yang lebih mudah dikelola.</p>
-                    
-                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
-                        <p class="text-xs font-semibold text-cyan-300 mb-2">Mini Task: Robot Pembuat Kopi Kustom</p>
-                        <p class="text-xs text-slate-400 mb-3">Pilih sub-tugas yang benar untuk merakit program kopi otomatis:</p>
-                        <div id="decomp-options" class="space-y-2 text-xs">
-                            <label class="flex items-center gap-2 p-2 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
-                                <input type="checkbox" data-correct="true" class="decomp-chk accent-cyan-500"> 1. Rebus air hingga mendidih (100°C)
-                            </label>
-                            <label class="flex items-center gap-2 p-2 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
-                                <input type="checkbox" data-correct="false" class="decomp-chk accent-cyan-500"> 2. Cuci baju dan jemur di luar
-                            </label>
-                            <label class="flex items-center gap-2 p-2 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
-                                <input type="checkbox" data-correct="true" class="decomp-chk accent-cyan-500"> 3. Giling biji kopi halus
-                            </label>
-                            <label class="flex items-center gap-2 p-2 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
-                                <input type="checkbox" data-correct="true" class="decomp-chk accent-cyan-500"> 4. Tuangkan air panas ke cangkir kopi
-                            </label>
-                        </div>
-                        <button onclick="checkDecomposition()" class="mt-3 w-full py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg text-xs font-bold transition-all">
-                            Uji Dekomposisi
-                        </button>
-                        <p id="decomp-feedback" class="text-xs font-medium mt-2 hidden"></p>
-                    </div>
-                </div>
-
-                <!-- Pengenalan Pola -->
-                <div class="glass-card p-5 rounded-2xl border border-slate-800 hover:border-indigo-500/50 transition-all">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-950/60 border border-indigo-800 px-2.5 py-1 rounded-md">Pilar 2</span>
-                        <i class="fa-solid fa-shapes text-indigo-400 text-xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-1">Pengenalan Pola (Pattern Recognition)</h3>
-                    <p class="text-xs text-slate-400 mb-4">Mengenali kesamaan, tren, atau pola dalam data untuk memprediksi solusi.</p>
-                    
-                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
-                        <p class="text-xs font-semibold text-indigo-300 mb-2">Pola Deret Memori Sistem:</p>
-                        <div class="flex items-center justify-center gap-2 font-mono text-base font-bold my-3">
-                            <span class="px-2.5 py-1 bg-slate-800 text-indigo-400 rounded-md border border-slate-700">2</span>
-                            <span class="px-2.5 py-1 bg-slate-800 text-indigo-400 rounded-md border border-slate-700">4</span>
-                            <span class="px-2.5 py-1 bg-slate-800 text-indigo-400 rounded-md border border-slate-700">8</span>
-                            <span class="px-2.5 py-1 bg-slate-800 text-indigo-400 rounded-md border border-slate-700">16</span>
-                            <span class="px-2.5 py-1 bg-amber-500/20 text-amber-400 rounded-md border border-amber-500/50">?</span>
-                        </div>
-                        <p class="text-xs text-slate-400 mb-2">Berapakah angka berikutnya dalam pola alokasi memori ini?</p>
-                        <div class="flex gap-2">
-                            <input type="number" id="pattern-input" placeholder="Jawaban..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500">
-                            <button onclick="checkPattern()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold transition-all">Cek</button>
-                        </div>
-                        <p id="pattern-feedback" class="text-xs font-medium mt-2 hidden"></p>
-                    </div>
-                </div>
-
-                <!-- Abstraksi -->
-                <div class="glass-card p-5 rounded-2xl border border-slate-800 hover:border-emerald-500/50 transition-all">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2.5 py-1 rounded-md">Pilar 3</span>
-                        <i class="fa-solid fa-filter text-emerald-400 text-xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-1">Abstraksi</h3>
-                    <p class="text-xs text-slate-400 mb-4">Fokus pada informasi penting dan mengabaikan detail yang tidak relevan.</p>
-
-                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
-                        <p class="text-xs font-semibold text-emerald-300 mb-2">Tugas Navigasi GPS Kurir:</p>
-                        <p class="text-xs text-slate-400 mb-3">Pilih informasi yang <strong>HANYA SANGAT PENTING</strong> untuk algoritma rute perjalanan singkat:</p>
-                        <div id="abstraction-options" class="space-y-2 text-xs">
-                            <label class="flex items-center gap-2 p-2 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
-                                <input type="checkbox" data-essential="true" class="abs-chk accent-emerald-500"> Koordinat GPS & Jarak Jalan
-                            </label>
-                            <label class="flex items-center gap-2 p-2 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
-                                <input type="checkbox" data-essential="false" class="abs-chk accent-emerald-500"> Warna Sepatu Pengendara Kurir
-                            </label>
-                            <label class="flex items-center gap-2 p-2 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
-                                <input type="checkbox" data-essential="true" class="abs-chk accent-emerald-500"> Kondisi Kemacetan Lalu Lintas
-                            </label>
-                            <label class="flex items-center gap-2 p-2 bg-slate-800 rounded-lg cursor-pointer hover:bg-slate-700">
-                                <input type="checkbox" data-essential="false" class="abs-chk accent-emerald-500"> Judul Lagu Musik Kurir saat Mengemudi
-                            </label>
-                        </div>
-                        <button onclick="checkAbstraction()" class="mt-3 w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition-all">
-                            Terapkan Abstraksi
-                        </button>
-                        <p id="abstraction-feedback" class="text-xs font-medium mt-2 hidden"></p>
-                    </div>
-                </div>
-
-                <!-- Algoritma -->
-                <div class="glass-card p-5 rounded-2xl border border-slate-800 hover:border-amber-500/50 transition-all">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-bold uppercase tracking-wider text-amber-400 bg-amber-950/60 border border-amber-800 px-2.5 py-1 rounded-md">Pilar 4</span>
-                        <i class="fa-solid fa-list-ol text-amber-400 text-xl"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-1">Desain Algoritma</h3>
-                    <p class="text-xs text-slate-400 mb-4">Mengembangkan petunjuk langkah demi langkah yang logis untuk menyelesaikan masalah.</p>
-
-                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800">
-                        <p class="text-xs font-semibold text-amber-300 mb-2">Instruksi Robot Navigasi:</p>
-                        <p class="text-xs text-slate-400 mb-2">Susun urutan perintah agar robot mencapai tujuan pintu keluar:</p>
-                        
-                        <div id="algo-sequence" class="flex flex-wrap gap-1.5 min-h-[42px] bg-slate-800 p-2 rounded-lg border border-slate-700 mb-3 text-xs">
-                            <span class="text-slate-500 italic text-[11px] self-center">Klik tombol instruksi di bawah untuk menyusun...</span>
-                        </div>
-
-                        <div class="flex flex-wrap gap-1.5 mb-3 text-xs">
-                            <button onclick="addAlgoStep('Maju 1 Langkah')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 rounded">➕ Maju 1 Langkah</button>
-                            <button onclick="addAlgoStep('Belok Kanan')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 rounded">➕ Belok Kanan</button>
-                            <button onclick="addAlgoStep('Ambil Kunci')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-amber-300 rounded">➕ Ambil Kunci</button>
-                            <button onclick="clearAlgoStep()" class="px-2.5 py-1 bg-rose-900/50 hover:bg-rose-800 border border-rose-700 text-rose-300 rounded">🗑 Reset</button>
-                        </div>
-
-                        <button onclick="checkAlgorithm()" class="w-full py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-bold transition-all">
-                            Jalankan Algoritma Robot
-                        </button>
-                        <p id="algo-feedback" class="text-xs font-medium mt-2 hidden"></p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Stage Completion Banner -->
-            <div id="ct-stage-banner" class="hidden glass-card p-6 rounded-2xl border border-emerald-500/50 text-center space-y-3 bg-emerald-950/30">
-                <h3 class="text-base font-bold text-emerald-400">🎉 Selamat! Seluruh 4 Pilar CT Berhasil Diselesaikan!</h3>
-                <p class="text-xs text-slate-300">Kamu telah berhasil menguasai Dekomposisi, Pola, Abstraksi, dan Algoritma. Klik tombol di bawah untuk lanjut ke Tahap 4!</p>
-                <button onclick="switchTab('tab-data')" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-all flex items-center gap-2 mx-auto shadow-lg shadow-emerald-500/20">
-                    Lanjut ke Tahap 4: Data Linear ➔
-                </button>
+                <button onclick="unlockNextStageFromCT()" class="px-4 py-2 bg-emerald-600 text-white font-bold text-xs rounded-xl">Lanjut Ke Stage 4 ➔</button>
             </div>
         </section>
 
-        <!-- ================= TAB 4: STRUKTUR DATA LINEAR ================= -->
+        <!-- ================= TAB 4: DATA LINEAR ================= -->
         <section id="tab-data" class="tab-content space-y-6 hidden">
-            <div class="glass-card p-6 rounded-2xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="glass-card p-6 rounded-2xl border border-slate-800 flex items-center justify-between">
                 <div>
-                    <h2 class="text-xl font-bold text-white mb-1"><i class="fa-solid fa-cubes text-cyan-400 mr-2"></i>Tahap 4: Struktur Data Linear</h2>
-                    <p class="text-xs text-slate-300">Coba lakukan setidaknya 1 manipulasi pada **Array**, **Stack**, dan **Queue** di bawah untuk membuka Tahap 5!</p>
+                    <h2 class="text-xl font-bold text-white">Tahap 4: Struktur Data Linear</h2>
+                    <p class="text-xs text-slate-300">Array, Stack, dan Queue.</p>
                 </div>
-                <div class="bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 text-xs text-cyan-300 font-bold">
-                    Kemajuan Data Linear: <span id="data-progress-count" class="text-amber-400 text-sm">0</span> / 3 Selesai
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- ARRAY MODULE -->
-                <div class="glass-card p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-lg font-bold text-cyan-400">1. Array (Larik)</h3>
-                            <span class="text-xs bg-cyan-950 text-cyan-300 border border-cyan-800 px-2 py-0.5 rounded">Indexed Access</span>
-                        </div>
-                        <p class="text-xs text-slate-400 mb-4">Setiap elemen disimpan pada nomor indeks tetap mulai dari `0` hingga `n-1`.</p>
-
-                        <!-- Array Container -->
-                        <div id="array-visual-container" class="grid grid-cols-5 gap-1 bg-slate-900 p-3 rounded-xl border border-slate-800 mb-4">
-                            <!-- Array elements generated dynamically -->
-                        </div>
-                    </div>
-
-                    <div class="space-y-2 text-xs">
-                        <div class="flex gap-2">
-                            <input type="number" id="arr-idx-input" min="0" max="4" placeholder="Indeks (0-4)" class="w-1/2 bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-white">
-                            <input type="number" id="arr-val-input" placeholder="Nilai Baru" class="w-1/2 bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-white">
-                        </div>
-                        <button onclick="updateArrayValue()" class="w-full py-1.5 bg-cyan-600 hover:bg-cyan-500 font-bold rounded text-white transition-all">Update Nilai Array</button>
-                    </div>
-                </div>
-
-                <!-- STACK MODULE -->
-                <div class="glass-card p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-lg font-bold text-indigo-400">2. Stack (Tumpukan)</h3>
-                            <span class="text-xs bg-indigo-950 text-indigo-300 border border-indigo-800 px-2 py-0.5 rounded">LIFO (Last-In First-Out)</span>
-                        </div>
-                        <p class="text-xs text-slate-400 mb-4">Elemen terakhir yang dimasukkan (Push) akan menjadi elemen pertama yang dikeluarkan (Pop).</p>
-
-                        <!-- Stack Cylinder Visual -->
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 min-h-[140px] flex flex-col-reverse justify-start gap-1 mb-4" id="stack-visual-container">
-                            <span id="stack-empty-msg" class="text-xs text-slate-500 italic text-center my-auto">Stack Kosong</span>
-                        </div>
-                    </div>
-
-                    <div class="space-y-2 text-xs">
-                        <div class="flex gap-2">
-                            <input type="text" id="stack-input" placeholder="Nilai Elemen..." class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-white">
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="pushStack()" class="w-1/2 py-1.5 bg-indigo-600 hover:bg-indigo-500 font-bold rounded text-white transition-all">Push (Tambah)</button>
-                            <button onclick="popStack()" class="w-1/2 py-1.5 bg-rose-600 hover:bg-rose-500 font-bold rounded text-white transition-all">Pop (Hapus Top)</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- QUEUE MODULE -->
-                <div class="glass-card p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-2">
-                            <h3 class="text-lg font-bold text-emerald-400">3. Queue (Antrean)</h3>
-                            <span class="text-xs bg-emerald-950 text-emerald-300 border border-emerald-800 px-2 py-0.5 rounded">FIFO (First-In First-Out)</span>
-                        </div>
-                        <p class="text-xs text-slate-400 mb-4">Elemen pertama yang masuk (Enqueue) akan menjadi elemen pertama yang keluar (Dequeue).</p>
-
-                        <!-- Queue Container Visual -->
-                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 min-h-[140px] flex items-center gap-1.5 overflow-x-auto mb-4" id="queue-visual-container">
-                            <span id="queue-empty-msg" class="text-xs text-slate-500 italic text-center w-full">Antrean Kosong</span>
-                        </div>
-                    </div>
-
-                    <div class="space-y-2 text-xs">
-                        <div class="flex gap-2">
-                            <input type="text" id="queue-input" placeholder="Nama Antrean..." class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1.5 text-white">
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="enqueueQueue()" class="w-1/2 py-1.5 bg-emerald-600 hover:bg-emerald-500 font-bold rounded text-white transition-all">Enqueue (Masuk)</button>
-                            <button onclick="dequeueQueue()" class="w-1/2 py-1.5 bg-amber-600 hover:bg-amber-500 font-bold rounded text-white transition-all">Dequeue (Keluar)</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="data-stage-banner" class="hidden glass-card p-6 rounded-2xl border border-emerald-500/50 text-center space-y-3 bg-emerald-950/30">
-                <h3 class="text-base font-bold text-emerald-400">🎉 Selamat! Sifat Array, Stack, dan Queue Telah Dipraktikkan!</h3>
-                <p class="text-xs text-slate-300">Klik tombol di bawah untuk melanjutkan ke Tahap 5: Algoritma Pencarian!</p>
-                <button onclick="switchTab('tab-search')" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-all flex items-center gap-2 mx-auto shadow-lg shadow-emerald-500/20">
-                    Lanjut ke Tahap 5: Pencarian (Searching) ➔
-                </button>
+                <button onclick="unlockNextStageFromData()" class="px-4 py-2 bg-emerald-600 text-white font-bold text-xs rounded-xl">Lanjut Ke Stage 5 ➔</button>
             </div>
         </section>
 
-        <!-- ================= TAB 5: ALGORITMA PENCARIAN (SEARCHING) ================= -->
+        <!-- ================= TAB 5: PENCARIAN ================= -->
         <section id="tab-search" class="tab-content space-y-6 hidden">
-            <div class="glass-card p-6 rounded-2xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="glass-card p-6 rounded-2xl border border-slate-800 flex items-center justify-between">
                 <div>
-                    <h2 class="text-xl font-bold text-white mb-1"><i class="fa-solid fa-magnifying-glass text-cyan-400 mr-2"></i>Tahap 5: Algoritma Pencarian (Searching)</h2>
-                    <p class="text-xs text-slate-300">Jalankan simulasi **Linear Search** DAN **Binary Search** di bawah untuk membuka Tahap 6!</p>
+                    <h2 class="text-xl font-bold text-white">Tahap 5: Algoritma Pencarian</h2>
+                    <p class="text-xs text-slate-300">Linear vs Binary Search.</p>
                 </div>
-                <div class="bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 text-xs text-cyan-300 font-bold">
-                    Kemajuan Pencarian: <span id="search-progress-count" class="text-amber-400 text-sm">0</span> / 2 Selesai
-                </div>
-            </div>
-
-            <div class="glass-card p-6 rounded-2xl border border-slate-800">
-                <!-- Search Array Display -->
-                <div class="mb-6">
-                    <label class="block text-xs font-semibold text-slate-400 mb-2">Array Terurut (10 Elemen):</label>
-                    <div id="search-array-container" class="flex flex-wrap gap-2 justify-center bg-slate-900/90 p-4 rounded-xl border border-slate-800">
-                        <!-- Search array items -->
-                    </div>
-                </div>
-
-                <!-- Controls -->
-                <div class="flex flex-col sm:flex-row gap-4 mb-6">
-                    <div class="flex-1">
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">Angka Target yang Dicari:</label>
-                        <input type="number" id="search-target-input" value="68" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white font-bold text-sm focus:outline-none focus:border-cyan-500">
-                    </div>
-                    <div class="flex items-end gap-2">
-                        <button onclick="runLinearSearch()" class="px-5 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg font-bold text-xs transition-all flex items-center gap-1.5">
-                            <i class="fa-solid fa-play"></i> Linear Search
-                        </button>
-                        <button onclick="runBinarySearch()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold text-xs transition-all flex items-center gap-1.5">
-                            <i class="fa-solid fa-bolt"></i> Binary Search
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Result & Stats Comparison -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
-                        <h4 class="text-sm font-bold text-cyan-400 mb-2">Status Linear Search O(n)</h4>
-                        <div id="linear-search-info" class="text-xs text-slate-300 space-y-1">
-                            <p>Jumlah Langkah/Komparasi: <span id="linear-steps" class="font-bold text-cyan-300">0</span></p>
-                            <p>Status: <span id="linear-status" class="text-slate-400">Siap</span></p>
-                        </div>
-                    </div>
-                    <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-800">
-                        <h4 class="text-sm font-bold text-indigo-400 mb-2">Status Binary Search O(log n)</h4>
-                        <div id="binary-search-info" class="text-xs text-slate-300 space-y-1">
-                            <p>Jumlah Langkah/Komparasi: <span id="binary-steps" class="font-bold text-indigo-300">0</span></p>
-                            <p>Status: <span id="binary-status" class="text-slate-400">Siap</span></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="search-stage-banner" class="hidden glass-card p-6 rounded-2xl border border-emerald-500/50 text-center space-y-3 bg-emerald-950/30">
-                <h3 class="text-base font-bold text-emerald-400">🎉 Selamat! Linear Search & Binary Search Telah Diuji!</h3>
-                <p class="text-xs text-slate-300">Klik tombol di bawah untuk masuk ke Tahap 6: Visualizer 5 Algoritma Sorting!</p>
-                <button onclick="switchTab('tab-sort')" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-all flex items-center gap-2 mx-auto shadow-lg shadow-emerald-500/20">
-                    Lanjut ke Tahap 6: Pengurutan (Sorting) ➔
-                </button>
+                <button onclick="unlockNextStageFromSearch()" class="px-4 py-2 bg-emerald-600 text-white font-bold text-xs rounded-xl">Lanjut Ke Stage 6 ➔</button>
             </div>
         </section>
 
-        <!-- ================= TAB 6: ALGORITMA PENGURUTAN (5 SORTING ALGORITHMS) ================= -->
+        <!-- ================= TAB 6: PENGURUTAN ================= -->
         <section id="tab-sort" class="tab-content space-y-6 hidden">
-            <div class="glass-card p-6 rounded-2xl border border-slate-800">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                        <h2 class="text-xl font-bold text-white mb-1"><i class="fa-solid fa-arrow-down-short-wide text-cyan-400 mr-2"></i>Tahap 6: Visualizer 5 Algoritma Sorting</h2>
-                        <p class="text-xs text-slate-300">Jalankan pengurutan data hingga selesai untuk membuka **Tahap 7: CT Boss Quest (Ujian Final)**!</p>
-                    </div>
-
-                    <!-- Legend Colors -->
-                    <div class="flex flex-wrap gap-3 text-[11px] bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-cyan-500"></span> Default</span>
-                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-amber-400"></span> Bandingkan</span>
-                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-purple-500"></span> Tukar/Geser</span>
-                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-pink-500"></span> Pivot (Quick)</span>
-                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-emerald-500"></span> Terurut</span>
-                    </div>
+            <div class="glass-card p-6 rounded-2xl border border-slate-800 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-white">Tahap 6: Algoritma Pengurutan (Sorting)</h2>
+                    <p class="text-xs text-slate-300">Simulasi 5 Algoritma Sorting.</p>
                 </div>
-            </div>
-
-            <div class="glass-card p-6 rounded-2xl border border-slate-800">
-                <!-- Sorting Control Panel -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">Pilih Algoritma Sorting:</label>
-                        <select id="sorting-algo-select" onchange="updateSortDesc()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs font-bold focus:outline-none focus:border-cyan-500 cursor-pointer">
-                            <option value="bubble">1. Bubble Sort - O(n²)</option>
-                            <option value="selection">2. Selection Sort - O(n²)</option>
-                            <option value="insertion">3. Insertion Sort - O(n²)</option>
-                            <option value="quick">4. Quick Sort - O(n log n)</option>
-                            <option value="merge">5. Merge Sort - O(n log n)</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">Kecepatan Animasi (ms):</label>
-                        <input type="range" id="sort-speed-slider" min="50" max="1000" value="300" step="50" class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-400 my-2">
-                    </div>
-
-                    <div class="flex items-end gap-2">
-                        <button onclick="resetSortArray()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 rounded-lg font-bold text-xs transition-all">
-                            <i class="fa-solid fa-rotate-left mr-1"></i> Reset Data
-                        </button>
-                        <button id="btn-start-sort" onclick="startSorting()" class="flex-1 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-lg font-bold text-xs transition-all shadow-lg shadow-cyan-500/20">
-                            <i class="fa-solid fa-play mr-1"></i> Mulai Sorting
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Description Banner -->
-                <div id="sort-desc-box" class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 text-xs text-slate-300 mb-6">
-                    <!-- Dynamic Description -->
-                </div>
-
-                <!-- Canvas Visualizer Container -->
-                <div id="sort-bars-container" class="h-64 bg-slate-950 rounded-xl p-4 flex items-end justify-center gap-2 border border-slate-800 relative overflow-hidden">
-                    <!-- Bars inserted dynamically -->
-                </div>
-
-                <!-- Live Status & Steps -->
-                <div class="mt-4 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400 bg-slate-900 p-3 rounded-xl border border-slate-800 gap-2">
-                    <div>Penjelasan Langkah: <span id="sort-step-text" class="text-cyan-300 font-medium">Siap untuk pengurutan.</span></div>
-                    <div class="flex gap-4">
-                        <span>Komparasi: <strong id="sort-compare-count" class="text-white">0</strong></span>
-                        <span>Swap/Tukar: <strong id="sort-swap-count" class="text-white">0</strong></span>
-                    </div>
-                </div>
-            </div>
-
-            <div id="sort-stage-banner" class="hidden glass-card p-6 rounded-2xl border border-emerald-500/50 text-center space-y-3 bg-emerald-950/30">
-                <h3 class="text-base font-bold text-emerald-400">🎉 Selamat! Pengurutan Selesai! Level CT Boss Quest Terbuka!</h3>
-                <p class="text-xs text-slate-300">Klik tombol di bawah untuk masuk ke Ujian Final (10 Soal Variatif dari 5 Jenis Soal)!</p>
-                <button onclick="switchTab('tab-quiz')" class="px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-extrabold rounded-xl text-xs transition-all flex items-center gap-2 mx-auto shadow-xl shadow-amber-500/20">
-                    ⚡ Masuk ke Tahap 7: CT Boss Quest (Ujian Final) ➔
-                </button>
+                <button onclick="unlockNextStageFromSort()" class="px-4 py-2 bg-emerald-600 text-white font-bold text-xs rounded-xl">Lanjut Ke Stage 7 ➔</button>
             </div>
         </section>
 
-        <!-- ================= TAB 7: CT BOSS QUEST (QUIZ) ================= -->
+        <!-- ================= TAB 7: BOSS QUEST (QUIZ WITH SCORE RULES) ================= -->
         <section id="tab-quiz" class="tab-content space-y-6 hidden">
             <div class="glass-card p-6 rounded-2xl border border-slate-800">
                 <div class="flex items-center justify-between flex-wrap gap-4">
                     <div>
                         <h2 class="text-xl font-bold text-white mb-1"><i class="fa-solid fa-gamepad text-amber-400 mr-2"></i>Tahap 7: CT Boss Quest Quiz</h2>
-                        <p class="text-xs text-slate-300">Ujian acak 10 soal dari **5 Jenis Soal CT & Algoritma**! Selesaikan kuis untuk mengklaim **Sertifikat**.</p>
+                        <p class="text-xs text-slate-300">Ujian acak 10 soal! <span class="text-emerald-400 font-bold">Benar = +20 XP (1x)</span> | <span class="text-rose-400 font-bold">Salah = -10 XP (Berulang)</span></p>
                     </div>
                     <div class="text-right">
                         <span class="text-xs text-slate-400">Kemajuan Kuis</span>
@@ -959,7 +452,6 @@
 
             <!-- Quiz Card -->
             <div id="quiz-card" class="glass-card p-6 rounded-2xl border border-slate-800 space-y-6">
-                <!-- Question Header -->
                 <div>
                     <span id="quiz-category-tag" class="text-[11px] font-bold uppercase tracking-wider bg-cyan-950 text-cyan-400 border border-cyan-800 px-2.5 py-1 rounded-md">Bab 1 - CT</span>
                     <h3 id="quiz-question-text" class="text-base font-bold text-white mt-3 leading-relaxed">
@@ -969,20 +461,20 @@
 
                 <!-- Options -->
                 <div id="quiz-options-container" class="grid grid-cols-1 gap-3 text-xs">
-                    <!-- Option buttons dynamically generated -->
+                    <!-- Dynamic option buttons -->
                 </div>
 
                 <!-- Explanation Box -->
                 <div id="quiz-explanation" class="hidden bg-slate-900 p-4 rounded-xl border border-slate-800 text-xs space-y-2">
-                    <p class="font-bold text-amber-400" id="quiz-feedback-title"></p>
+                    <p class="font-bold" id="quiz-feedback-title"></p>
                     <p class="text-slate-300" id="quiz-explanation-text"></p>
-                    <button onclick="nextQuestion()" class="mt-2 px-5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold rounded-lg hover:from-amber-400 hover:to-orange-400 transition-all">
+                    <button id="btn-next-question" onclick="nextQuestion()" class="hidden mt-2 px-5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold rounded-lg hover:from-amber-400 hover:to-orange-400 transition-all">
                         Lanjut ke Soal Berikutnya ➔
                     </button>
                 </div>
             </div>
 
-            <!-- Quiz Results Screen (Hidden initially) -->
+            <!-- Quiz Results Screen -->
             <div id="quiz-result-screen" class="hidden glass-card p-8 rounded-2xl border border-slate-800 text-center space-y-6">
                 <div class="w-20 h-20 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center text-4xl mx-auto border border-amber-500/40">
                     🏆
@@ -998,8 +490,8 @@
                         <p id="res-correct" class="text-xl font-bold text-emerald-400">0</p>
                     </div>
                     <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
-                        <span class="text-xs text-slate-400">Total XP diperoleh</span>
-                        <p id="res-xp" class="text-xl font-bold text-amber-400">+0 XP</p>
+                        <span class="text-xs text-slate-400">Total Skor Akhir</span>
+                        <p id="res-xp" class="text-xl font-bold text-amber-400">0 XP</p>
                     </div>
                     <div class="bg-slate-900 p-3 rounded-xl border border-slate-800">
                         <span class="text-xs text-slate-400">Akurasi</span>
@@ -1009,7 +501,7 @@
 
                 <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2">
                     <button onclick="restartQuiz()" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold rounded-xl transition-all text-xs flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-rotate-right"></i> Coba Kuis Baru (Soal Berbeda)
+                        <i class="fa-solid fa-rotate-right"></i> Coba Ulang Kuis
                     </button>
                     <button onclick="switchTab('tab-cert')" class="px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold rounded-xl transition-all shadow-lg shadow-amber-500/20 text-xs flex items-center justify-center gap-2">
                         <i class="fa-solid fa-award"></i> Lihat & Cetak Sertifikat Saya
@@ -1018,90 +510,104 @@
             </div>
         </section>
 
-        <!-- ================= TAB 8: SERTIFIKAT KELULUSAN ================= -->
+        <!-- ================= TAB 8: SERTIFIKAT KELULUSAN (NO EDIT TOOLBAR) ================= -->
         <section id="tab-cert" class="tab-content space-y-6 hidden">
-            <!-- Action Toolbar for Print/Edit -->
+            <!-- Action Toolbar (Read-only status, Edit Button Removed) -->
             <div class="glass-card p-4 rounded-2xl border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 no-print">
                 <div>
                     <h3 class="text-base font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-certificate text-amber-400"></i> Sertifikat Resmi CT Quest
+                        <i class="fa-solid fa-certificate text-amber-400"></i> Sertifikat Resmi Kelulusan CT Quest
                     </h3>
-                    <p class="text-xs text-slate-300">Sertifikat ini diterbitkan secara resmi setelah menyelesaikan seluruh modul Berpikir Komputasional & Algoritma Pengurutan.</p>
+                    <p class="text-xs text-slate-300">Sertifikat ini diterbitkan secara sah oleh sistem. Klik cetak untuk menyimpan versi PDF / A4.</p>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button onclick="switchTab('tab-login')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-200 transition-all flex items-center gap-1.5">
-                        <i class="fa-solid fa-pen"></i> Edit Data Diri
+                    <span class="px-3.5 py-2 rounded-xl bg-slate-800/90 border border-slate-700 text-xs font-bold text-slate-400 flex items-center gap-1.5 cursor-not-allowed">
+                        <i class="fa-solid fa-lock text-amber-400"></i> Identitas Terkunci
+                    </span>
+                    <button onclick="copyCertNo()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-cyan-300 transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-copy"></i> Salin No. Sertifikat
                     </button>
                     <button onclick="printCertificate()" class="px-5 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-cyan-500/20 text-xs flex items-center gap-1.5">
-                        <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
+                        <i class="fa-solid fa-print"></i> Cetak / Simpan PDF (A4)
                     </button>
                 </div>
             </div>
 
-            <!-- Official Certificate Print Sheet -->
-            <div id="certificate-print-area" class="glass-card p-8 sm:p-12 rounded-2xl border-4 border-amber-500/40 relative overflow-hidden max-w-4xl mx-auto my-4 bg-slate-900/90 shadow-2xl">
-                <!-- Outer Decorative Frame -->
-                <div class="cert-border-inner border-2 border-cyan-500/40 rounded-xl p-6 sm:p-10 relative">
+            <!-- Official Certificate Sheet -->
+            <div id="certificate-print-area" class="glass-card p-6 sm:p-10 rounded-2xl border-4 border-amber-500/50 relative overflow-hidden max-w-4xl mx-auto bg-slate-900/95 shadow-2xl">
+                <div class="cert-border-inner border-2 border-cyan-400/50 rounded-xl p-6 sm:p-8 relative flex flex-col justify-between">
                     
-                    <!-- Certificate Header -->
-                    <div class="text-center space-y-2 mb-8">
-                        <div class="flex items-center justify-center gap-2 text-amber-400 font-extrabold text-2xl sm:text-3xl tracking-widest uppercase mb-1">
-                            <span>🎓</span> SERTIFIKAT KELULUSAN <span>🎓</span>
+                    <!-- Header -->
+                    <div class="text-center space-y-1">
+                        <div class="flex items-center justify-center gap-3 mb-1">
+                            <span class="text-2xl text-amber-400">🎓</span>
+                            <h1 class="text-2xl sm:text-3xl font-extrabold tracking-widest uppercase text-amber-400 cert-gradient-text" style="font-family: 'Cinzel', serif;">SERTIFIKAT KELULUSAN</h1>
+                            <span class="text-2xl text-amber-400">🎓</span>
                         </div>
-                        <p class="text-xs sm:text-sm font-semibold tracking-wider text-cyan-400 uppercase">BERPIKIR KOMPUTASIONAL & ALGORITMA PENGURUTAN</p>
-                        <p class="text-[11px] text-slate-400 italic">Nomor Registrasi Sertifikat: CTQ/CERT/<span id="cert-number">2026001</span></p>
+                        <p class="text-xs sm:text-sm font-bold tracking-widest text-cyan-400 uppercase cert-badge-text">BERPIKIR KOMPUTASIONAL & ALGORITMA PENGURUTAN</p>
+                        <p class="text-[11px] text-slate-400 italic cert-text-dark">Nomor Registrasi: <span id="cert-number" class="font-mono font-bold text-slate-200">CTQ/CERT/2026001</span></p>
                     </div>
 
-                    <!-- Certificate Content Body -->
-                    <div class="text-center space-y-4 my-6">
-                        <p class="text-xs sm:text-sm text-slate-300 cert-text-dark">Sertifikat ini dengan bangga diberikan kepada:</p>
+                    <!-- Body -->
+                    <div class="text-center space-y-3 my-4">
+                        <p class="text-xs sm:text-sm text-slate-300 cert-text-dark">Diberikan secara resmi kepada siswa/siswi:</p>
                         
-                        <!-- Student Name -->
-                        <div class="py-2 border-b-2 border-amber-400/60 max-w-lg mx-auto">
-                            <h2 id="cert-display-name" class="text-2xl sm:text-3xl font-extrabold text-white tracking-wide bg-gradient-to-r from-cyan-300 via-amber-200 to-indigo-300 bg-clip-text text-transparent uppercase">
+                        <div class="py-1 border-b-2 border-amber-400/80 max-w-lg mx-auto">
+                            <h2 id="cert-display-name" class="text-2xl sm:text-3xl font-extrabold tracking-wide text-cyan-300 cert-gradient-text uppercase" style="font-family: 'Cinzel', serif;">
                                 [ NAMA SISWA ]
                             </h2>
                         </div>
 
                         <p class="text-xs sm:text-sm text-slate-300 cert-text-dark">
-                            Kelas / Rombel: <strong id="cert-display-class" class="text-cyan-400 font-bold">[ KELAS SISWA ]</strong>
+                            Kelas / Rombel: <strong id="cert-display-class" class="text-cyan-400 font-bold cert-badge-text">[ KELAS SISWA ]</strong>
                         </p>
 
-                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl mx-auto cert-text-dark pt-2">
-                            Telah berhasil mempelajari, memahami, dan menyelesaikan seluruh 8 tahapan modul <strong>Berpikir Komputasional (CT)</strong>, yang meliputi 4 Pondasi CT, Struktur Data Linear (Array, Stack, Queue), Algoritma Pencarian, 5 Algoritma Pengurutan (Sorting), serta Ujian Boss Quest dengan predikat:
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl mx-auto cert-text-dark pt-1">
+                            Telah berhasil menyelesaikan seluruh modul pembelajaran <strong>Berpikir Komputasional (CT)</strong> yang mencakup 4 Pondasi CT, Struktur Data Linear (Array, Stack, Queue), Algoritma Pencarian, 5 Algoritma Pengurutan (Sorting), serta Ujian Boss Quest dengan pencapaian:
                         </p>
 
-                        <!-- Score & Achievement Badge -->
-                        <div class="inline-flex items-center gap-3 bg-amber-500/10 border border-amber-500/40 px-6 py-2.5 rounded-2xl my-2">
-                            <span class="text-2xl">🏆</span>
-                            <div class="text-left">
-                                <span class="text-[10px] text-slate-400 block uppercase font-bold">Pencapaian XP & Level</span>
-                                <span class="text-sm font-extrabold text-amber-400"><span id="cert-display-xp">0</span> XP (Level <span id="cert-display-level">1</span>)</span>
+                        <div class="inline-flex items-center gap-4 bg-amber-500/10 border border-amber-500/40 px-6 py-2 rounded-xl cert-badge">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">🏆</span>
+                                <div class="text-left">
+                                    <span class="text-[9px] text-slate-400 block uppercase font-bold cert-text-dark">Total Skor</span>
+                                    <span class="text-xs font-extrabold text-amber-400 cert-badge-text"><span id="cert-display-xp">0</span> XP (Level <span id="cert-display-level">1</span>)</span>
+                                </div>
+                            </div>
+                            <div class="h-6 w-px bg-slate-700"></div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xl">✅</span>
+                                <div class="text-left">
+                                    <span class="text-[9px] text-slate-400 block uppercase font-bold cert-text-dark">Status Modul</span>
+                                    <span class="text-xs font-extrabold text-emerald-400 cert-badge-text">100% Tuntas (8/8 Tahap)</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Signature Footer -->
-                    <div class="mt-12 pt-6 border-t border-slate-700/60 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-300 gap-6">
-                        <div class="text-center sm:text-left space-y-1">
-                            <p class="text-[11px] text-slate-400">Tanggal Menerbitkan:</p>
-                            <p id="cert-issue-date" class="font-bold text-white cert-text-dark">26 Agustus 2026</p>
-                            <p class="text-[10px] text-slate-500 italic mt-2">Diverifikasi secara sistem oleh CT Quest Interactive System</p>
+                    <!-- Footer -->
+                    <div class="pt-4 border-t border-slate-700/60 flex flex-row justify-between items-end text-xs text-slate-300">
+                        <div class="text-left space-y-1">
+                            <p class="text-[10px] text-slate-400 cert-text-dark">Tanggal Diterbitkan:</p>
+                            <p id="cert-issue-date" class="font-bold text-white cert-text-dark">3 September 2026</p>
+                            <div class="flex items-center gap-1.5 mt-1">
+                                <i class="fa-solid fa-shield-halved text-cyan-400 text-xs"></i>
+                                <span class="text-[9px] text-slate-400 italic cert-text-dark">Terverifikasi Otomatis oleh Sistem CT Quest</span>
+                            </div>
                         </div>
 
-                        <!-- Teacher Signature -->
                         <div class="text-center space-y-1">
-                            <p class="text-[11px] text-slate-400">Guru Mata Pelajaran Informatika,</p>
+                            <p class="text-[10px] text-slate-400 cert-text-dark">Guru Mata Pelajaran Informatika,</p>
                             
-                            <!-- Digital Signature Line / Stamp -->
-                            <div class="h-16 flex items-center justify-center my-1">
-                                <div class="px-4 py-1 border border-cyan-500/30 rounded-lg bg-cyan-950/20 text-cyan-400 font-mono text-[10px] italic">
-                                    [ Tanda Tangan Digital Terverifikasi ]
+                            <div class="h-12 flex items-center justify-center my-0.5">
+                                <div class="px-3 py-1 border border-cyan-500/40 rounded-lg bg-cyan-950/30 text-cyan-300 font-mono text-[9px] italic flex items-center gap-1.5 cert-badge">
+                                    <i class="fa-solid fa-certificate text-amber-400"></i>
+                                    <span>[ Tanda Tangan Digital Terverifikasi ]</span>
                                 </div>
                             </div>
 
                             <p class="font-extrabold text-sm text-white cert-text-dark">Otib Subagja, S.Kom</p>
-                            <p class="text-[11px] text-slate-400 font-mono">NIP. 19930210 202521 1 112</p>
+                            <p class="text-[10px] text-slate-400 font-mono cert-text-dark">NIP. 19930210 202521 1 112</p>
                         </div>
                     </div>
 
@@ -1116,7 +622,7 @@
     </footer>
 
     <script>
-        /* ================= GLOBAL GAME STATE & UNLOCK PROGRESSION ================= */
+        /* ================= GLOBAL GAME STATE ================= */
         let playerScore = 0;
         let playerLevel = 1;
         
@@ -1126,39 +632,18 @@
             isLoggedIn: false
         };
 
-        // Sequential stage unlocking system
         let stageUnlocked = {
             'tab-materi': true,
-            'tab-login': false,
-            'tab-ct': false,
-            'tab-data': false,
-            'tab-search': false,
-            'tab-sort': false,
-            'tab-quiz': false,
-            'tab-cert': false
+            'tab-login': true,
+            'tab-ct': true,
+            'tab-data': true,
+            'tab-search': true,
+            'tab-sort': true,
+            'tab-quiz': true,
+            'tab-cert': true
         };
 
-        let ctPillarsDone = {
-            decomp: false,
-            pattern: false,
-            abs: false,
-            algo: false
-        };
-
-        let dataLinearDone = {
-            array: false,
-            stack: false,
-            queue: false
-        };
-
-        let searchAlgoDone = {
-            linear: false,
-            binary: false
-        };
-
-        // Audio System State
         let audioCtx = null;
-        let bgmInterval = null;
         let isBgmPlaying = false;
 
         function initAudio() {
@@ -1167,7 +652,20 @@
             }
         }
 
-        /* Update lock badges on navigation buttons & global progress */
+        function addXP(amount) {
+            playerScore = Math.max(0, playerScore + amount); // Pastikan poin tidak negatif
+            document.getElementById('player-score').innerText = playerScore;
+
+            const newLevel = Math.floor(playerScore / 100) + 1;
+            if (newLevel > playerLevel) {
+                playerLevel = newLevel;
+                document.getElementById('player-level').innerText = playerLevel;
+                playSound('levelup');
+                fireConfetti();
+            }
+            updateCertificateView();
+        }
+
         function updateTabLockUI() {
             let unlockedCount = 0;
             const totalStages = Object.keys(stageUnlocked).length;
@@ -1187,7 +685,6 @@
                 }
             }
 
-            // Update Header Global Progress Bar
             const percent = Math.round((unlockedCount / totalStages) * 100);
             const progressBar = document.getElementById('global-progress-bar');
             const progressText = document.getElementById('global-progress-text');
@@ -1195,19 +692,12 @@
             if (progressText) progressText.innerText = percent + '%';
         }
 
-        /* Stage 1 Complete Handler */
         function completeMateriStage() {
-            if (!stageUnlocked['tab-login']) {
-                stageUnlocked['tab-login'] = true;
-                updateTabLockUI();
-                addXP(20);
-                playSound('levelup');
-                fireConfetti();
-            }
+            stageUnlocked['tab-login'] = true;
+            updateTabLockUI();
             switchTab('tab-login');
         }
 
-        /* Stage 2 Login Form Handler */
         function handleLoginSubmit(event) {
             event.preventDefault();
             const nameInput = document.getElementById('input-student-name').value.trim();
@@ -1219,30 +709,25 @@
             studentProfile.class = classInput;
             studentProfile.isLoggedIn = true;
 
-            // Unlock Stage 3
             stageUnlocked['tab-ct'] = true;
             updateTabLockUI();
 
-            // Update UI elements
             document.getElementById('header-student-name').innerText = `${studentProfile.name} (${studentProfile.class})`;
             document.getElementById('saved-name-preview').innerText = studentProfile.name;
             document.getElementById('saved-class-preview').innerText = studentProfile.class;
             
-            const feedback = document.getElementById('login-success-feedback');
-            feedback.classList.remove('hidden');
+            document.getElementById('login-success-feedback').classList.remove('hidden');
 
             updateCertificateView();
             playSound('correct');
-            addXP(10);
 
-            // Generate fresh random quiz questions for this student session
-            generateSessionQuizQuestions();
-
-            // Auto-advance to Stage 3 after 1.2s
-            setTimeout(() => {
-                switchTab('tab-ct');
-            }, 1200);
+            setTimeout(() => { switchTab('tab-ct'); }, 1000);
         }
+
+        function unlockNextStageFromCT() { stageUnlocked['tab-data'] = true; updateTabLockUI(); switchTab('tab-data'); }
+        function unlockNextStageFromData() { stageUnlocked['tab-search'] = true; updateTabLockUI(); switchTab('tab-search'); }
+        function unlockNextStageFromSearch() { stageUnlocked['tab-sort'] = true; updateTabLockUI(); switchTab('tab-sort'); }
+        function unlockNextStageFromSort() { stageUnlocked['tab-quiz'] = true; updateTabLockUI(); switchTab('tab-quiz'); }
 
         function updateCertificateView() {
             const displayName = studentProfile.isLoggedIn ? studentProfile.name : '[ Selesaikan Login Siswa ]';
@@ -1253,162 +738,232 @@
             document.getElementById('cert-display-xp').innerText = playerScore;
             document.getElementById('cert-display-level').innerText = playerLevel;
 
-            // Generate date & registration number
             const today = new Date();
-            const dateStr = today.toLocaleDateString('id-ID', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
+            const dateStr = today.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
             document.getElementById('cert-issue-date').innerText = dateStr;
-            document.getElementById('cert-number').innerText = `2026${String(Math.floor(Math.random() * 8999) + 1000)}`;
+            if(!document.getElementById('cert-number').innerText.includes('CTQ/CERT/2026')) {
+                document.getElementById('cert-number').innerText = `CTQ/CERT/2026${String(Math.floor(Math.random() * 8999) + 1000)}`;
+            }
+        }
+
+        function copyCertNo() {
+            const certNo = document.getElementById('cert-number').innerText;
+            navigator.clipboard.writeText(certNo);
+            alert('Nomor Sertifikat berhasil disalin: ' + certNo);
         }
 
         function printCertificate() {
-            if (!studentProfile.isLoggedIn || !stageUnlocked['tab-cert']) {
+            if (!studentProfile.isLoggedIn) {
                 switchTab('tab-login');
-                playSound('wrong');
+                alert('Silakan isi Identitas Siswa terlebih dahulu.');
                 return;
             }
             updateCertificateView();
             window.print();
         }
 
-        function addXP(amount) {
-            playerScore += amount;
-            document.getElementById('player-score').innerText = playerScore;
-
-            const newLevel = Math.floor(playerScore / 100) + 1;
-            if (newLevel > playerLevel) {
-                playerLevel = newLevel;
-                document.getElementById('player-level').innerText = playerLevel;
-                playSound('levelup');
-                fireConfetti();
+        /* ================= QUIZ ENGINE WITH STRICT SCORE RULES ================= */
+        const quizBank = [
+            {
+                category: "Jenis 1 - 4 Pondasi CT",
+                question: "Pilar Berpikir Komputasional yang memecah masalah besar menjadi bagian kecil adalah...",
+                options: ["Abstraksi", "Dekomposisi", "Pengenalan Pola", "Algoritma"],
+                correct: 1,
+                explanation: "Dekomposisi memecah masalah kompleks menjadi komponen-komponents kecil yang mudah dikelola."
+            },
+            {
+                category: "Jenis 1 - Kasus Logika",
+                question: "Pada kasus kunci gembok kombinasi (682: 1 tepat, 614: 1 salah pos, 206: 2 salah pos, 738: salah semua), kombinasi tepat adalah...",
+                options: ["682", "042", "206", "738"],
+                correct: 1,
+                explanation: "Menggunakan metode eliminasi logika CT, hasil akhir kombinasi gembok yang tepat adalah 042."
+            },
+            {
+                category: "Jenis 2 - Struktur Data",
+                question: "Manakah di bawah ini yang tergolong ke dalam Struktur Data Non-Linear?",
+                options: ["Array & Stack", "Queue & Linked List", "Tree (Pohon) & Graph (Jaringan)", "Stack & Queue"],
+                correct: 2,
+                explanation: "Tree dan Graph merupakan struktur data non-linear karena terhubung secara berjejaring atau hierarki."
+            },
+            {
+                category: "Jenis 3 - Data Linear",
+                question: "Struktur data Stack (Tumpukan) bekerja dengan prinsip...",
+                options: ["FIFO (First-In First-Out)", "LIFO (Last-In First-Out)", "Random Access", "Linear Search"],
+                correct: 1,
+                explanation: "Stack menggunakan LIFO — elemen terakhir yang dimasukkan adalah yang pertama dikeluarkan."
+            },
+            {
+                category: "Jenis 4 - Algoritma Pencarian",
+                question: "Syarat mutlak untuk menjalankan algoritma Binary Search adalah...",
+                options: ["Data berjumlah di atas 100", "Data HARUS sudah terurut", "Data harus berupa teks", "Memori RAM harus kosong"],
+                correct: 1,
+                explanation: "Binary Search hanya bekerja dengan benar pada data yang sudah terurut (Sorted)."
+            },
+            {
+                category: "Jenis 5 - Algoritma Pengurutan",
+                question: "Algoritma pengurutan yang memilih elemen 'Pivot' untuk pemisahan partisi adalah...",
+                options: ["Insertion Sort", "Selection Sort", "Quick Sort", "Bubble Sort"],
+                correct: 2,
+                explanation: "Quick Sort membagi elemen array berdasarkan perbandingan terhadap elemen Pivot."
             }
-            updateCertificateView();
+        ];
+
+        let currentQuizIdx = 0;
+        let quizCorrectCount = 0;
+        let questionXPClaimed = false; // Memastikan penambahan poin benar hanya 1x per soal
+
+        function renderQuizQuestion() {
+            questionXPClaimed = false; // Reset klaim poin untuk soal baru
+            const q = quizBank[currentQuizIdx];
+            document.getElementById('quiz-progress-text').innerText = currentQuizIdx + 1;
+            document.getElementById('quiz-total-text').innerText = quizBank.length;
+            document.getElementById('quiz-category-tag').innerText = q.category;
+            document.getElementById('quiz-question-text').innerText = q.question;
+
+            document.getElementById('quiz-explanation').classList.add('hidden');
+            document.getElementById('btn-next-question').classList.add('hidden');
+
+            const container = document.getElementById('quiz-options-container');
+            container.innerHTML = q.options.map((opt, idx) => `
+                <button onclick="submitQuizAnswer(${idx}, this)" class="quiz-opt-btn p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 rounded-xl text-left transition-all flex items-center justify-between w-full">
+                    <span>${String.fromCharCode(65 + idx)}. ${opt}</span>
+                    <i class="fa-regular fa-circle text-slate-500"></i>
+                </button>
+            `).join('');
+        }
+
+        function submitQuizAnswer(selectedIdx, btnElement) {
+            const q = quizBank[currentQuizIdx];
+            const isCorrect = selectedIdx === q.correct;
+
+            if (isCorrect) {
+                // Jawaban Benar
+                if (!questionXPClaimed) {
+                    addXP(20); // Tambah +20 XP hanya 1x per soal
+                    questionXPClaimed = true;
+                    quizCorrectCount++;
+                }
+                playSound('correct');
+
+                // Kunci seluruh tombol opsi setelah berhasil menjawab benar
+                document.querySelectorAll('.quiz-opt-btn').forEach((btn, idx) => {
+                    btn.disabled = true;
+                    if (idx === q.correct) {
+                        btn.className = "quiz-opt-btn p-3 bg-emerald-950/80 border border-emerald-500 text-emerald-300 rounded-xl text-left flex items-center justify-between w-full font-bold cursor-not-allowed";
+                    }
+                });
+
+                const expBox = document.getElementById('quiz-explanation');
+                expBox.classList.remove('hidden');
+                document.getElementById('quiz-feedback-title').innerText = "✨ Jawaban Benar! (+20 XP)";
+                document.getElementById('quiz-feedback-title').className = "font-bold text-emerald-400";
+                document.getElementById('quiz-explanation-text').innerText = q.explanation;
+                document.getElementById('btn-next-question').classList.remove('hidden');
+
+            } else {
+                // Jawaban Salah: Selalu mengurangi -10 XP tiap kali tombol salah diklik
+                addXP(-10);
+                playSound('wrong');
+
+                // Nonaktifkan hanya tombol salah yang diklik
+                if (btnElement) {
+                    btnElement.disabled = true;
+                    btnElement.className = "quiz-opt-btn p-3 bg-rose-950/80 border border-rose-500 text-rose-300 rounded-xl text-left flex items-center justify-between w-full opacity-60 cursor-not-allowed";
+                }
+
+                const expBox = document.getElementById('quiz-explanation');
+                expBox.classList.remove('hidden');
+                document.getElementById('quiz-feedback-title').innerText = "❌ Jawaban Salah (-10 XP)";
+                document.getElementById('quiz-feedback-title').className = "font-bold text-rose-400";
+                document.getElementById('quiz-explanation-text').innerText = "Pilihan ini belum tepat. Poin Anda berkurang 10 XP. Silakan coba pilih jawaban lain!";
+            }
+        }
+
+        function nextQuestion() {
+            currentQuizIdx++;
+            if (currentQuizIdx < quizBank.length) {
+                renderQuizQuestion();
+            } else {
+                showQuizResults();
+            }
+        }
+
+        function showQuizResults() {
+            document.getElementById('quiz-card').classList.add('hidden');
+            document.getElementById('quiz-result-screen').classList.remove('hidden');
+
+            document.getElementById('res-correct').innerText = `${quizCorrectCount} / ${quizBank.length}`;
+            document.getElementById('res-xp').innerText = `${playerScore} XP`;
+            const accuracy = Math.round((quizCorrectCount / quizBank.length) * 100);
+            document.getElementById('res-accuracy').innerText = `${accuracy}%`;
+
+            stageUnlocked['tab-cert'] = true;
+            updateTabLockUI();
+            fireConfetti();
+        }
+
+        function restartQuiz() {
+            currentQuizIdx = 0;
+            quizCorrectCount = 0;
+            document.getElementById('quiz-card').classList.remove('hidden');
+            document.getElementById('quiz-result-screen').classList.add('hidden');
+            renderQuizQuestion();
         }
 
         function playSound(type) {
             initAudio();
             if (!audioCtx) return;
-
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
+            osc.connect(gain); gain.connect(audioCtx.destination);
             const now = audioCtx.currentTime;
 
             if (type === 'click') {
-                osc.type = 'sine';
                 osc.frequency.setValueAtTime(400, now);
-                osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
-                gain.gain.setValueAtTime(0.1, now);
-                gain.gain.linearRampToValueAtTime(0.01, now + 0.05);
-                osc.start(now);
-                osc.stop(now + 0.05);
+                gain.gain.setValueAtTime(0.08, now);
+                osc.start(now); osc.stop(now + 0.04);
             } else if (type === 'correct') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(523.25, now);
-                osc.frequency.setValueAtTime(659.25, now + 0.1);
-                osc.frequency.setValueAtTime(783.99, now + 0.2);
-                gain.gain.setValueAtTime(0.15, now);
-                gain.gain.linearRampToValueAtTime(0.01, now + 0.35);
-                osc.start(now);
-                osc.stop(now + 0.35);
+                osc.frequency.setValueAtTime(523, now);
+                osc.frequency.setValueAtTime(659, now + 0.08);
+                gain.gain.setValueAtTime(0.1, now);
+                osc.start(now); osc.stop(now + 0.2);
             } else if (type === 'wrong') {
                 osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(200, now);
-                osc.frequency.linearRampToValueAtTime(100, now + 0.2);
-                gain.gain.setValueAtTime(0.15, now);
-                gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
-                osc.start(now);
-                osc.stop(now + 0.2);
-            } else if (type === 'swap') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(300, now);
-                osc.frequency.exponentialRampToValueAtTime(150, now + 0.04);
-                gain.gain.setValueAtTime(0.05, now);
-                gain.gain.linearRampToValueAtTime(0.001, now + 0.04);
-                osc.start(now);
-                osc.stop(now + 0.04);
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.linearRampToValueAtTime(110, now + 0.15);
+                gain.gain.setValueAtTime(0.1, now);
+                osc.start(now); osc.stop(now + 0.15);
             } else if (type === 'levelup') {
                 osc.type = 'square';
                 osc.frequency.setValueAtTime(440, now);
-                osc.frequency.setValueAtTime(554.37, now + 0.1);
-                osc.frequency.setValueAtTime(659.25, now + 0.2);
-                osc.frequency.setValueAtTime(880, now + 0.3);
-                gain.gain.setValueAtTime(0.12, now);
-                gain.gain.linearRampToValueAtTime(0.01, now + 0.5);
-                osc.start(now);
-                osc.stop(now + 0.5);
+                osc.frequency.setValueAtTime(880, now + 0.15);
+                gain.gain.setValueAtTime(0.1, now);
+                osc.start(now); osc.stop(now + 0.3);
             }
         }
 
         function toggleBGM() {
-            initAudio();
-            const btn = document.getElementById('bgm-toggle-btn');
             isBgmPlaying = !isBgmPlaying;
-
-            if (isBgmPlaying) {
-                btn.innerHTML = "🎵 BGM: ON";
-                btn.classList.add('bg-cyan-600', 'text-white');
-                startBGM();
-            } else {
-                btn.innerHTML = "🎵 BGM: OFF";
-                btn.classList.remove('bg-cyan-600', 'text-white');
-                stopBGM();
-            }
+            document.getElementById('bgm-toggle-btn').innerText = isBgmPlaying ? "🎵 BGM: ON" : "🎵 BGM: OFF";
         }
 
-        function startBGM() {
-            if (bgmInterval) clearInterval(bgmInterval);
-            const notes = [261.63, 329.63, 392.00, 523.25, 392.00, 329.63];
-            let step = 0;
-
-            bgmInterval = setInterval(() => {
-                if (!isBgmPlaying || !audioCtx) return;
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(notes[step % notes.length], audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.4);
-                step++;
-            }, 500);
-        }
-
-        function stopBGM() {
-            if (bgmInterval) clearInterval(bgmInterval);
-        }
-
-        /* ================= CONFETTI EFFECT ================= */
+        /* ================= CONFETTI ================= */
         const canvas = document.getElementById('confetti-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
         function fireConfetti() {
             particles = [];
-            for (let i = 0; i < 120; i++) {
+            for (let i = 0; i < 90; i++) {
                 particles.push({
-                    x: canvas.width / 2,
-                    y: canvas.height / 2,
-                    vx: (Math.random() - 0.5) * 16,
-                    vy: (Math.random() - 0.7) * 16,
+                    x: canvas.width / 2, y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 14, vy: (Math.random() - 0.7) * 14,
                     color: `hsl(${Math.random() * 360}, 100%, 60%)`,
-                    size: Math.random() * 8 + 4,
-                    life: 100
+                    size: Math.random() * 6 + 3, life: 80
                 });
             }
             animateConfetti();
@@ -1417,35 +972,19 @@
         function animateConfetti() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             let alive = false;
-
             particles.forEach(p => {
                 if (p.life > 0) {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.vy += 0.3;
-                    p.life--;
-                    ctx.fillStyle = p.color;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fill();
+                    p.x += p.vx; p.y += p.vy; p.vy += 0.25; p.life--;
+                    ctx.fillStyle = p.color; ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
                     alive = true;
                 }
             });
-
             if (alive) requestAnimationFrame(animateConfetti);
         }
 
-        /* ================= NAVIGATION & STAGE SWITCHING ================= */
         function switchTab(tabId) {
             playSound('click');
-
-            // Guard: Check if stage is unlocked
-            if (!stageUnlocked[tabId]) {
-                playSound('wrong');
-                showToastLockedMessage(tabId);
-                return;
-            }
-
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(tabId).classList.remove('hidden');
 
@@ -1456,37 +995,8 @@
             const activeBtn = document.getElementById('btn-' + tabId);
             if (activeBtn) {
                 activeBtn.className = "tab-btn shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg shadow-amber-500/20";
-                activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             }
             updateTabLockUI();
-        }
-
-        function showToastLockedMessage(targetTabId) {
-            const tabNames = {
-                'tab-login': 'Tahap 1 (Materi Belajar)',
-                'tab-ct': 'Tahap 2 (Identitas Siswa)',
-                'tab-data': 'Tahap 3 (4 Pondasi CT)',
-                'tab-search': 'Tahap 4 (Data Linear)',
-                'tab-sort': 'Tahap 5 (Pencarian)',
-                'tab-quiz': 'Tahap 6 (Pengurutan)',
-                'tab-cert': 'Tahap 7 (CT Boss Quest)'
-            };
-
-            const msg = `🔒 Tahap ini masih terkunci! Silakan selesaikan ${tabNames[targetTabId] || 'tahap sebelumnya'} terlebih dahulu.`;
-            
-            let toast = document.getElementById('lock-toast');
-            if (!toast) {
-                toast = document.createElement('div');
-                toast.id = 'lock-toast';
-                toast.className = 'fixed bottom-6 right-6 z-50 bg-rose-900/95 border border-rose-500 text-rose-100 px-5 py-3 rounded-2xl shadow-2xl text-xs font-bold transition-all animate-toast backdrop-blur-md flex items-center gap-2';
-                document.body.appendChild(toast);
-            }
-            toast.innerHTML = `<i class="fa-solid fa-lock text-rose-400 text-sm"></i> <span>${msg}</span>`;
-            toast.style.display = 'flex';
-
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
         }
 
         function showChapter(chapId) {
@@ -1504,867 +1014,8 @@
             }
         }
 
-        /* ================= 4 PILLARS LOGIC ================= */
-        function updateCTProgress() {
-            let count = 0;
-            if (ctPillarsDone.decomp) count++;
-            if (ctPillarsDone.pattern) count++;
-            if (ctPillarsDone.abs) count++;
-            if (ctPillarsDone.algo) count++;
-
-            document.getElementById('ct-progress-count').innerText = count;
-
-            if (count === 4 && !stageUnlocked['tab-data']) {
-                stageUnlocked['tab-data'] = true;
-                updateTabLockUI();
-                document.getElementById('ct-stage-banner').classList.remove('hidden');
-                playSound('levelup');
-                fireConfetti();
-            }
-        }
-
-        function checkDecomposition() {
-            const chks = document.querySelectorAll('.decomp-chk');
-            let isCorrect = true;
-
-            chks.forEach(c => {
-                const correct = c.getAttribute('data-correct') === 'true';
-                if (c.checked !== correct) isCorrect = false;
-            });
-
-            const fb = document.getElementById('decomp-feedback');
-            fb.classList.remove('hidden');
-
-            if (isCorrect) {
-                playSound('correct');
-                addXP(25);
-                ctPillarsDone.decomp = true;
-                updateCTProgress();
-                fb.className = "text-xs font-medium mt-2 text-emerald-400";
-                fb.innerText = "✨ Sempurna! Kamu berhasil mengisolasi sub-tugas yang relevan untuk membuat kopi!";
-            } else {
-                playSound('wrong');
-                fb.className = "text-xs font-medium mt-2 text-rose-400";
-                fb.innerText = "❌ Masih kurang tepat. Periksa kembali tugas mana yang tidak berhubungan dengan kopi.";
-            }
-        }
-
-        function checkPattern() {
-            const val = parseInt(document.getElementById('pattern-input').value);
-            const fb = document.getElementById('pattern-feedback');
-            fb.classList.remove('hidden');
-
-            if (val === 32) {
-                playSound('correct');
-                addXP(25);
-                ctPillarsDone.pattern = true;
-                updateCTProgress();
-                fb.className = "text-xs font-medium mt-2 text-emerald-400";
-                fb.innerText = "✨ Benar sekali! Pola memori berkembang dengan kelipatan 2 (2^n) ➔ 32.";
-            } else {
-                playSound('wrong');
-                fb.className = "text-xs font-medium mt-2 text-rose-400";
-                fb.innerText = "❌ Kurang tepat. Perhatikan perkalian 2 dari angka sebelumnya (16 x 2).";
-            }
-        }
-
-        function checkAbstraction() {
-            const chks = document.querySelectorAll('.abs-chk');
-            let isCorrect = true;
-
-            chks.forEach(c => {
-                const essential = c.getAttribute('data-essential') === 'true';
-                if (c.checked !== essential) isCorrect = false;
-            });
-
-            const fb = document.getElementById('abstraction-feedback');
-            fb.classList.remove('hidden');
-
-            if (isCorrect) {
-                playSound('correct');
-                addXP(25);
-                ctPillarsDone.abs = true;
-                updateCTProgress();
-                fb.className = "text-xs font-medium mt-2 text-emerald-400";
-                fb.innerText = "✨ Hebat! Kamu mengabaikan warna sepatu & lagu musik yang tidak relevan dengan navigasi GPS.";
-            } else {
-                playSound('wrong');
-                fb.className = "text-xs font-medium mt-2 text-rose-400";
-                fb.innerText = "❌ Coba lagi! Fokus hanya pada data yang memengaruhi waktu & rute perjalanan.";
-            }
-        }
-
-        let algoSteps = [];
-        function addAlgoStep(step) {
-            playSound('click');
-            algoSteps.push(step);
-            renderAlgoSteps();
-        }
-
-        function clearAlgoStep() {
-            playSound('click');
-            algoSteps = [];
-            renderAlgoSteps();
-            document.getElementById('algo-feedback').classList.add('hidden');
-        }
-
-        function renderAlgoSteps() {
-            const box = document.getElementById('algo-sequence');
-            if (algoSteps.length === 0) {
-                box.innerHTML = `<span class="text-slate-500 italic text-[11px] self-center">Klik tombol instruksi di bawah untuk menyusun...</span>`;
-                return;
-            }
-            box.innerHTML = algoSteps.map((s, idx) => `
-                <span class="px-2 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded flex items-center gap-1 font-mono">
-                    ${idx + 1}. ${s}
-                </span>
-            `).join('');
-        }
-
-        function checkAlgorithm() {
-            const fb = document.getElementById('algo-feedback');
-            fb.classList.remove('hidden');
-
-            const targetSeq = ['Maju 1 Langkah', 'Belok Kanan', 'Ambil Kunci'];
-            const match = algoSteps.length === targetSeq.length && algoSteps.every((val, idx) => val === targetSeq[idx]);
-
-            if (match) {
-                playSound('correct');
-                addXP(25);
-                ctPillarsDone.algo = true;
-                updateCTProgress();
-                fb.className = "text-xs font-medium mt-2 text-emerald-400";
-                fb.innerText = "✨ Sukses! Robot berhasil bergerak, belok, dan mengamankan kunci sesuai urutan!";
-            } else {
-                playSound('wrong');
-                fb.className = "text-xs font-medium mt-2 text-rose-400";
-                fb.innerText = "❌ Urutan algoritma belum sesuai. Target: Maju 1 Langkah ➔ Belok Kanan ➔ Ambil Kunci.";
-            }
-        }
-
-        /* ================= LINEAR DATA STRUCTURES LOGIC ================= */
-        let arrayData = [12, 45, 78, 23, 89];
-        let stackData = [10, 25];
-        let queueData = ['Andi', 'Budi'];
-
-        function updateDataLinearProgress() {
-            let count = 0;
-            if (dataLinearDone.array) count++;
-            if (dataLinearDone.stack) count++;
-            if (dataLinearDone.queue) count++;
-
-            document.getElementById('data-progress-count').innerText = count;
-
-            if (count === 3 && !stageUnlocked['tab-search']) {
-                stageUnlocked['tab-search'] = true;
-                updateTabLockUI();
-                document.getElementById('data-stage-banner').classList.remove('hidden');
-                playSound('levelup');
-                fireConfetti();
-            }
-        }
-
-        function renderArrayVisual() {
-            const container = document.getElementById('array-visual-container');
-            container.innerHTML = arrayData.map((val, idx) => `
-                <div class="bg-slate-800 p-2 rounded-lg text-center border border-slate-700">
-                    <span class="text-[10px] text-slate-500 block">Indeks [${idx}]</span>
-                    <span class="text-sm font-bold text-cyan-400 font-mono">${val}</span>
-                </div>
-            `).join('');
-        }
-
-        function updateArrayValue() {
-            const idx = parseInt(document.getElementById('arr-idx-input').value);
-            const val = parseInt(document.getElementById('arr-val-input').value);
-
-            if (!isNaN(idx) && idx >= 0 && idx < arrayData.length && !isNaN(val)) {
-                playSound('click');
-                arrayData[idx] = val;
-                renderArrayVisual();
-                addXP(5);
-                dataLinearDone.array = true;
-                updateDataLinearProgress();
-            }
-        }
-
-        function renderStackVisual() {
-            const container = document.getElementById('stack-visual-container');
-            if (stackData.length === 0) {
-                container.innerHTML = `<span id="stack-empty-msg" class="text-xs text-slate-500 italic text-center my-auto">Stack Kosong</span>`;
-                return;
-            }
-            container.innerHTML = stackData.map((val, idx) => `
-                <div class="bg-indigo-900/60 text-indigo-200 border border-indigo-700/80 rounded-lg p-2 text-center text-xs font-mono font-bold flex justify-between items-center px-3">
-                    <span>${val}</span>
-                    ${idx === stackData.length - 1 ? '<span class="text-[10px] bg-indigo-500 text-white px-1.5 py-0.5 rounded">TOP</span>' : ''}
-                </div>
-            `).join('');
-        }
-
-        function pushStack() {
-            const val = document.getElementById('stack-input').value.trim();
-            if (val && stackData.length < 5) {
-                playSound('click');
-                stackData.push(val);
-                document.getElementById('stack-input').value = '';
-                renderStackVisual();
-                addXP(5);
-                dataLinearDone.stack = true;
-                updateDataLinearProgress();
-            }
-        }
-
-        function popStack() {
-            if (stackData.length > 0) {
-                playSound('click');
-                stackData.pop();
-                renderStackVisual();
-                dataLinearDone.stack = true;
-                updateDataLinearProgress();
-            }
-        }
-
-        function renderQueueVisual() {
-            const container = document.getElementById('queue-visual-container');
-            if (queueData.length === 0) {
-                container.innerHTML = `<span id="queue-empty-msg" class="text-xs text-slate-500 italic text-center w-full">Antrean Kosong</span>`;
-                return;
-            }
-            container.innerHTML = queueData.map((val, idx) => `
-                <div class="bg-emerald-900/60 text-emerald-200 border border-emerald-700/80 rounded-lg p-2.5 text-center text-xs font-bold whitespace-nowrap min-w-[70px]">
-                    <span class="block text-[9px] text-emerald-400">${idx === 0 ? 'FRONT' : (idx === queueData.length - 1 ? 'REAR' : 'PASIEN')}</span>
-                    ${val}
-                </div>
-            `).join('');
-        }
-
-        function enqueueQueue() {
-            const val = document.getElementById('queue-input').value.trim();
-            if (val && queueData.length < 6) {
-                playSound('click');
-                queueData.push(val);
-                document.getElementById('queue-input').value = '';
-                renderQueueVisual();
-                addXP(5);
-                dataLinearDone.queue = true;
-                updateDataLinearProgress();
-            }
-        }
-
-        function dequeueQueue() {
-            if (queueData.length > 0) {
-                playSound('click');
-                queueData.shift();
-                renderQueueVisual();
-                dataLinearDone.queue = true;
-                updateDataLinearProgress();
-            }
-        }
-
-        /* ================= SEARCHING ALGORITHMS ================= */
-        const searchArray = [5, 12, 18, 24, 31, 42, 55, 68, 70, 88];
-
-        function updateSearchProgress() {
-            let count = 0;
-            if (searchAlgoDone.linear) count++;
-            if (searchAlgoDone.binary) count++;
-
-            document.getElementById('search-progress-count').innerText = count;
-
-            if (count === 2 && !stageUnlocked['tab-sort']) {
-                stageUnlocked['tab-sort'] = true;
-                updateTabLockUI();
-                document.getElementById('search-stage-banner').classList.remove('hidden');
-                playSound('levelup');
-                fireConfetti();
-            }
-        }
-
-        function renderSearchArray(highlightIdx = -1, lowIdx = -1, highIdx = -1) {
-            const container = document.getElementById('search-array-container');
-            container.innerHTML = searchArray.map((val, idx) => {
-                let colorClass = "bg-slate-800 text-slate-300 border-slate-700";
-                if (idx === highlightIdx) colorClass = "bg-amber-500 text-slate-950 font-extrabold border-amber-300 scale-110";
-                else if (idx >= lowIdx && idx <= highIdx && lowIdx !== -1) colorClass = "bg-indigo-950 text-indigo-300 border-indigo-700";
-
-                return `
-                    <div class="px-3 py-2 rounded-lg border font-mono text-xs text-center transition-all ${colorClass}">
-                        <span class="block text-[9px] text-slate-500">idx ${idx}</span>
-                        ${val}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        async function runLinearSearch() {
-            const target = parseInt(document.getElementById('search-target-input').value);
-            let steps = 0;
-            let found = false;
-
-            for (let i = 0; i < searchArray.length; i++) {
-                steps++;
-                renderSearchArray(i);
-                document.getElementById('linear-steps').innerText = steps;
-                document.getElementById('linear-status').innerText = `Memeriksa Indeks ${i} (${searchArray[i]} == ${target}?)`;
-                playSound('click');
-                await new Promise(r => setTimeout(r, 400));
-
-                if (searchArray[i] === target) {
-                    found = true;
-                    document.getElementById('linear-status').innerText = `✨ Ditemukan di Indeks ${i}!`;
-                    playSound('correct');
-                    addXP(15);
-                    searchAlgoDone.linear = true;
-                    updateSearchProgress();
-                    break;
-                }
-            }
-
-            if (!found) {
-                document.getElementById('linear-status').innerText = `❌ Tidak ditemukan dalam array.`;
-                playSound('wrong');
-            }
-        }
-
-        async function runBinarySearch() {
-            const target = parseInt(document.getElementById('search-target-input').value);
-            let low = 0;
-            let high = searchArray.length - 1;
-            let steps = 0;
-            let found = false;
-
-            while (low <= high) {
-                steps++;
-                let mid = Math.floor((low + high) / 2);
-                renderSearchArray(mid, low, high);
-                document.getElementById('binary-steps').innerText = steps;
-                document.getElementById('binary-status').innerText = `Rentang [${low}-${high}], Mid: Indeks ${mid} (${searchArray[mid]})`;
-                playSound('click');
-                await new Promise(r => setTimeout(r, 600));
-
-                if (searchArray[mid] === target) {
-                    found = true;
-                    document.getElementById('binary-status').innerText = `✨ Ditemukan di Indeks ${mid}!`;
-                    playSound('correct');
-                    addXP(20);
-                    searchAlgoDone.binary = true;
-                    updateSearchProgress();
-                    break;
-                } else if (searchArray[mid] < target) {
-                    low = mid + 1;
-                } else {
-                    high = mid - 1;
-                }
-            }
-
-            if (!found) {
-                document.getElementById('binary-status').innerText = `❌ Tidak ditemukan dalam array.`;
-                playSound('wrong');
-            }
-        }
-
-        /* ================= 5 SORTING ALGORITHMS VISUALIZER ================= */
-        let sortArray = [];
-        let isSorting = false;
-        let compareCount = 0;
-        let swapCount = 0;
-
-        const algoDescs = {
-            bubble: "<strong>Bubble Sort:</strong> Membandingkan dua pasangan elemen berdampingan dan menukarnya jika urutannya salah secara berulang.",
-            selection: "<strong>Selection Sort:</strong> Mencari elemen terkecil di bagian belum terurut, lalu menukarnya ke posisi awal.",
-            insertion: "<strong>Insertion Sort:</strong> Menyisipkan setiap elemen satu per satu ke dalam posisi yang tepat pada bagian terurut.",
-            quick: "<strong>Quick Sort:</strong> Menggunakan elemen Pivot untuk membagi array menjadi dua partisi (&lt; pivot dan &gt; pivot).",
-            merge: "<strong>Merge Sort:</strong> Membelah array menjadi elemen tunggal lalu menggabungkannya kembali secara terurut."
-        };
-
-        function updateSortDesc() {
-            const algo = document.getElementById('sorting-algo-select').value;
-            document.getElementById('sort-desc-box').innerHTML = algoDescs[algo];
-        }
-
-        function resetSortArray() {
-            if (isSorting) return;
-            sortArray = [];
-            for (let i = 0; i < 10; i++) {
-                sortArray.push(Math.floor(Math.random() * 80) + 15);
-            }
-            compareCount = 0;
-            swapCount = 0;
-            document.getElementById('sort-compare-count').innerText = '0';
-            document.getElementById('sort-swap-count').innerText = '0';
-            document.getElementById('sort-step-text').innerText = 'Array diacak. Siap dimulai.';
-            renderSortBars();
-        }
-
-        function renderSortBars(compareIdxs = [], swapIdxs = [], pivotIdx = -1, sortedIdxs = []) {
-            const container = document.getElementById('sort-bars-container');
-            container.innerHTML = sortArray.map((val, idx) => {
-                let bgColor = "bg-cyan-500";
-                if (sortedIdxs.includes(idx)) bgColor = "bg-emerald-500";
-                else if (idx === pivotIdx) bgColor = "bg-pink-500";
-                else if (swapIdxs.includes(idx)) bgColor = "bg-purple-500";
-                else if (compareIdxs.includes(idx)) bgColor = "bg-amber-400";
-
-                const heightPercent = (val / 100) * 100;
-
-                return `
-                    <div class="flex-1 flex flex-col items-center justify-end h-full">
-                        <span class="text-[10px] font-mono text-slate-300 mb-1">${val}</span>
-                        <div class="w-full array-bar ${bgColor} rounded-t-md" style="height: ${heightPercent}%;"></div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function getDelay() {
-            return parseInt(document.getElementById('sort-speed-slider').value);
-        }
-
-        async function startSorting() {
-            if (isSorting) return;
-            isSorting = true;
-            document.getElementById('btn-start-sort').disabled = true;
-
-            const algo = document.getElementById('sorting-algo-select').value;
-
-            if (algo === 'bubble') await runBubbleSort();
-            else if (algo === 'selection') await runSelectionSort();
-            else if (algo === 'insertion') await runInsertionSort();
-            else if (algo === 'quick') await runQuickSort(0, sortArray.length - 1);
-            else if (algo === 'merge') await runMergeSort(0, sortArray.length - 1);
-
-            renderSortBars([], [], -1, Array.from({length: sortArray.length}, (_, i) => i));
-            document.getElementById('sort-step-text').innerText = '🎉 Pengurutan Selesai Sempurna!';
-            playSound('correct');
-            addXP(30);
-            isSorting = false;
-            document.getElementById('btn-start-sort').disabled = false;
-
-            // Unlock Stage 7 (CT Boss Quest)
-            if (!stageUnlocked['tab-quiz']) {
-                stageUnlocked['tab-quiz'] = true;
-                updateTabLockUI();
-                document.getElementById('sort-stage-banner').classList.remove('hidden');
-                playSound('levelup');
-                fireConfetti();
-            }
-        }
-
-        /* 1. BUBBLE SORT */
-        async function runBubbleSort() {
-            let n = sortArray.length;
-            for (let i = 0; i < n - 1; i++) {
-                for (let j = 0; j < n - i - 1; j++) {
-                    compareCount++;
-                    document.getElementById('sort-compare-count').innerText = compareCount;
-                    document.getElementById('sort-step-text').innerText = `Bandingkan Indeks ${j} (${sortArray[j]}) dan ${j+1} (${sortArray[j+1]})`;
-                    renderSortBars([j, j+1]);
-                    await new Promise(r => setTimeout(r, getDelay()));
-
-                    if (sortArray[j] > sortArray[j+1]) {
-                        swapCount++;
-                        document.getElementById('sort-swap-count').innerText = swapCount;
-                        let temp = sortArray[j];
-                        sortArray[j] = sortArray[j+1];
-                        sortArray[j+1] = temp;
-                        playSound('swap');
-                        renderSortBars([], [j, j+1]);
-                        await new Promise(r => setTimeout(r, getDelay()));
-                    }
-                }
-            }
-        }
-
-        /* 2. SELECTION SORT */
-        async function runSelectionSort() {
-            let n = sortArray.length;
-            for (let i = 0; i < n - 1; i++) {
-                let minIdx = i;
-                for (let j = i + 1; j < n; j++) {
-                    compareCount++;
-                    document.getElementById('sort-compare-count').innerText = compareCount;
-                    document.getElementById('sort-step-text').innerText = `Cari minimum: bandingkan ${sortArray[j]} dengan min sementara (${sortArray[minIdx]})`;
-                    renderSortBars([j, minIdx]);
-                    await new Promise(r => setTimeout(r, getDelay()));
-
-                    if (sortArray[j] < sortArray[minIdx]) {
-                        minIdx = j;
-                    }
-                }
-                if (minIdx !== i) {
-                    swapCount++;
-                    document.getElementById('sort-swap-count').innerText = swapCount;
-                    let temp = sortArray[i];
-                    sortArray[i] = sortArray[minIdx];
-                    sortArray[minIdx] = temp;
-                    playSound('swap');
-                    renderSortBars([], [i, minIdx]);
-                    await new Promise(r => setTimeout(r, getDelay()));
-                }
-            }
-        }
-
-        /* 3. INSERTION SORT */
-        async function runInsertionSort() {
-            let n = sortArray.length;
-            for (let i = 1; i < n; i++) {
-                let key = sortArray[i];
-                let j = i - 1;
-                document.getElementById('sort-step-text').innerText = `Sisipkan ${key} ke bagian terurut kiri`;
-
-                while (j >= 0 && sortArray[j] > key) {
-                    compareCount++;
-                    swapCount++;
-                    document.getElementById('sort-compare-count').innerText = compareCount;
-                    document.getElementById('sort-swap-count').innerText = swapCount;
-                    sortArray[j + 1] = sortArray[j];
-                    playSound('swap');
-                    renderSortBars([j], [j + 1]);
-                    await new Promise(r => setTimeout(r, getDelay()));
-                    j--;
-                }
-                sortArray[j + 1] = key;
-            }
-        }
-
-        /* 4. QUICK SORT */
-        async function runQuickSort(low, high) {
-            if (low < high) {
-                let pi = await partitionQuick(low, high);
-                await runQuickSort(low, pi - 1);
-                await runQuickSort(pi + 1, high);
-            }
-        }
-
-        async function partitionQuick(low, high) {
-            let pivot = sortArray[high];
-            let i = low - 1;
-            document.getElementById('sort-step-text').innerText = `Pivot dipilih: ${pivot}`;
-
-            for (let j = low; j < high; j++) {
-                compareCount++;
-                document.getElementById('sort-compare-count').innerText = compareCount;
-                renderSortBars([j], [], high);
-                await new Promise(r => setTimeout(r, getDelay()));
-
-                if (sortArray[j] < pivot) {
-                    i++;
-                    swapCount++;
-                    document.getElementById('sort-swap-count').innerText = swapCount;
-                    let temp = sortArray[i];
-                    sortArray[i] = sortArray[j];
-                    sortArray[j] = temp;
-                    playSound('swap');
-                    renderSortBars([], [i, j], high);
-                    await new Promise(r => setTimeout(r, getDelay()));
-                }
-            }
-            let temp = sortArray[i + 1];
-            sortArray[i + 1] = sortArray[high];
-            sortArray[high] = temp;
-            return i + 1;
-        }
-
-        /* 5. MERGE SORT */
-        async function runMergeSort(l, r) {
-            if (l >= r) return;
-            let m = l + Math.floor((r - l) / 2);
-            await runMergeSort(l, m);
-            await runMergeSort(m + 1, r);
-            await mergeParts(l, m, r);
-        }
-
-        async function mergeParts(l, m, r) {
-            let n1 = m - l + 1;
-            let n2 = r - m;
-            let L = new Array(n1);
-            let R = new Array(n2);
-
-            for (let i = 0; i < n1; i++) L[i] = sortArray[l + i];
-            for (let j = 0; j < n2; j++) R[j] = sortArray[m + 1 + j];
-
-            let i = 0, j = 0, k = l;
-            while (i < n1 && j < n2) {
-                compareCount++;
-                document.getElementById('sort-compare-count').innerText = compareCount;
-                document.getElementById('sort-step-text').innerText = `Penggabungan (Merge) area sub-array [${l}-${r}]`;
-                renderSortBars([k]);
-                await new Promise(res => setTimeout(res, getDelay()));
-
-                if (L[i] <= R[j]) {
-                    sortArray[k] = L[i];
-                    i++;
-                } else {
-                    sortArray[k] = R[j];
-                    j++;
-                }
-                k++;
-            }
-            while (i < n1) {
-                sortArray[k] = L[i];
-                i++; k++;
-            }
-            while (j < n2) {
-                sortArray[k] = R[j];
-                j++; k++;
-            }
-            renderSortBars([], [], -1, Array.from({length: r - l + 1}, (_, idx) => l + idx));
-        }
-
-        /* ================= QUIZ ENGINE WITH 5 QUESTION TYPES ================= */
-        // Comprehensive Question Bank categorized into 5 distinct types (Jenis Soal)
-        const masterQuestionBank = {
-            type1: [ // Jenis 1: 4 Pondasi CT & Kasus Logika
-                {
-                    category: "Jenis 1 - 4 Pondasi CT",
-                    question: "Pilar Berpikir Komputasional yang memecah masalah kompleks menjadi bagian-bagian kecil yang lebih mudah dikelola adalah...",
-                    options: ["Abstraksi", "Dekomposisi", "Pengenalan Pola", "Desain Algoritma"],
-                    correct: 1,
-                    explanation: "Dekomposisi bertugas memecah masalah besar/kompleks menjadi sub-masalah kecil yang mandiri."
-                },
-                {
-                    category: "Jenis 1 - Kasus Logika CT",
-                    question: "Pada Kasus 1 Kunci Gembok Kombinasi (682: 1 tepat, 614: 1 salah pos, 206: 2 salah pos, 738: salah semua), kombinasi angka yang benar adalah...",
-                    options: ["682", "042", "206", "738"],
-                    correct: 1,
-                    explanation: "Berdasarkan langkah eliminasi logika CT pada Bab 1, kombinasi tepat adalah 042."
-                },
-                {
-                    category: "Jenis 1 - 4 Pondasi CT",
-                    question: "Mengabaikan warna pakaian, merk gembok, atau warna motor kurir dan hanya fokus pada rute perjalanan dinamakan...",
-                    options: ["Dekomposisi", "Abstraksi", "Pengenalan Pola", "Algoritma"],
-                    correct: 1,
-                    explanation: "Abstraksi fokus pada informasi penting dan mengabaikan detail yang tidak relevan."
-                },
-                {
-                    category: "Jenis 1 - Kasus Logika CT",
-                    question: "Diberikan deret angka memori: 2, 5, 10, 17, 26, ... Selisih pertambahannya adalah +3, +5, +7, +9. Berapakah angka suku ke-6?",
-                    options: ["32", "35", "37", "40"],
-                    correct: 2,
-                    explanation: "Selisih berikutnya adalah +11 (bilangan ganjil), sehingga $26 + 11 = 37$."
-                }
-            ],
-            type2: [ // Jenis 2: Pengertian & Klasifikasi Struktur Data
-                {
-                    category: "Jenis 2 - Konsep Struktur Data",
-                    question: "Apa fungsi utama dari Struktur Data di dalam memori komputer (RAM)?",
-                    options: ["Menghemat baterai laptop", "Mengatur & menyimpan data agar diproses secara efisien oleh algoritma", "Membuat tampilan grafik web menjadi 3D", "Menghapus virus secara otomatis"],
-                    correct: 1,
-                    explanation: "Struktur Data mengorganisasi dan mengelompokkan data di memori agar mudah diakses dan diproses."
-                },
-                {
-                    category: "Jenis 2 - Klasifikasi Struktur Data",
-                    question: "Buku-buku perpustakaan yang disusun secara bertingkat pada rak bernomor sesuai kategori mewakili analogi...",
-                    options: ["Algoritma Random", "Struktur Data", "Hardware Processor", "Jaringan Internet"],
-                    correct: 1,
-                    explanation: "Rak bertingkat yang rapi adalah gambaran pengorganisasian Struktur Data."
-                },
-                {
-                    category: "Jenis 2 - Klasifikasi Struktur Data",
-                    question: "Manakah di bawah ini yang termasuk ke dalam kelompok Struktur Data Non-Linear?",
-                    options: ["Array dan Stack", "Queue dan Linked List", "Tree (Pohon) dan Graph (Jaringan)", "Stack dan Queue"],
-                    correct: 2,
-                    explanation: "Tree dan Graph terhubung secara hierarki/berjejaring (Non-Linear), sedangkan Array/Stack/Queue berbentuk Linear."
-                }
-            ],
-            type3: [ // Jenis 3: Data Linear (Array, Stack, Queue)
-                {
-                    category: "Jenis 3 - Data Linear",
-                    question: "Struktur data linear yang menyimpan elemen data bertipe sama pada lokasi memori berdampingan dengan nomor Indeks dipanggil...",
-                    options: ["Queue", "Array (Larik)", "Tree", "Graph"],
-                    correct: 1,
-                    explanation: "Array menyimpan elemen bertipe sama dengan indeks mulai dari 0."
-                },
-                {
-                    category: "Jenis 3 - Data Linear",
-                    question: "Struktur data Stack (Tumpukan) bekerja menggunakan prinsip operasi...",
-                    options: ["FIFO (First In, First Out)", "LIFO (Last In, First Out)", "Random Access", "Linear Search"],
-                    correct: 1,
-                    explanation: "Stack menggunakan prinsip LIFO (Last In, First Out) — data terakhir masuk adalah yang pertama keluar."
-                },
-                {
-                    category: "Jenis 3 - Data Linear",
-                    question: "Operasi untuk memasukkan data baru dari bagian belakang (Rear) pada struktur data Queue (Antrean) disebut...",
-                    options: ["Push", "Pop", "Enqueue", "Dequeue"],
-                    correct: 2,
-                    explanation: "Enqueue menambah data ke belakang antrean, sedangkan Dequeue mengambil dari depan."
-                }
-            ],
-            type4: [ // Jenis 4: Algoritma Pencarian (Searching)
-                {
-                    category: "Jenis 4 - Algoritma Pencarian",
-                    question: "Syarat mutlak yang HARUS dipenuhi sebelum kita dapat menjalankan algoritma Binary Search adalah...",
-                    options: ["Data berjumlah di atas 100", "Data HARUS sudah terurut (Sorted)", "Data berupa teks alfabet", "Memori RAM harus kosong"],
-                    correct: 1,
-                    explanation: "Binary Search membelah dua wilayah pencarian hanya jika data sudah terurut."
-                },
-                {
-                    category: "Jenis 4 - Algoritma Pencarian",
-                    question: "Algoritma pencarian yang memeriksa elemen data satu per satu dari indeks awal hingga akhir dinamakan...",
-                    options: ["Binary Search", "Linear Search", "Quick Search", "Bubble Search"],
-                    correct: 1,
-                    explanation: "Linear Search menguji elemen satu per satu secara berurutan dari awal hingga akhir."
-                },
-                {
-                    category: "Jenis 4 - Algoritma Pencarian",
-                    question: "Berapakah kompleksitas waktu (Time Complexity) rata-rata dari algoritma Binary Search?",
-                    options: ["O(1)", "O(n)", "O(log n)", "O(n²)"],
-                    correct: 2,
-                    explanation: "Binary Search memiliki efisiensi waktu sangat tinggi yaitu O(log n)."
-                }
-            ],
-            type5: [ // Jenis 5: Algoritma Pengurutan (5 Algo Sorting)
-                {
-                    category: "Jenis 5 - Algoritma Pengurutan",
-                    question: "Algoritma pengurutan yang membandingkan dua pasangan elemen berdampingan dan menukarnya jika urutannya salah adalah...",
-                    options: ["Bubble Sort", "Quick Sort", "Merge Sort", "Insertion Sort"],
-                    correct: 0,
-                    explanation: "Bubble Sort menukar pasangan berdampingan berulang kali hingga data terbesar mengapung ke kanan."
-                },
-                {
-                    category: "Jenis 5 - Algoritma Pengurutan",
-                    question: "Algoritma pengurutan yang memilih elemen 'Pivot' untuk membagi array menjadi dua kelompok (< pivot & > pivot) adalah...",
-                    options: ["Insertion Sort", "Selection Sort", "Quick Sort", "Bubble Sort"],
-                    correct: 2,
-                    explanation: "Quick Sort menggunakan elemen Pivot untuk pemisahan partisi rekursif."
-                },
-                {
-                    category: "Jenis 5 - Algoritma Pengurutan",
-                    question: "Algoritma pengurutan manakah yang secara spesifik menggunakan prinsip Divide and Conquer (membelah hingga tunggal lalu menggabung)?",
-                    options: ["Selection Sort", "Merge Sort", "Bubble Sort", "Insertion Sort"],
-                    correct: 1,
-                    explanation: "Merge Sort membelah (Divide) array hingga tunggal lalu menggabungkan kembali secara terurut (Merge)."
-                },
-                {
-                    category: "Jenis 5 - Algoritma Pengurutan",
-                    question: "Jika perangkat komputer memiliki keterbatasan pada jumlah penukaran (swap), algoritma sorting manakah yang paling ideal?",
-                    options: ["Bubble Sort", "Selection Sort", "Quick Sort", "Merge Sort"],
-                    correct: 1,
-                    explanation: "Selection Sort meminimalkan jumlah operasi swap (maksimal n-1 kali swap)."
-                }
-            ]
-        };
-
-        let currentQuizQuestions = [];
-        let currentQuizIdx = 0;
-        let quizCorrectCount = 0;
-
-        // Sample random questions spanning all 5 types for each session
-        function generateSessionQuizQuestions() {
-            currentQuizQuestions = [];
-            
-            // Pick 2 random questions from each of the 5 categories (Total = 10 questions)
-            const keys = ['type1', 'type2', 'type3', 'type4', 'type5'];
-            keys.forEach(key => {
-                const pool = [...masterQuestionBank[key]];
-                pool.sort(() => Math.random() - 0.5);
-                currentQuizQuestions.push(pool[0]);
-                if (pool[1]) currentQuizQuestions.push(pool[1]);
-            });
-
-            // Shuffle final list
-            currentQuizQuestions.sort(() => Math.random() - 0.5);
-            currentQuizIdx = 0;
-            quizCorrectCount = 0;
-        }
-
-        function renderQuizQuestion() {
-            if (currentQuizQuestions.length === 0) generateSessionQuizQuestions();
-
-            const q = currentQuizQuestions[currentQuizIdx];
-            document.getElementById('quiz-progress-text').innerText = currentQuizIdx + 1;
-            document.getElementById('quiz-total-text').innerText = currentQuizQuestions.length;
-            document.getElementById('quiz-category-tag').innerText = q.category;
-            document.getElementById('quiz-question-text').innerText = q.question;
-
-            document.getElementById('quiz-explanation').classList.add('hidden');
-
-            const container = document.getElementById('quiz-options-container');
-            container.innerHTML = q.options.map((opt, idx) => `
-                <button onclick="submitQuizAnswer(${idx})" class="quiz-opt-btn p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 rounded-xl text-left transition-all flex items-center justify-between">
-                    <span>${String.fromCharCode(65 + idx)}. ${opt}</span>
-                    <i class="fa-regular fa-circle text-slate-500"></i>
-                </button>
-            `).join('');
-        }
-
-        function submitQuizAnswer(selectedIdx) {
-            const q = currentQuizQuestions[currentQuizIdx];
-            const isCorrect = selectedIdx === q.correct;
-
-            document.querySelectorAll('.quiz-opt-btn').forEach((btn, idx) => {
-                btn.disabled = true;
-                if (idx === q.correct) {
-                    btn.className = "quiz-opt-btn p-3 bg-emerald-950/80 border border-emerald-500 text-emerald-300 rounded-xl text-left flex items-center justify-between font-bold";
-                } else if (idx === selectedIdx && !isCorrect) {
-                    btn.className = "quiz-opt-btn p-3 bg-rose-950/80 border border-rose-500 text-rose-300 rounded-xl text-left flex items-center justify-between";
-                }
-            });
-
-            const expBox = document.getElementById('quiz-explanation');
-            expBox.classList.remove('hidden');
-
-            if (isCorrect) {
-                quizCorrectCount++;
-                addXP(20);
-                playSound('correct');
-                document.getElementById('quiz-feedback-title').innerText = "✨ Jawaban Benar! (+20 XP)";
-                document.getElementById('quiz-feedback-title').className = "font-bold text-emerald-400";
-            } else {
-                playSound('wrong');
-                document.getElementById('quiz-feedback-title').innerText = "❌ Jawaban Belum Tepat";
-                document.getElementById('quiz-feedback-title').className = "font-bold text-rose-400";
-            }
-
-            document.getElementById('quiz-explanation-text').innerText = q.explanation;
-        }
-
-        function nextQuestion() {
-            currentQuizIdx++;
-            if (currentQuizIdx < currentQuizQuestions.length) {
-                renderQuizQuestion();
-            } else {
-                showQuizResults();
-            }
-        }
-
-        function showQuizResults() {
-            document.getElementById('quiz-card').classList.add('hidden');
-            document.getElementById('quiz-result-screen').classList.remove('hidden');
-
-            document.getElementById('res-correct').innerText = `${quizCorrectCount} / ${currentQuizQuestions.length}`;
-            document.getElementById('res-xp').innerText = `+${quizCorrectCount * 20} XP`;
-            const accuracy = Math.round((quizCorrectCount / currentQuizQuestions.length) * 100);
-            document.getElementById('res-accuracy').innerText = `${accuracy}%`;
-
-            // Unlock Stage 8 (Sertifikat)
-            stageUnlocked['tab-cert'] = true;
-            updateTabLockUI();
-
-            if (accuracy >= 60) {
-                fireConfetti();
-                playSound('levelup');
-            }
-        }
-
-        function restartQuiz() {
-            generateSessionQuizQuestions();
-            document.getElementById('quiz-card').classList.remove('hidden');
-            document.getElementById('quiz-result-screen').classList.add('hidden');
-            renderQuizQuestion();
-        }
-
-        /* INITIALIZATION ON PAGE LOAD */
         window.onload = function() {
             updateTabLockUI();
-            updateSortDesc();
-            resetSortArray();
-            renderArrayVisual();
-            renderStackVisual();
-            renderQueueVisual();
-            renderSearchArray();
-            generateSessionQuizQuestions();
             renderQuizQuestion();
             updateCertificateView();
         };
